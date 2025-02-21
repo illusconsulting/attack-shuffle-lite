@@ -387,6 +387,55 @@
         <pre id="json-output" class="json-content"></pre>
     </div>
     <script>
+        // Global cache for JSON data
+        const jsonCache = {};
+        
+        // List of JSON files to fetch
+        const jsonFiles = {
+            "enterpriseAttack": "enterprise-attack.json",
+            "weightKeywords": "weight-keywords.json",
+            "staticVariables": "static-variables.json",
+            "attackPrevTid": "attack-prev-tid.json",
+            "cisToAttack": "cis_safeguard_to_techniques.json",
+            "devicesMapping": "enterprise-assets-devices-02.20.2025_attack-16.1-enterprise_json.json",
+            "networksMapping": "enterprise-assets-networks-02.20.2025_attack-16.1-enterprise_json.json",
+            "applicationsMapping": "enterprise-assets-applications-02.20.2025_attack-16.1-enterprise_json.json",
+            "dataMapping": "enterprise-assets-data-02.20.2025_attack-16.1-enterprise_json.json",
+            "identitiesMapping": "enterprise-assets-identities-02.20.2025_attack-16.1-enterprise_json.json",
+            "nistMapping": "nist_800_53-rev5_attack-14.1-enterprise_json.json"
+        };
+
+        // Function to fetch JSON files once on page load
+        async function fetchJSONFiles() {
+            try {
+                const fetchPromises = Object.entries(jsonFiles).map(async ([key, url]) => {
+                    const response = await fetch(url, { mode: "cors" });
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch ${url}: ${response.status}`);
+                    }
+                    jsonCache[key] = await response.json();
+                });
+
+                await Promise.all(fetchPromises);
+                console.log("✅ All JSON files loaded successfully:", jsonCache);
+            } catch (error) {
+                console.error("❌ Error loading JSON files:", error);
+            }
+        }
+
+        // Function to get cached JSON data
+        function getJSONData(key) {
+            if (!jsonCache[key]) {
+                console.warn(`⚠️ Warning: JSON data for '${key}' not available.`);
+                return null;
+            }
+            return jsonCache[key];
+        }
+
+        async function fetchJSON(key) {
+            return getJSONData(key);
+        }
+
         function showToast(message, type = "success", duration = 3000) {
             const toastContainer = document.getElementById("toast-container");
 
@@ -523,41 +572,60 @@
 
         // Function to Add Asset Type to Model Definition
         function addAssetType() {
+            // Retrieve selected values from form fields
             const assetCategory = document.querySelector("input[name='asset-category']:checked")?.value;
             const assetType = document.getElementById("asset-type-dropdown").value;
             const environment = document.getElementById("environment-dropdown").value;
             const recordCount = document.getElementById("record-count-dropdown")?.value;
+            
+            // Monitoring coverage checkboxes
             const networkMonitoring = document.querySelector("input[name='network_monitoring']:checked")?.value;
             const processMonitoring = document.querySelector("input[name='process_monitoring']:checked")?.value;
             const fileMonitoring = document.querySelector("input[name='file_monitoring']:checked")?.value;
             const cloudMonitoring = document.querySelector("input[name='cloud_monitoring']:checked")?.value;
             const hardwareMonitoring = document.querySelector("input[name='hardware_monitoring']:checked")?.value;
-    
+
+            // ✅ Validate required fields before proceeding
             if (!assetCategory || !assetType || !environment) {
                 showToast("Please complete all required fields.", "error");
                 return;
             }
-    
+
+            // ✅ Create a new asset type instance
             const assetInstance = {
                 asset_category: assetCategory,
                 asset_type: assetType,
                 environment: environment,
                 record_count: assetCategory === "data" ? recordCount : undefined,
                 monitoring_coverage: {
-                    network: networkMonitoring,
-                    process: processMonitoring,
-                    file: fileMonitoring,
-                    cloud: cloudMonitoring,
-                    hardware: hardwareMonitoring
-                }
+                    network: networkMonitoring || "None",
+                    process: processMonitoring || "None",
+                    file: fileMonitoring || "None",
+                    cloud: cloudMonitoring || "None",
+                    hardware: hardwareMonitoring || "None"
+                },
+                attack_scores: [] // Initialize an empty array for attack scores
             };
-    
+
+            // ✅ Add the asset to the model definition
             modelDefinition.asset_types.push(assetInstance);
-            // console.log("Updated model definition:", modelDefinition);
-            updateModelDisplay(); // Update JSON display
+
+            // ✅ Update the model display
+            updateModelDisplay();
+            
+            // ✅ Show success message
             showToast("Asset type added successfully!", "success");
-            document.getElementById("add-more-assets").style.display = "inline-block"; // Show "Add Another Asset Type" button
+
+            // ✅ Ensure the "View JSON Model" button is visible
+            document.getElementById("view-model-definition").style.display = "inline-block";
+
+            // ✅ Ensure the "Add More Assets" button is visible
+            document.getElementById("add-more-assets").style.display = "inline-block";
+
+            // ✅ Refresh the model summary table (fixes techniques not updating)
+            generateModelSummaryTable();
         }
+
     
         // Function to Handle Asset Category Selection
         function handleAssetCategorySelection() {
@@ -659,27 +727,41 @@
         async function calculateAllTechniqueScores() {
             console.log("🚀 Calculating ATT&CK scores for all selected asset types...");
 
-            // Show the progress bar
-            document.getElementById("progress-container").style.display = "block";
+            // Show progress bar
+            const progressContainer = document.getElementById("progress-container");
             const progressBar = document.getElementById("progress-bar");
-            
-            // Get total techniques to calculate
+            progressContainer.style.display = "block";
+
+            // Calculate total number of techniques
             let totalTechniques = modelDefinition.asset_types.reduce((sum, asset) => 
                 sum + (asset.attack_scores ? asset.attack_scores.length : 0), 0);
             let completed = 0;
 
-            // Fetch techniques for all asset types
-            const promises = modelDefinition.asset_types.map(async (asset) => {
+            // Pre-fetch all JSON files in parallel
+            const assetCategoryFiles = [...new Set(modelDefinition.asset_types.map(asset => getCategoryFilePath(asset.asset_category)))];
+            const jsonData = await Promise.all(assetCategoryFiles.map(async (filePath) => {
+                const response = await fetch(filePath);
+                return { filePath, data: await response.json() };
+            }));
+
+            // Convert JSON data into a lookup Map for fast access
+            const jsonDataMap = new Map(jsonData.map(({ filePath, data }) => [filePath, data.mapping_objects]));
+
+            // Process each asset type in parallel
+            const assetPromises = modelDefinition.asset_types.map(async (asset) => {
                 if (!asset.attack_scores) {
-                    asset.attack_scores = []; // Initialize if not already defined
+                    asset.attack_scores = []; // Ensure attack_scores is initialized
                 }
 
+                // Lookup asset category data
                 const categoryFilePath = getCategoryFilePath(asset.asset_category);
-                const response = await fetch(categoryFilePath);
-                const data = await response.json();
+                const mappingObjects = jsonDataMap.get(categoryFilePath) || [];
 
-                // Extract techniques related to this asset type
-                const techniques = data.mapping_objects
+                // Create a Set for quick lookup of existing scores
+                const existingScoreSet = new Set(asset.attack_scores.map(t => t.attack_object_id));
+
+                // Extract techniques related to this asset type using a Map lookup
+                const techniques = mappingObjects
                     .filter(obj => obj.capability_id === asset.asset_type)
                     .map(obj => ({
                         attack_object_id: obj.attack_object_id,
@@ -688,23 +770,23 @@
 
                 console.log(`Techniques for ${asset.asset_type}:`, techniques);
 
-                // Run all score calculations in parallel, but only if the technique is missing
+                // Calculate scores in parallel while skipping existing ones
                 const newScores = await Promise.all(techniques.map(async (technique) => {
-                    // Skip recalculation if score already exists
-                    const existingScore = asset.attack_scores.find(t => t.attack_object_id === technique.attack_object_id);
-                    if (existingScore) {
-                        completed++;
-                        progressBar.style.width = `${(completed / totalTechniques) * 100}%`;
-                        return existingScore; // Return cached score
+                    if (existingScoreSet.has(technique.attack_object_id)) {
+                        return asset.attack_scores.find(t => t.attack_object_id === technique.attack_object_id);
                     }
 
                     const score = await calculateFinalScore(technique.attack_object_id, asset);
                     completed++;
-                    progressBar.style.width = `${(completed / totalTechniques) * 100}%`;
+
+                    // ✅ Only update the progress bar every 10 calculations
+                    if (completed % 10 === 0 || completed === totalTechniques) {
+                        progressBar.style.width = `${(completed / totalTechniques) * 100}%`;
+                    }
 
                     return {
                         ...technique,
-                        score: score.toFixed(4) // Store rounded score
+                        score: score.toFixed(4)
                     };
                 }));
 
@@ -713,13 +795,14 @@
             });
 
             // Wait for all assets to complete score computation
-            await Promise.all(promises);
+            await Promise.all(assetPromises);
 
             // Hide progress bar after completion
-            document.getElementById("progress-container").style.display = "none";
+            progressContainer.style.display = "none";
 
             console.log("✅ ATT&CK scores computed for all asset types.");
         }
+
 
 
 
@@ -758,7 +841,6 @@
             modelDefinition.asset_types.forEach(asset => {
                 const techniques = asset.attack_scores || [];
 
-                // Compute the average ATT&CK score
                 const avgScore = techniques.length
                     ? (techniques.reduce((sum, t) => sum + parseFloat(t.score), 0) / techniques.length).toFixed(4)
                     : "N/A";
@@ -768,16 +850,20 @@
                     <td class="border border-gray-300 px-4 py-2">${asset.environment}</td>
                     <td class="border border-gray-300 px-4 py-2">${asset.asset_category}</td>
                     <td class="border border-gray-300 px-4 py-2">${asset.asset_type}</td>
-                    <td class="border border-gray-300 px-4 py-2 text-blue-500 cursor-pointer" data-techniques='${JSON.stringify(techniques)}'>
+                    <td class="border border-gray-300 px-4 py-2 text-blue-500 cursor-pointer">
                         ${techniques.length} techniques (Avg Score: ${avgScore})
                     </td>
                 `;
-                row.querySelector("td:last-child").addEventListener("click", (event) => {
-                    displayTechniquesTable(event.target.dataset.techniques, asset.asset_type);
+
+                // ✅ Pass asset type name instead of JSON
+                row.querySelector("td:last-child").addEventListener("click", () => {
+                    displayTechniquesTable(asset.asset_type);
                 });
+
                 tableBody.appendChild(row);
             });
         }
+
 
         async function displayTechniquesTable(assetTypeName) {
             const tableBody = document.getElementById("techniques-body");
@@ -832,15 +918,6 @@
             }
         }
 
-        // Attach Event Listener to Toggle Button
-        // document.addEventListener("DOMContentLoaded", () => {
-        //     const toggleButton = document.getElementById("toggle-techniques-btn");
-        //     if (toggleButton) {
-        //         toggleButton.addEventListener("click", toggleTechniquesTable);
-        //     }
-        // });
-    
-        // Function to Toggle Dark Mode
         function toggleDarkMode() {
             const body = document.body;
             const icon = document.getElementById("darkModeIcon");
@@ -851,12 +928,13 @@
     
         // Initialize the Script After DOM Loads
         document.addEventListener("DOMContentLoaded", () => {
+            fetchJSONFiles();
             const drawerTab = document.getElementById("drawer-tab");
                 if (drawerTab) {
                     // console.log("Drawer tab detected, attaching event listener.");
                     drawerTab.addEventListener("click", toggleDrawer);
                 } else {
-                    // console.log("Error: Drawer tab element not found.");
+                    console.log("Error: Drawer tab element not found.");
                 }
             
             const toggleButton = document.getElementById("toggle-techniques-btn");
@@ -877,227 +955,206 @@
         });
 
         // Object to store loaded STIX data
-        const stixData = {};
+        const stixData = {
+            objects: [],
+            attackPatterns: new Map(),
+            relationships: new Map(),
+            dataComponents: new Map(),
+            dataSources: new Map()
+        };
 
         // URLs for fetching STIX data
         const stixUrls = {
-        "enterprise-attack": "enterprise-attack.json"
+            "enterprise-attack": "enterprise-attack.json"
         };
 
         // Function to load STIX data from JSON files
         async function loadStixData() {
-        for (const [key, url] of Object.entries(stixUrls)) {
             try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const data = await response.json();
-            
-            // Ensure objects exist before assigning
-            stixData[key] = data.objects || [];
-            
-            // console.log(`Successfully loaded STIX data for: ${key}`);
+                const responses = await Promise.all(
+                    Object.entries(stixUrls).map(async ([key, url]) => {
+                        const response = await fetch(url);
+                        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                        return { key, data: await response.json() };
+                    })
+                );
+
+                // Process and store STIX data
+                responses.forEach(({ key, data }) => {
+                    const objects = data.objects || [];
+                    stixData.objects = objects; // Store raw data
+
+                    // Preprocess into Maps for faster lookups
+                    stixData.attackPatterns = new Map();
+                    stixData.relationships = new Map();
+                    stixData.dataComponents = new Map();
+                    stixData.dataSources = new Map();
+
+                    for (const obj of objects) {
+                        switch (obj.type) {
+                            case 'attack-pattern':
+                                if (obj.external_references) {
+                                    const externalId = obj.external_references.find(ref => ref.external_id);
+                                    if (externalId) stixData.attackPatterns.set(externalId.external_id, obj);
+                                }
+                                break;
+                            case 'relationship':
+                                if (!stixData.relationships.has(obj.target_ref)) {
+                                    stixData.relationships.set(obj.target_ref, []);
+                                }
+                                stixData.relationships.get(obj.target_ref).push(obj);
+                                break;
+                            case 'x-mitre-data-component':
+                                stixData.dataComponents.set(obj.id, obj);
+                                break;
+                            case 'x-mitre-data-source':
+                                stixData.dataSources.set(obj.id, obj);
+                                break;
+                        }
+                    }
+                });
+
+                console.log("✅ STIX data successfully loaded and indexed.");
             } catch (error) {
-            console.error(`Failed to fetch or process STIX data from ${url}:`, error);
-            
-            // Store empty array to prevent undefined references later
-            stixData[key] = [];
+                console.error("❌ Failed to load STIX data:", error);
             }
-        }
         }
 
         // Function to find data sources for a given MITRE ATT&CK technique ID
-        async function findDataSources(techniqueId) {
+        function findDataSources(techniqueId) {
             let dataSources = [];
 
-            for (const key in stixData) {
-                const objects = stixData[key];
+            // Find the attack pattern object
+            const attackPattern = stixData.attackPatterns.get(techniqueId);
+            if (!attackPattern) return [];
 
-                // Find the attack pattern that matches the technique ID
-                const attackPattern = objects.find(obj =>
-                    obj.type === 'attack-pattern' &&
-                    obj.external_references &&
-                    obj.external_references.some(ref => ref.external_id === techniqueId)
-                );
+            // Find relationships where this attack pattern is the target
+            const detectingRelationships = stixData.relationships.get(attackPattern.id) || [];
 
-                if (attackPattern) {
-                    // Find all "detects" relationships for this attack pattern
-                    const detectingRelationships = objects.filter(obj =>
-                        obj.type === 'relationship' &&
-                        obj.target_ref === attackPattern.id &&
-                        obj.relationship_type === 'detects'
-                    );
+            for (const rel of detectingRelationships) {
+                if (rel.relationship_type === 'detects') {
+                    // Find the data component
+                    const dataComponent = stixData.dataComponents.get(rel.source_ref);
+                    if (!dataComponent || !dataComponent.x_mitre_data_source_ref) continue;
 
-                    detectingRelationships.forEach(rel => {
-                        const dataComponent = objects.find(obj =>
-                            obj.type === 'x-mitre-data-component' && obj.id === rel.source_ref
-                        );
-
-                        if (dataComponent && dataComponent.x_mitre_data_source_ref) {
-                            const dataSource = objects.find(obj =>
-                                obj.type === 'x-mitre-data-source' && obj.id === dataComponent.x_mitre_data_source_ref
-                            );
-
-                            if (dataSource && dataSource.external_references && dataSource.external_references.length > 0) {
-                                dataSources.push(`${dataComponent.name} (${dataSource.external_references[0].external_id})`);
-                            }
-                        }
-                    });
+                    // Find the data source
+                    const dataSource = stixData.dataSources.get(dataComponent.x_mitre_data_source_ref);
+                    if (dataSource && dataSource.external_references && dataSource.external_references.length > 0) {
+                        dataSources.push(`${dataComponent.name} (${dataSource.external_references[0].external_id})`);
+                    }
                 }
             }
 
-            return Array.isArray(dataSources) ? dataSources : []; // Ensure return value is an array
+            return dataSources;
         }
 
 
         // Function to calculate weight_sum based on keywords in data sources and monitoring coverage maturity selected by user
         async function calculateMonitoringCoverageWeightSum(techniqueId, assetMonitoringCoverage) {
-            // console.log(`Calculating monitoring coverage weight sum for Technique ID: ${techniqueId} with coverage:`, assetMonitoringCoverage);
-
-            // Load required data files
-            const weightKeywords = await fetchJSON('weight-keywords.json');
-            const staticVariables = await fetchJSON('static-variables.json');
-
-            // Get data sources detecting this technique
-            const dataSources = await findDataSources(techniqueId);
-
-            // Ensure dataSources is an array
-            if (!Array.isArray(dataSources)) {
-                console.error(`Expected an array, but received:`, dataSources);
-                return 0; // Return 0 to avoid further errors
+            if (!assetMonitoringCoverage || typeof assetMonitoringCoverage !== 'object') {
+                console.error(`Error: Invalid assetMonitoringCoverage for Technique ID: ${techniqueId}`);
+                return 0;
             }
 
-            // console.log(`Data sources for ${techniqueId}:`, dataSources);
-
-            // Initialize weight categories
-            let categoryWeights = {
-                process: 0,
-                network: 0,
-                file: 0,
-                cloud: 0,
-                hardware: 0
-            };
-
-            // Convert weight-keywords to a case-insensitive map
-            const keywordMap = {};
-            Object.keys(weightKeywords).forEach(key => {
-                keywordMap[key.toLowerCase()] = weightKeywords[key];
-            });
-
-            // console.log(`Keyword map:`, keywordMap);
-
-            // Determine applicable monitoring categories based on keywords in data sources
-            dataSources.forEach(source => {
-                Object.keys(keywordMap).forEach(keyword => {
-                    const lowerSource = source.toLowerCase();  // Ensure case-insensitive matching
-                    const lowerKeyword = keyword.toLowerCase();
-                    
-                    // Create a regex pattern to match whole words (e.g., "command" vs "commands")
-                    const keywordRegex = new RegExp(`\\b${lowerKeyword}\\b`, 'i');  // 'i' ensures case insensitivity
-
-                    if (keywordRegex.test(lowerSource)) {  // ✅ Improved Matching Logic
-                        const category = keywordMap[keyword];
-
-                        // Ensure the category exists in the monitoring coverage object
-                        if (!(category in assetMonitoringCoverage)) {
-                            console.warn(`Category '${category}' is not found in assetMonitoringCoverage.`);
-                            return;
-                        }
-
-                        // Determine weight based on user-selected monitoring coverage
-                        const monitoringLevel = assetMonitoringCoverage[category]; // "None", "Low", "Medium", "High"
-
-                        let weight = 0;
-                        switch (monitoringLevel) {
-                            case "None":
-                                weight = staticVariables.weight_score_none;
-                                break;
-                            case "Low":
-                                weight = staticVariables.weight_score_low;
-                                break;
-                            case "Medium":
-                                weight = staticVariables.weight_score_medium;
-                                break;
-                            case "High":
-                                weight = staticVariables.weight_score_high;
-                                break;
-                            default:
-                                weight = 0; // Default to zero if no valid selection
-                        }
-
-                        // Assign highest weight found for this category
-                        categoryWeights[category] = Math.max(categoryWeights[category], weight);
-                    }
-                });
-            });
-
-            // Compute final weight sum
-            const weightSum = Object.values(categoryWeights).reduce((sum, weight) => sum + weight, 0);
-
-            // console.log(`Final weight sum for ${techniqueId}: ${weightSum}`);
-            return weightSum;
-        }
-
-
-
-        // Helper function to fetch JSON files
-        async function fetchJSON(filename) {
             try {
-                const response = await fetch(filename);
-                const data = await response.json();
-                return data;
+                // Load cached JSON data instead of fetching
+                const weightKeywords = getJSONData("weightKeywords") || {};
+                const staticVariables = getJSONData("staticVariables") || {};
+
+                // Get data sources detecting this technique
+                const dataSources = await findDataSources(techniqueId);
+                if (!Array.isArray(dataSources) || dataSources.length === 0) {
+                    console.warn(`No valid data sources found for Technique ID: ${techniqueId}`);
+                    return 0;
+                }
+
+                // Convert weight-keywords to a Map for fast lookup
+                const keywordMap = new Map(
+                    Object.entries(weightKeywords).map(([key, value]) => [key.toLowerCase(), value])
+                );
+
+                // Convert dataSources to lowercase once before iteration
+                const lowercasedDataSources = dataSources.map(source => source.toLowerCase());
+
+                // Initialize weight categories
+                let categoryWeights = {
+                    process: 0,
+                    network: 0,
+                    file: 0,
+                    cloud: 0,
+                    hardware: 0
+                };
+
+                // Precompute matched categories per source to minimize redundant checks
+                const matchedCategories = new Set();
+
+                for (const source of lowercasedDataSources) {
+                    for (const [keyword, category] of keywordMap.entries()) {
+                        if (source.includes(keyword)) { // ✅ Substring Matching Fix
+                            matchedCategories.add(category);
+                        }
+                    }
+                }
+
+                // Process matched categories
+                for (const category of matchedCategories) {
+                    if (!(category in assetMonitoringCoverage)) {
+                        console.warn(`Category '${category}' is not found in assetMonitoringCoverage.`);
+                        continue; // Skip invalid categories
+                    }
+
+                    // Determine weight based on user-selected monitoring coverage
+                    const monitoringLevel = assetMonitoringCoverage[category]; // "None", "Low", "Medium", "High"
+
+                    const weight = {
+                        "None": staticVariables.weight_score_none || 0,
+                        "Low": staticVariables.weight_score_low || 0,
+                        "Medium": staticVariables.weight_score_medium || 0,
+                        "High": staticVariables.weight_score_high || 0
+                    }[monitoringLevel] || 0;
+
+                    // Assign highest weight found for this category
+                    categoryWeights[category] = Math.max(categoryWeights[category], weight);
+                }
+
+                // Compute final weight sum
+                return Object.values(categoryWeights).reduce((sum, weight) => sum + weight, 0);
             } catch (error) {
-                console.error(`Error fetching JSON file: ${filename}`, error);
-                return {};
+                console.error(`Error in calculateMonitoringCoverageWeightSum for Technique ID ${techniqueId}:`, error);
+                return 0;
             }
         }
 
-        
         async function calculateFinalScore(techniqueId, assetObject) {
-            // console.log(`Calculating score for Technique ID: ${techniqueId}`);
-
             if (!assetObject || !assetObject.monitoring_coverage) {
-                console.error(`Error: assetMonitoringCoverage is undefined for technique ID ${techniqueId}`);
+                console.error(`Error: Asset monitoring coverage is undefined for technique ID ${techniqueId}`);
                 return 0; // Prevent further execution
             }
-            // Load data sources
-            const attackPrev = await fetchJSON('attack-prev-tid.json');
-            const nistMappings = await fetchJSON('nist_800_53-rev5_attack-14.1-enterprise.json');
-            const cisMappings = await fetchJSON('cis_safeguard_to_techniques.json');
-            const enterpriseAttack = await fetchJSON('enterprise-attack.json');
-            const staticVariables = await fetchJSON('static-variables.json');
-            const weightKeywords = await fetchJSON('weight-keywords.json');
 
-            // console.log("Data loaded successfully.");
+            try {
+                // Load cached JSON data using correct keys from jsonFiles
+                const attackPrev = getJSONData("attackPrevTid") || [];
+                const nistMappings = getJSONData("nistMapping") || { mapping_objects: [] };
+                const cisMappings = getJSONData("cisToAttack") || [];
+                const enterpriseAttack = getJSONData("enterpriseAttack") || { objects: [] };
+                const staticVariables = getJSONData("staticVariables") || {};
+                const weightKeywords = getJSONData("weightKeywords") || {};
 
-            // Calculate weights based on keywords
-            // console.log(`Calculating score for Technique ID: ${techniqueId} with monitoring coverage:`, assetMonitoringCoverage);
-            const weight_sum = await calculateMonitoringCoverageWeightSum(techniqueId, assetObject.monitoring_coverage);
-            //return weight_sum;
-            // console.log(`Weight sum for ${techniqueId}: ${weight_sum}`);
+                // Compute weight sum based on monitoring coverage
+                const weightSum = await calculateMonitoringCoverageWeightSum(techniqueId, assetObject.monitoring_coverage);
 
-            // Extract prevalence score
-            const prevEntry = attackPrev.find(t => t.attack_object_id === techniqueId);
-            const prevalenceScore = prevEntry ? parseFloat(prevEntry.calc_prev_score) : 0;
-            const tidBefore = prevEntry ? parseFloat(prevEntry.calc_tid_before) : 0;
-            const tidAfter = prevEntry ? parseFloat(prevEntry.calc_tid_after) : 0;
-            // console.log(`Prevalence Score: ${prevalenceScore}`);
+                // Extract prevalence score
+                const prevEntry = attackPrev.find(t => t.attack_object_id === techniqueId);
+                const prevalenceScore = prevEntry ? parseFloat(prevEntry.calc_prev_score) : 0;
+                const tidBefore = prevEntry ? parseFloat(prevEntry.calc_tid_before) : 0;
+                const tidAfter = prevEntry ? parseFloat(prevEntry.calc_tid_after) : 0;
 
-            // Count security controls mapped to this technique
-            const nistCount = nistMappings.mapping_objects
-                ? nistMappings.mapping_objects.filter(obj => obj.attack_object_id === techniqueId).length
-                : 0;
-            // console.log(`NIST Count: ${nistCount}`);
+                // Count security controls mapped to this technique
+                const nistCount = (nistMappings.mapping_objects || []).filter(obj => obj.attack_object_id === techniqueId).length;
+                const cisCount = (cisMappings || []).filter(obj => obj.attack_techniques.some(t => t.technique_id === techniqueId)).length;
 
-            const cisCount = cisMappings
-                ? cisMappings.filter(obj => obj.attack_techniques.some(t => t.technique_id === techniqueId)).length
-                : 0;
-            // console.log(`CIS Count: ${cisCount}`);
-
-            // Count detections from enterprise-attack.json
-            let detectionCount = 0;
-            if (enterpriseAttack.objects) {
+                // Count detections from enterprise-attack.json
+                let detectionCount = 0;
                 const attackPattern = enterpriseAttack.objects.find(obj =>
                     obj.type === 'attack-pattern' &&
                     obj.external_references &&
@@ -1111,79 +1168,74 @@
                         obj.relationship_type === 'detects'
                     ).length;
                 }
-            }
-            // console.log(`Detection Count: ${detectionCount}`);
 
-            // Apply cutoffs and weights from static-variables.json
-            const mitigationsUtility = Math.min(Math.max(
-                (nistCount + cisCount - staticVariables.actionability_mitigations_lower_cutoff) /
-                (staticVariables.actionability_mitigations_upper_cutoff - staticVariables.actionability_mitigations_lower_cutoff),
-                0), 1);
-            // console.log(`Mitigations Utility: ${mitigationsUtility}`);
+                // Ensure static variable defaults exist to prevent NaN issues
+                const mitigationsLowerCutoff = staticVariables.actionability_mitigations_lower_cutoff || 0;
+                const mitigationsUpperCutoff = staticVariables.actionability_mitigations_upper_cutoff || 1;
+                const detectionsLowerCutoff = staticVariables.actionability_detections_lower_cutoff || 0;
+                const detectionsUpperCutoff = staticVariables.actionability_detections_upper_cutoff || 1;
 
-            const detectionsUtility = Math.min(Math.max(
-                (detectionCount - staticVariables.actionability_detections_lower_cutoff) /
-                (staticVariables.actionability_detections_upper_cutoff - staticVariables.actionability_detections_lower_cutoff),
-                0), 1);
-            // console.log(`Detections Utility: ${detectionsUtility}`);
-            actionability_w_detect1 = staticVariables.actionability_w_miti1 / staticVariables.actionability_mitigations_to_detections_ratio * (staticVariables.actionability_detections_upper_cutoff - staticVariables.actionability_detections_lower_cutoff) / (staticVariables.actionability_mitigations_upper_cutoff - staticVariables.actionability_mitigations_lower_cutoff)
-            const actionability_w_miti = staticVariables.actionability_w_miti1 / (actionability_w_detect1 + staticVariables.actionability_w_miti1)
-            const actionability_w_detect = actionability_w_detect1 / (actionability_w_detect1 + staticVariables.actionability_w_miti1)
-            const actionabilityScore = actionability_w_miti * mitigationsUtility + actionability_w_detect * detectionsUtility;
-            // console.log(`actionability_w_miti1 for ${techniqueId}: ${staticVariables.actionability_w_miti1}`);
-            // console.log(`actionability_w_detect1 for ${techniqueId}: ${actionability_w_detect1}`);
-            // console.log(`Actionability Score for ${techniqueId}: ${actionabilityScore}`);
+                // Compute actionability score
+                const mitigationsUtility = Math.min(Math.max(
+                    (nistCount + cisCount - mitigationsLowerCutoff) / (mitigationsUpperCutoff - mitigationsLowerCutoff),
+                    0), 1);
 
-            // chokepoint_w_after1 = chokepoint_w_before1 / chokepoint_before_to_after_ratio * (chokepoint_after_upper_cutoff - chokepoint_after_lower_cutoff) / (chokepoint_before_upper_cutoff - chokepoint_before_lower_cutoff)
-            chokepoint_w_after1 = staticVariables.chokepoint_w_before1 / staticVariables.chokepoint_before_to_after_ratio * (staticVariables.chokepoint_after_upper_cutoff - staticVariables.chokepoint_after_lower_cutoff) / (staticVariables.chokepoint_before_upper_cutoff - staticVariables.chokepoint_before_lower_cutoff)
-            // console.log(`chokepoint_w_after1 for ${techniqueId}: ${chokepoint_w_after1}`);
+                const detectionsUtility = Math.min(Math.max(
+                    (detectionCount - detectionsLowerCutoff) / (detectionsUpperCutoff - detectionsLowerCutoff),
+                    0), 1);
 
-            // chokepoint_w_before = chokepoint_w_before1 / (chokepoint_w_after1 + chokepoint_w_before1)
-            chokepoint_w_before = staticVariables.chokepoint_w_before1 / (chokepoint_w_after1 + staticVariables.chokepoint_w_before1)
-            // console.log(`chokepoint_w_before for ${techniqueId}: ${chokepoint_w_before}`);
+                const actionabilityWeightDetect1 = (staticVariables.actionability_w_miti1 || 1) /
+                    (staticVariables.actionability_mitigations_to_detections_ratio || 1) *
+                    (detectionsUpperCutoff - detectionsLowerCutoff) /
+                    (mitigationsUpperCutoff - mitigationsLowerCutoff);
 
-            // chokepoint_w_after = chokepoint_w_after1 / (chokepoint_w_after1 + chokepoint_w_before1)
-            chokepoint_w_after = chokepoint_w_after1 / (chokepoint_w_after1 + staticVariables.chokepoint_w_before1)
-            // console.log(`chokepoint_w_after for ${techniqueId}: ${chokepoint_w_after}`);
+                const actionabilityWeightMiti = (staticVariables.actionability_w_miti1 || 1) /
+                    (actionabilityWeightDetect1 + (staticVariables.actionability_w_miti1 || 1));
 
-            // Before Utility = (tidBefore - chokepoint_before_lower_cutoff)/(chokepoint_before_upper_cutoff - chokepoint_before_lower_cutoff), must be between 0 and 1
-            const before_utility = Math.min(Math.max(
-                (tidBefore - staticVariables.chokepoint_before_lower_cutoff) /
-                (staticVariables.chokepoint_before_upper_cutoff - staticVariables.chokepoint_before_lower_cutoff),
-                0), 1);
-            // console.log(`Before Utility for ${techniqueId}: ${before_utility}`);
+                const actionabilityWeightDetect = actionabilityWeightDetect1 /
+                    (actionabilityWeightDetect1 + (staticVariables.actionability_w_miti1 || 1));
 
-            // After Utility = (tidAfter - chokepoint_after_lower_cutoff)/(chokepoint_after_upper_cutoff - chokepoint_after_lower_cutoff), must be between 0 and 1 
-            const after_utility = Math.min(Math.max(
-                (tidAfter - staticVariables.chokepoint_after_lower_cutoff) /
-                (staticVariables.chokepoint_after_upper_cutoff - staticVariables.chokepoint_after_lower_cutoff),
-                0), 1);    
-            // console.log(`After Utility for ${techniqueId}: ${after_utility}`);
+                const actionabilityScore = actionabilityWeightMiti * mitigationsUtility + actionabilityWeightDetect * detectionsUtility;
 
-            // calculate chokepointScore
-            chokepointScore = chokepoint_w_before * before_utility + chokepoint_w_after * after_utility
-            // console.log(`Chokepoint Score for ${techniqueId}: ${chokepointScore}`);
+                // Compute chokepoint score
+                const chokepointBeforeLower = staticVariables.chokepoint_before_lower_cutoff || 0;
+                const chokepointBeforeUpper = staticVariables.chokepoint_before_upper_cutoff || 1;
+                const chokepointAfterLower = staticVariables.chokepoint_after_lower_cutoff || 0;
+                const chokepointAfterUpper = staticVariables.chokepoint_after_upper_cutoff || 1;
 
-            // Initial ATT&CK Score Calculation
-            const initialScore = prevalenceScore + chokepointScore + actionabilityScore;
-            // console.log(`initial Score for ${techniqueId}: ${initialScore} = ${prevalenceScore} + ${chokepointScore} + ${actionabilityScore}`);
+                const chokepointWeightAfter1 = (staticVariables.chokepoint_w_before1 || 1) /
+                    (staticVariables.chokepoint_before_to_after_ratio || 1) *
+                    (chokepointAfterUpper - chokepointAfterLower) /
+                    (chokepointBeforeUpper - chokepointBeforeLower);
 
-            finalScore = initialScore * (1 + weight_sum);
-            // finalScore = initialScore * (1 + weight_sum);
-            return finalScore;
-        }
+                const chokepointWeightBefore = (staticVariables.chokepoint_w_before1 || 1) /
+                    (chokepointWeightAfter1 + (staticVariables.chokepoint_w_before1 || 1));
 
-        // Helper function to fetch JSON files
-        async function fetchJSON(filename) {
-            try {
-                const response = await fetch(filename);
-                const data = await response.json();
-                return data;
+                const chokepointWeightAfter = chokepointWeightAfter1 /
+                    (chokepointWeightAfter1 + (staticVariables.chokepoint_w_before1 || 1));
+
+                const beforeUtility = Math.min(Math.max(
+                    (tidBefore - chokepointBeforeLower) / (chokepointBeforeUpper - chokepointBeforeLower),
+                    0), 1);
+
+                const afterUtility = Math.min(Math.max(
+                    (tidAfter - chokepointAfterLower) / (chokepointAfterUpper - chokepointAfterLower),
+                    0), 1);
+
+                const chokepointScore = chokepointWeightBefore * beforeUtility + chokepointWeightAfter * afterUtility;
+
+                // Compute final score
+                const initialScore = prevalenceScore + chokepointScore + actionabilityScore;
+                const finalScore = initialScore * (1 + weightSum);
+
+                return finalScore;
             } catch (error) {
-                console.error(`Error fetching JSON file: ${filename}`, error);
-                return {};
+                console.error(`Error in calculateFinalScore for technique ${techniqueId}:`, error);
+                return 0; // Return a default score in case of an error
             }
         }
+
+        
 
 
         // async function displayTechniquesTable(techniquesJSON, assetType) {
