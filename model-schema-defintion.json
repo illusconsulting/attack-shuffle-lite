@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "organization": {
+      "type": "object",
+      "properties": {
+        "ai_automation_deployed": {
+          "type": "boolean",
+          "description": "My organization has deployed AI and automation for Information Security."
+        },
+        "cybersecurity_training_security_staff": {
+          "type": "boolean",
+          "description": "My organization prioritizes cybersecurity training for information security employees."
+        },
+        "cybersecurity_training_all_employees": {
+          "type": "boolean",
+          "description": "My organization prioritizes cybersecurity training for all employees."
+        },
+        "incident_response_testing": {
+          "type": "boolean",
+          "description": "My organization conducts incident response tests."
+        },
+        "law_enforcement_ransomware": {
+          "type": "boolean",
+          "description": "My organization engages law enforcement in ransomware cases."
+        },
+        "data_encryption": {
+          "type": "boolean",
+          "description": "My organization encrypts the data that is stored, not just the data volume/disk."
+        },
+        "data_inventory_accuracy": {
+          "type": "boolean",
+          "description": "My organization has an accurate inventory of data storage locations."
+        },
+        "staffing_shortages": {
+          "type": "boolean",
+          "description": "My organization has dealt with staffing shortages in cybersecurity roles."
+        },
+        "complex_tech_environment": {
+          "type": "boolean",
+          "description": "My organization operates multi-cloud, hybrid-cloud, and/or legacy technology systems."
+        },
+        "decentralized_data_sources": {
+          "type": "boolean",
+          "description": "My organization relies on data sources which are not centrally managed."
+        }
+      },
+      "required": [
+        "ai_automation_deployed",
+        "cybersecurity_training_security_staff",
+        "cybersecurity_training_all_employees",
+        "incident_response_testing",
+        "law_enforcement_ransomware",
+        "data_encryption",
+        "data_inventory_accuracy",
+        "staffing_shortages",
+        "complex_tech_environment",
+        "decentralized_data_sources"
+      ]
+    },
+    "system": {
+      "type": "object",
+      "properties": {
+        "environments": {
+          "type": "array",
+          "description": "Unique environments from all asset type objects in the model.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "asset_types": {
+          "type": "array",
+          "description": "Unique values of the 'capability_id' key for each object in the assets-techniques-mapping JSON file.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": ["environments", "asset_types"]
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "asset_type": {
+            "type": "string",
+            "description": "The 'capability_id' value of the selected asset type object."
+          },
+          "asset_category": {
+            "type": "string",
+            "enum": ["Devices", "Networks", "Applications & Workloads", "Data", "Identities"],
+            "description": "The 'capability_group' value of the selected asset type object."
+          },
+          "environment": {
+            "type": "string",
+            "enum": [
+              "AWS",
+              "GCP",
+              "Azure",
+              "M365",
+              "Rackspace",
+              "Private Cloud",
+              "OCI",
+              "Alibaba",
+              "IBM",
+              "DigitalOcean",
+              "Huawei",
+              "Tencent",
+              "Other"
+            ],
+            "description": "The environment in which the asset operates."
+          },
+          "network_monitoring_maturity": {
+            "type": "string",
+            "enum": ["High", "Medium", "Low", "None"],
+            "description": "Network monitoring maturity level."
+          },
+          "process_monitoring_maturity": {
+            "type": "string",
+            "enum": ["High", "Medium", "Low", "None"],
+            "description": "Process monitoring maturity level."
+          },
+          "file_monitoring_maturity": {
+            "type": "string",
+            "enum": ["High", "Medium", "Low", "None"],
+            "description": "File monitoring maturity level."
+          },
+          "cloud_monitoring_maturity": {
+            "type": "string",
+            "enum": ["High", "Medium", "Low", "None"],
+            "description": "Cloud monitoring maturity level."
+          },
+          "hardware_monitoring_maturity": {
+            "type": "string",
+            "enum": ["High", "Medium", "Low", "None"],
+            "description": "Hardware monitoring maturity level."
+          },
+          "approximate_number_of_records": {
+            "type": "string",
+            "enum": ["<500", "500-2k", "2k-10k", "10k-100k", ">100k"],
+            "description": "Approximate number of records stored in the asset.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "asset_type",
+          "asset_category",
+          "environment",
+          "network_monitoring_maturity",
+          "process_monitoring_maturity",
+          "file_monitoring_maturity",
+          "cloud_monitoring_maturity",
+          "hardware_monitoring_maturity"
+        ],
+        "if": {
+          "properties": { "asset_category": { "const": "Data" } }
+        },
+        "then": {
+          "required": ["approximate_number_of_records"]
+        }
+      }
+    }
+  },
+  "required": ["organization", "system", "assets"]
+}

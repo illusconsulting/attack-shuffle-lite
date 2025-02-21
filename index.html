@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Breach Cost Estimator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.12.0/ajv7.bundle.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <style>
+        /* Dark mode by default */
+        body.dark {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+        .dark .bg-white { background-color: #2d3748 !important; }
+        .dark .text-black { color: #e2e8f0 !important; }
+        .dark .bg-gray-100 { background-color: #1a202c !important; }
+        .dark .border-gray-300 { border-color: #4a5568 !important; }
+    
+        /* Progress Bar */
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .progress-bar li {
+            list-style: none;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            font-weight: bold;
+            color: gray;
+        }
+        .progress-bar li:before {
+            content: attr(data-step);
+            display: block;
+            margin: 0 auto;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            border-radius: 50%;
+            background-color: gray;
+            color: white;
+        }
+        .progress-bar li.active {
+            color: #3490dc;
+        }
+        .progress-bar li.active:before {
+            background-color: #3490dc;
+        }
+    
+        /* Hide all form steps by default */
+        .form-step {
+            display: none;
+        }
+    
+        /* Only display the form-step that has the 'active' class */
+        .form-step.active {
+            display: block;
+        }
+    
+        /* Loading Indicator */
+        #loading-icon {
+            display: none;
+            font-size: 14px;
+            color: #3490dc;
+            animation: spin 1s linear infinite;
+        }
+    
+        /* Loading Animation */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    
+        /* Styling for asset selection */
+        #asset-category-container label {
+            display: block;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+        #asset-category-container input[type="radio"] {
+            display: none;
+        }
+        #asset-category-container input[type="radio"]:checked + label {
+            background-color: #3490dc;
+            color: white;
+            border-color: #3490dc;
+        }
+    
+        /* Styling for form fields */
+        select, input[type="text"], input[type="number"] {
+            background-color: #2d3748;
+            border: 1px solid #ddd;
+            padding: 8px;
+            width: 100%;
+            border-radius: 5px;
+        }
+    
+        /* Button styles */
+        button {
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background-color: #3490dc;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-success {
+            background-color: #38a169;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #e3342f;
+            color: white;
+        }
+        .btn-primary:hover { background-color: #2779bd; }
+        .btn-secondary:hover { background-color: #5a6268; }
+        .btn-success:hover { background-color: #2f855a; }
+        .btn-danger:hover { background-color: #cc1f1a; }
+    
+        /* JSON Output */
+        #json-output {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #f7fafc;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        /* Drawer Default Styling */
+        .model-drawer {
+            position: fixed;
+            top: 0;
+            right: -350px; /* Initially Hidden */
+            width: 350px;
+            height: 100%;
+            background-color: #2d3748;
+            color: white;
+            overflow-y: auto;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+            transition: right 0.3s ease-in-out;
+            padding: 20px;
+        }
+
+        /* When Opened */
+        .model-drawer.open {
+            right: 0;
+        }
+
+        /* Drawer Tab */
+        .drawer-tab {
+            position: absolute;
+            left: -50px;
+            top: 50%;
+            width: 50px;
+            height: 100px;
+            background-color: #3490dc;
+            color: white;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Move Tab Inside Drawer When Expanded */
+        .model-drawer.open .drawer-tab {
+            left: 10px;
+            background-color: #1e3a8a;
+        }
+
+        /* JSON Styling */
+        .json-content {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #1a202c;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        #progress-container {
+            display: none;
+        }
+    </style>
+    
+</head>
+<body class="dark flex justify-center items-center min-h-screen">
+    <!-- Progress Bar -->
+    <div id="progress-container" class="w-full bg-gray-300 rounded mt-4 hidden">
+        <div id="progress-bar" class="h-4 bg-blue-500 rounded w-0"></div>
+    </div>
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 space-y-2 z-50"></div>
+    <!-- Main Form Container -->
+    <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-2xl">
+        <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold">Data Breach Cost Estimator</h2>
+            <button id="darkModeToggle" class="px-3 py-1 text-sm bg-gray-700 text-white rounded">
+                <span id="darkModeIcon" class="material-symbols-outlined">dark_mode</span>
+            </button>            
+        </div>
+
+        <!-- Progress Bar -->
+        <ol class="progress-bar flex">
+            <li data-step="1" class="active">Organization</li>
+            <li data-step="2">Asset Types</li>
+            <li data-step="3">MITRE ATT&CK Inventory</li>
+        </ol>
+
+        <form id="multiStepForm">
+            <!-- Step 1: Organization Details -->
+            <div class="form-step active">
+                <h3 class="text-lg font-semibold mb-2">Organization Details</h3>
+                <p class="text-sm text-gray-600 mb-2">Define your organization's security practices.</p>
+
+                <div id="organization-details">
+                    <label class="block mt-2">
+                        <input type="checkbox" id="ai_automation" class="mr-2">
+                        AI & Automation for Information Security
+                    </label>
+                    <label class="block mt-2">
+                        <input type="checkbox" id="cybersecurity_training_security_staff" class="mr-2">
+                        Cybersecurity Training for Security Staff
+                    </label>
+                    <label class="block mt-2">
+                        <input type="checkbox" id="cybersecurity_training_all_employees" class="mr-2">
+                        Cybersecurity Training for All Employees
+                    </label>
+                    <label class="block mt-2">
+                        <input type="checkbox" id="incident_response_testing" class="mr-2">
+                        Conduct Incident Response Tests
+                    </label>
+                    <label class="block mt-2">
+                        <input type="checkbox" id="law_enforcement_ransomware" class="mr-2">
+                        Engage Law Enforcement for Ransomware
+                    </label>
+                    <label class="block mt-2">
+                        <input type="checkbox" id="data_encryption" class="mr-2">
+                        Encrypt Stored Data (Beyond Disk Encryption)
+                    </label>
+                </div>
+
+                <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4">Next</button>
+            </div>
+
+            <!-- Step 2: Asset Types -->
+            <div class="form-step">
+                <h3 class="text-lg font-semibold mb-2">Define Asset Types</h3>
+                <p class="text-sm text-gray-600 mb-2">Select an asset category to continue.</p>
+
+                <!-- Asset Category Selection -->
+                <div id="asset-category-container">
+                    <label class="block mt-2">
+                        <input type="radio" name="asset-category" value="devices" class="mr-2"> Devices
+                    </label>
+                    <label class="block mt-2">
+                        <input type="radio" name="asset-category" value="networks" class="mr-2"> Networks
+                    </label>
+                    <label class="block mt-2">
+                        <input type="radio" name="asset-category" value="applications" class="mr-2"> Applications & Workloads
+                    </label>
+                    <label class="block mt-2">
+                        <input type="radio" name="asset-category" value="data" class="mr-2"> Data
+                    </label>
+                    <label class="block mt-2">
+                        <input type="radio" name="asset-category" value="identities" class="mr-2"> Identities
+                    </label>
+                </div>
+
+                <!-- Asset Type Selection -->
+                <label class="block mt-2">Select Asset Type:
+                    <select id="asset-type-dropdown" class="border p-2 w-full" disabled>
+                        <option value="">Select an asset category first</option>
+                    </select>
+                    <span id="loading-icon" class="ml-2" style="display: none;">Loading...</span>
+                </label>
+
+                <!-- Environment Selection -->
+                <div id="environment-selection" class="mt-4" style="display: none;">
+                    <label class="block mt-2">Environment:
+                        <select id="environment-dropdown" class="border p-2 w-full"></select>
+                    </label>
+                </div>
+
+                <!-- Record Count Selection (Only for Data) -->
+                <div id="record-count-selection" class="mt-4" style="display: none;">
+                    <label class="block mt-2">Estimated Record Count:
+                        <select id="record-count-dropdown" class="border p-2 w-full"></select>
+                    </label>
+                </div>
+
+                <!-- Monitoring Coverage Selection -->
+                <div id="monitoring-selection" class="mt-4" style="display: none;">
+                    <label class="block mt-2">Monitoring Coverage:</label>
+                    <div id="network-monitoring" data-label="Network Monitoring"></div>
+                    <div id="process-monitoring" data-label="Process Monitoring"></div>
+                    <div id="file-monitoring" data-label="File Monitoring"></div>
+                    <div id="cloud-monitoring" data-label="Cloud Monitoring"></div>
+                    <div id="hardware-monitoring" data-label="Hardware Monitoring"></div>
+                </div>
+
+                <!-- Submit Asset Type -->
+                <button type="button" id="submit-asset-type" class="bg-green-500 text-white px-4 py-2 rounded mt-4" style="display: none;">
+                    Add Asset Type
+                </button>
+
+                <!-- Button to Add Another Asset Type -->
+                <button type="button" id="add-more-assets" class="bg-gray-500 text-white px-4 py-2 rounded mt-4" style="display: none;">
+                    Add Another Asset Type
+                </button>
+
+                <!-- Display Model Definition in JSON -->
+                <button type="button" id="view-model-definition" class="bg-gray-700 text-white px-4 py-2 rounded mt-4" style="display: none;">
+                    View Model JSON
+                </button>
+
+                <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
+                <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4">Next</button>
+            </div>
+            <div class="form-step">
+                <h3 class="text-lg font-semibold mb-2">MITRE ATT&CK Techniques Inventory</h3>
+                <p class="text-sm text-gray-600 mb-4">Review the MITRE ATT&CK techniques relevant to each asset type.</p>
+            
+                <!-- Summary Table -->
+                <table id="model-summary-table" class="w-full border-collapse border border-gray-300 text-sm">
+                    <thead>
+                        <tr class="bg-gray-700 text-white">
+                            <th class="border border-gray-300 px-4 py-2">Environment</th>
+                            <th class="border border-gray-300 px-4 py-2">Asset Category</th>
+                            <th class="border border-gray-300 px-4 py-2">Asset Type</th>
+                            <th class="border border-gray-300 px-4 py-2">Count of MITRE ATT&CK Techniques</th>
+                        </tr>
+                    </thead>
+                    <tbody id="model-summary-body"></tbody>
+                </table>
+            
+                <!-- Techniques Table Container -->
+                <div id="techniques-container" class="hidden mt-6">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="text-md font-semibold">Techniques for <span id="selected-asset-type"></span></h4>
+                        <button id="toggle-techniques-btn" type="button" bg-gray-600 text-white px-3 py-1 rounded">
+                            Hide Techniques
+                        </button>
+                    </div>
+
+                    <table id="techniques-table" class="w-full border-collapse border border-gray-300 text-sm">
+                        <thead>
+                            <tr class="bg-gray-700 text-white">
+                                <th class="border border-gray-300 px-4 py-2">ATT&CK Technique ID</th>
+                                <th class="border border-gray-300 px-4 py-2">ATT&CK Technique Name</th>
+                                <th class="border border-gray-300 px-4 py-2">ATT&CK Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="techniques-body"></tbody>
+                    </table>
+                </div>
+
+            
+                <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
+            </div>
+            
+        </form>
+
+        <!-- JSON Output -->
+        <pre id="json-output" class="bg-gray-100 text-black p-4 rounded mt-4" style="display: none;"></pre>
+    </div>
+    <!-- Collapsible Drawer -->
+    <div id="model-drawer" class="model-drawer">
+        <button id="drawer-tab" class="drawer-tab">Model JSON</button>
+        <pre id="json-output" class="json-content"></pre>
+    </div>
+    <script>
+        function showToast(message, type = "success", duration = 3000) {
+            const toastContainer = document.getElementById("toast-container");
+
+            // Create toast element
+            const toast = document.createElement("div");
+            toast.classList.add(
+                "px-4", "py-2", "rounded", "shadow-lg", "text-white", "transition-opacity", "duration-500", "opacity-100"
+            );
+
+            // Set background color based on type
+            if (type === "success") {
+                toast.classList.add("bg-green-500");
+            } else if (type === "error") {
+                toast.classList.add("bg-red-500");
+            } else if (type === "warning") {
+                toast.classList.add("bg-yellow-500", "text-black");
+            } else {
+                toast.classList.add("bg-gray-700");
+            }
+
+            // Set toast message
+            toast.textContent = message;
+
+            // Append to container
+            toastContainer.appendChild(toast);
+
+            // Fade out and remove toast
+            setTimeout(() => {
+                toast.classList.add("opacity-0");
+                setTimeout(() => {
+                    toast.remove();
+                }, 500);
+            }, duration);
+        }
+        // Store Model Definition in Memory
+        const modelDefinition = {
+            organization_attributes: {},
+            asset_types: []
+        };
+    
+        // Function to Toggle Drawer Visibility
+        function toggleDrawer() {
+            const drawer = document.getElementById("model-drawer");
+            drawer.classList.toggle("open");
+        }
+    
+        // Function to Populate Dropdowns and Radio Buttons with Predefined Values
+        function populateStaticValues() {
+            // console.log("Populating static values...");
+            const environments = ["AWS", "GCP", "Azure", "M365"];
+            const monitoringLevels = ["High", "Medium", "Low", "None"];
+            const recordCounts = ["<500", "500-2k", "2k-10k", "10k-100k", ">100k"];
+    
+            populateDropdown("#environment-dropdown", environments);
+            populateDropdown("#record-count-dropdown", recordCounts);
+            populateRadioButtons("#network-monitoring", monitoringLevels, "network_monitoring");
+            populateRadioButtons("#process-monitoring", monitoringLevels, "process_monitoring");
+            populateRadioButtons("#file-monitoring", monitoringLevels, "file_monitoring");
+            populateRadioButtons("#cloud-monitoring", monitoringLevels, "cloud_monitoring");
+            populateRadioButtons("#hardware-monitoring", monitoringLevels, "hardware_monitoring");
+        }
+    
+        // Helper function to populate a dropdown with options
+        function populateDropdown(selector, options) {
+            const dropdown = document.querySelector(selector);
+            dropdown.innerHTML = "";
+            options.forEach(option => {
+                const opt = document.createElement("option");
+                opt.value = option;
+                opt.textContent = option;
+                dropdown.appendChild(opt);
+            });
+        }
+    
+        // Helper function to populate radio buttons
+        function populateRadioButtons(containerSelector, options, name) {
+            const container = document.querySelector(containerSelector);
+            container.innerHTML = ""; // Clear previous content
+
+            // Create a row div to group the label and radio buttons
+            const rowDiv = document.createElement("div");
+            rowDiv.classList.add("flex", "items-center", "space-x-4", "py-2"); // Flexbox for horizontal alignment
+
+            // Create a label for the category
+            const categoryLabel = document.createElement("span");
+            categoryLabel.textContent = container.getAttribute("data-label") + ":";
+            categoryLabel.classList.add("w-48", "font-semibold", "text-right"); // Ensure alignment
+
+            rowDiv.appendChild(categoryLabel);
+
+            // Create the radio button group
+            const radioGroupDiv = document.createElement("div");
+            radioGroupDiv.classList.add("flex", "space-x-6"); // Ensure even spacing
+
+            options.forEach(option => {
+                const radioWrapper = document.createElement("label");
+                radioWrapper.classList.add("inline-flex", "items-center", "space-x-2");
+
+                const radio = document.createElement("input");
+                radio.type = "radio";
+                radio.name = name;
+                radio.value = option;
+                radio.classList.add("form-radio", "text-blue-500");
+
+                // Text label for radio button
+                const radioText = document.createElement("span");
+                radioText.textContent = option;
+
+                radioWrapper.appendChild(radio);
+                radioWrapper.appendChild(radioText);
+                radioGroupDiv.appendChild(radioWrapper);
+            });
+
+            rowDiv.appendChild(radioGroupDiv);
+            container.appendChild(rowDiv);
+        }
+    
+        // Function to Update and Display Model Definition JSON
+        function updateModelDisplay() {
+            const jsonOutput = document.getElementById("json-output");
+            jsonOutput.textContent = JSON.stringify(modelDefinition, null, 4);
+        }
+    
+        document.getElementById("view-model-definition").addEventListener("click", () => {
+            const jsonOutput = document.getElementById("json-output");
+
+            // Toggle visibility
+            if (jsonOutput.style.display === "none" || jsonOutput.style.display === "") {
+                jsonOutput.style.display = "block";  // Show JSON
+            } else {
+                jsonOutput.style.display = "none";   // Hide JSON
+            }
+        });
+
+        // Function to Add Asset Type to Model Definition
+        function addAssetType() {
+            const assetCategory = document.querySelector("input[name='asset-category']:checked")?.value;
+            const assetType = document.getElementById("asset-type-dropdown").value;
+            const environment = document.getElementById("environment-dropdown").value;
+            const recordCount = document.getElementById("record-count-dropdown")?.value;
+            const networkMonitoring = document.querySelector("input[name='network_monitoring']:checked")?.value;
+            const processMonitoring = document.querySelector("input[name='process_monitoring']:checked")?.value;
+            const fileMonitoring = document.querySelector("input[name='file_monitoring']:checked")?.value;
+            const cloudMonitoring = document.querySelector("input[name='cloud_monitoring']:checked")?.value;
+            const hardwareMonitoring = document.querySelector("input[name='hardware_monitoring']:checked")?.value;
+    
+            if (!assetCategory || !assetType || !environment) {
+                showToast("Please complete all required fields.", "error");
+                return;
+            }
+    
+            const assetInstance = {
+                asset_category: assetCategory,
+                asset_type: assetType,
+                environment: environment,
+                record_count: assetCategory === "data" ? recordCount : undefined,
+                monitoring_coverage: {
+                    network: networkMonitoring,
+                    process: processMonitoring,
+                    file: fileMonitoring,
+                    cloud: cloudMonitoring,
+                    hardware: hardwareMonitoring
+                }
+            };
+    
+            modelDefinition.asset_types.push(assetInstance);
+            // console.log("Updated model definition:", modelDefinition);
+            updateModelDisplay(); // Update JSON display
+            showToast("Asset type added successfully!", "success");
+            document.getElementById("add-more-assets").style.display = "inline-block"; // Show "Add Another Asset Type" button
+        }
+    
+        // Function to Handle Asset Category Selection
+        function handleAssetCategorySelection() {
+            document.querySelectorAll("input[name='asset-category']").forEach(radio => {
+                radio.addEventListener("change", function() {
+                    fetchAndPopulateAssetTypes(this.value);
+                    document.getElementById("environment-selection").style.display = "block";
+                    document.getElementById("monitoring-selection").style.display = "block";
+                    document.getElementById("submit-asset-type").style.display = "block";
+    
+                    if (this.value === "data") {
+                        document.getElementById("record-count-selection").style.display = "block";
+                    } else {
+                        document.getElementById("record-count-selection").style.display = "none";
+                    }
+                });
+            });
+        }
+    
+        // Function to Fetch and Populate Asset Types
+        function fetchAndPopulateAssetTypes(category) {
+            const assetTypeDropdown = document.getElementById("asset-type-dropdown");
+            const loadingIcon = document.getElementById("loading-icon");
+            const categoryUrls = {
+                'devices': './enterprise-assets-devices-02.20.2025_attack-16.1-enterprise_json.json',
+                'networks': './enterprise-assets-networks-02.20.2025_attack-16.1-enterprise_json.json',
+                'applications': './enterprise-assets-applications-02.20.2025_attack-16.1-enterprise_json.json',
+                'data': './enterprise-assets-data-02.20.2025_attack-16.1-enterprise_json.json',
+                'identities': './enterprise-assets-identities-02.20.2025_attack-16.1-enterprise_json.json'
+            };
+    
+            const url = categoryUrls[category];
+            if (!url) return;
+    
+            assetTypeDropdown.disabled = true;
+            assetTypeDropdown.innerHTML = `<option value="">Loading...</option>`;
+            loadingIcon.style.display = "inline-block";
+    
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const uniqueCapabilityIds = [...new Set(data.mapping_objects.map(obj => obj.capability_id))];
+                    assetTypeDropdown.innerHTML = `<option value="">Select an asset type</option>`;
+                    uniqueCapabilityIds.forEach(id => {
+                        const option = document.createElement("option");
+                        option.value = id;
+                        option.textContent = id;
+                        assetTypeDropdown.appendChild(option);
+                    });
+                    assetTypeDropdown.disabled = false;
+                    loadingIcon.style.display = "none";
+                })
+                .catch(() => {
+                    assetTypeDropdown.innerHTML = `<option value="">Error loading asset types</option>`;
+                    loadingIcon.style.display = "none";
+                });
+        }
+    
+        // Function to Handle Navigation Between Steps
+        let currentStep = 0;
+        async function handleNavigation() {
+            showStep(currentStep);
+
+            document.querySelectorAll(".next-step").forEach(button => {
+                button.addEventListener("click", async () => {
+                    if (currentStep < 2) {
+                        if (currentStep === 0) {
+                            buildOrganizationAttributes();
+                        }
+                        if (currentStep === 1) {
+                            // ✅ Only recalculate if scores do not exist
+                            const scoresExist = modelDefinition.asset_types.some(asset => asset.attack_scores?.length > 0);
+                            if (!scoresExist) {
+                                await calculateAllTechniqueScores();
+                            }
+                            updateModelDisplay();
+                            generateModelSummaryTable();
+                        }
+                        currentStep++;
+                        showStep(currentStep);
+                        hideDynamicElements();
+                    }
+                });
+            });
+
+            document.querySelectorAll(".prev-step").forEach(button => {
+                button.addEventListener("click", () => {
+                    if (currentStep > 0) {
+                        currentStep--;
+                        showStep(currentStep);
+                        hideDynamicElements();
+                        updateModelDisplay(); // ✅ Ensure JSON output is updated
+                    }
+                });
+            });
+        }
+
+        // Fetch techniques for each asset type; Run score calculations in parallel using Promise.all(); store results in modelDefinition.asset_types[].attack_scores
+        async function calculateAllTechniqueScores() {
+            console.log("🚀 Calculating ATT&CK scores for all selected asset types...");
+
+            // Show the progress bar
+            document.getElementById("progress-container").style.display = "block";
+            const progressBar = document.getElementById("progress-bar");
+            
+            // Get total techniques to calculate
+            let totalTechniques = modelDefinition.asset_types.reduce((sum, asset) => 
+                sum + (asset.attack_scores ? asset.attack_scores.length : 0), 0);
+            let completed = 0;
+
+            // Fetch techniques for all asset types
+            const promises = modelDefinition.asset_types.map(async (asset) => {
+                if (!asset.attack_scores) {
+                    asset.attack_scores = []; // Initialize if not already defined
+                }
+
+                const categoryFilePath = getCategoryFilePath(asset.asset_category);
+                const response = await fetch(categoryFilePath);
+                const data = await response.json();
+
+                // Extract techniques related to this asset type
+                const techniques = data.mapping_objects
+                    .filter(obj => obj.capability_id === asset.asset_type)
+                    .map(obj => ({
+                        attack_object_id: obj.attack_object_id,
+                        attack_object_name: obj.attack_object_name
+                    }));
+
+                console.log(`Techniques for ${asset.asset_type}:`, techniques);
+
+                // Run all score calculations in parallel, but only if the technique is missing
+                const newScores = await Promise.all(techniques.map(async (technique) => {
+                    // Skip recalculation if score already exists
+                    const existingScore = asset.attack_scores.find(t => t.attack_object_id === technique.attack_object_id);
+                    if (existingScore) {
+                        completed++;
+                        progressBar.style.width = `${(completed / totalTechniques) * 100}%`;
+                        return existingScore; // Return cached score
+                    }
+
+                    const score = await calculateFinalScore(technique.attack_object_id, asset);
+                    completed++;
+                    progressBar.style.width = `${(completed / totalTechniques) * 100}%`;
+
+                    return {
+                        ...technique,
+                        score: score.toFixed(4) // Store rounded score
+                    };
+                }));
+
+                // Merge new scores into existing scores
+                asset.attack_scores = [...asset.attack_scores, ...newScores];
+            });
+
+            // Wait for all assets to complete score computation
+            await Promise.all(promises);
+
+            // Hide progress bar after completion
+            document.getElementById("progress-container").style.display = "none";
+
+            console.log("✅ ATT&CK scores computed for all asset types.");
+        }
+
+
+
+        // Function to Hide the Techniques Table and JSON Output
+        function hideDynamicElements() {
+            document.getElementById("techniques-container").classList.add("hidden");
+            document.getElementById("json-output").style.display = "none";
+        }
+    
+        // Function to Show the Current Step
+        function showStep(step) {
+            const formSteps = document.querySelectorAll(".form-step");
+            const progressItems = document.querySelectorAll(".progress-bar li");
+    
+            formSteps.forEach((el, i) => {
+                el.classList.toggle("active", i === step);
+            });
+            progressItems.forEach((el, i) => {
+                el.classList.toggle("active", i === step);
+            });
+        }
+    
+        // Function to Build Organization Attributes from Checkboxes
+        function buildOrganizationAttributes() {
+            document.querySelectorAll("#organization-details input[type='checkbox']").forEach(input => {
+                modelDefinition.organization_attributes[input.id] = input.checked;  // ✅ Ensure proper assignment
+            });
+
+            // console.log("Saved Organization Attributes:", modelDefinition.organization_attributes);
+        }
+
+        function generateModelSummaryTable() {
+            const tableBody = document.getElementById("model-summary-body");
+            tableBody.innerHTML = "";
+
+            modelDefinition.asset_types.forEach(asset => {
+                const techniques = asset.attack_scores || [];
+
+                // Compute the average ATT&CK score
+                const avgScore = techniques.length
+                    ? (techniques.reduce((sum, t) => sum + parseFloat(t.score), 0) / techniques.length).toFixed(4)
+                    : "N/A";
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td class="border border-gray-300 px-4 py-2">${asset.environment}</td>
+                    <td class="border border-gray-300 px-4 py-2">${asset.asset_category}</td>
+                    <td class="border border-gray-300 px-4 py-2">${asset.asset_type}</td>
+                    <td class="border border-gray-300 px-4 py-2 text-blue-500 cursor-pointer" data-techniques='${JSON.stringify(techniques)}'>
+                        ${techniques.length} techniques (Avg Score: ${avgScore})
+                    </td>
+                `;
+                row.querySelector("td:last-child").addEventListener("click", (event) => {
+                    displayTechniquesTable(event.target.dataset.techniques, asset.asset_type);
+                });
+                tableBody.appendChild(row);
+            });
+        }
+
+        async function displayTechniquesTable(assetTypeName) {
+            const tableBody = document.getElementById("techniques-body");
+            tableBody.innerHTML = "";
+
+            document.getElementById("selected-asset-type").textContent = assetTypeName;
+            document.getElementById("techniques-container").classList.remove("hidden");
+
+            // Find the asset type object
+            const selectedAssetType = modelDefinition.asset_types.find(asset => asset.asset_type === assetTypeName);
+            if (!selectedAssetType) {
+                console.error(`Error: Asset type '${assetTypeName}' not found in model definition.`);
+                return;
+            }
+
+            // Use precomputed attack scores
+            const techniques = selectedAssetType.attack_scores || [];
+
+            techniques.forEach(technique => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td class="border border-gray-300 px-4 py-2">${technique.attack_object_id}</td>
+                    <td class="border border-gray-300 px-4 py-2">${technique.attack_object_name}</td>
+                    <td class="border border-gray-300 px-4 py-2">${technique.score}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function getCategoryFilePath(category) {
+            const files = {
+                'devices': './enterprise-assets-devices-02.20.2025_attack-16.1-enterprise_json.json',
+                'networks': './enterprise-assets-networks-02.20.2025_attack-16.1-enterprise_json.json',
+                'applications': './enterprise-assets-applications-02.20.2025_attack-16.1-enterprise_json.json',
+                'data': './enterprise-assets-data-02.20.2025_attack-16.1-enterprise_json.json',
+                'identities': './enterprise-assets-identities-02.20.2025_attack-16.1-enterprise_json.json'
+            };
+            return files[category] || "";
+        }
+
+        // Function to Toggle the Visibility of the Techniques Table
+        function toggleTechniquesTable() {
+            const techniquesContainer = document.getElementById("techniques-container");
+            const toggleButton = document.getElementById("toggle-techniques-btn");
+
+            if (techniquesContainer.classList.contains("hidden")) {
+                techniquesContainer.classList.remove("hidden");
+                toggleButton.textContent = "Hide Techniques";
+            } else {
+                techniquesContainer.classList.add("hidden");
+                toggleButton.textContent = "Show Techniques";
+            }
+        }
+
+        // Attach Event Listener to Toggle Button
+        // document.addEventListener("DOMContentLoaded", () => {
+        //     const toggleButton = document.getElementById("toggle-techniques-btn");
+        //     if (toggleButton) {
+        //         toggleButton.addEventListener("click", toggleTechniquesTable);
+        //     }
+        // });
+    
+        // Function to Toggle Dark Mode
+        function toggleDarkMode() {
+            const body = document.body;
+            const icon = document.getElementById("darkModeIcon");
+    
+            body.classList.toggle("dark");
+            icon.textContent = body.classList.contains("dark") ? "light_mode" : "dark_mode";
+        }
+    
+        // Initialize the Script After DOM Loads
+        document.addEventListener("DOMContentLoaded", () => {
+            const drawerTab = document.getElementById("drawer-tab");
+                if (drawerTab) {
+                    // console.log("Drawer tab detected, attaching event listener.");
+                    drawerTab.addEventListener("click", toggleDrawer);
+                } else {
+                    // console.log("Error: Drawer tab element not found.");
+                }
+            
+            const toggleButton = document.getElementById("toggle-techniques-btn");
+            if (toggleButton) {
+                toggleButton.addEventListener("click", toggleTechniquesTable);
+            }
+
+            const darkModeToggle = document.getElementById("darkModeToggle");
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener("click", toggleDarkMode);
+            }
+
+            document.getElementById("submit-asset-type").addEventListener("click", addAssetType);
+            handleNavigation();
+            handleAssetCategorySelection();
+            populateStaticValues();
+            loadStixData();
+        });
+
+        // Object to store loaded STIX data
+        const stixData = {};
+
+        // URLs for fetching STIX data
+        const stixUrls = {
+        "enterprise-attack": "enterprise-attack.json"
+        };
+
+        // Function to load STIX data from JSON files
+        async function loadStixData() {
+        for (const [key, url] of Object.entries(stixUrls)) {
+            try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            
+            // Ensure objects exist before assigning
+            stixData[key] = data.objects || [];
+            
+            // console.log(`Successfully loaded STIX data for: ${key}`);
+            } catch (error) {
+            console.error(`Failed to fetch or process STIX data from ${url}:`, error);
+            
+            // Store empty array to prevent undefined references later
+            stixData[key] = [];
+            }
+        }
+        }
+
+        // Function to find data sources for a given MITRE ATT&CK technique ID
+        async function findDataSources(techniqueId) {
+            let dataSources = [];
+
+            for (const key in stixData) {
+                const objects = stixData[key];
+
+                // Find the attack pattern that matches the technique ID
+                const attackPattern = objects.find(obj =>
+                    obj.type === 'attack-pattern' &&
+                    obj.external_references &&
+                    obj.external_references.some(ref => ref.external_id === techniqueId)
+                );
+
+                if (attackPattern) {
+                    // Find all "detects" relationships for this attack pattern
+                    const detectingRelationships = objects.filter(obj =>
+                        obj.type === 'relationship' &&
+                        obj.target_ref === attackPattern.id &&
+                        obj.relationship_type === 'detects'
+                    );
+
+                    detectingRelationships.forEach(rel => {
+                        const dataComponent = objects.find(obj =>
+                            obj.type === 'x-mitre-data-component' && obj.id === rel.source_ref
+                        );
+
+                        if (dataComponent && dataComponent.x_mitre_data_source_ref) {
+                            const dataSource = objects.find(obj =>
+                                obj.type === 'x-mitre-data-source' && obj.id === dataComponent.x_mitre_data_source_ref
+                            );
+
+                            if (dataSource && dataSource.external_references && dataSource.external_references.length > 0) {
+                                dataSources.push(`${dataComponent.name} (${dataSource.external_references[0].external_id})`);
+                            }
+                        }
+                    });
+                }
+            }
+
+            return Array.isArray(dataSources) ? dataSources : []; // Ensure return value is an array
+        }
+
+
+        // Function to calculate weight_sum based on keywords in data sources and monitoring coverage maturity selected by user
+        async function calculateMonitoringCoverageWeightSum(techniqueId, assetMonitoringCoverage) {
+            // console.log(`Calculating monitoring coverage weight sum for Technique ID: ${techniqueId} with coverage:`, assetMonitoringCoverage);
+
+            // Load required data files
+            const weightKeywords = await fetchJSON('weight-keywords.json');
+            const staticVariables = await fetchJSON('static-variables.json');
+
+            // Get data sources detecting this technique
+            const dataSources = await findDataSources(techniqueId);
+
+            // Ensure dataSources is an array
+            if (!Array.isArray(dataSources)) {
+                console.error(`Expected an array, but received:`, dataSources);
+                return 0; // Return 0 to avoid further errors
+            }
+
+            // console.log(`Data sources for ${techniqueId}:`, dataSources);
+
+            // Initialize weight categories
+            let categoryWeights = {
+                process: 0,
+                network: 0,
+                file: 0,
+                cloud: 0,
+                hardware: 0
+            };
+
+            // Convert weight-keywords to a case-insensitive map
+            const keywordMap = {};
+            Object.keys(weightKeywords).forEach(key => {
+                keywordMap[key.toLowerCase()] = weightKeywords[key];
+            });
+
+            // console.log(`Keyword map:`, keywordMap);
+
+            // Determine applicable monitoring categories based on keywords in data sources
+            dataSources.forEach(source => {
+                Object.keys(keywordMap).forEach(keyword => {
+                    const lowerSource = source.toLowerCase();  // Ensure case-insensitive matching
+                    const lowerKeyword = keyword.toLowerCase();
+                    
+                    // Create a regex pattern to match whole words (e.g., "command" vs "commands")
+                    const keywordRegex = new RegExp(`\\b${lowerKeyword}\\b`, 'i');  // 'i' ensures case insensitivity
+
+                    if (keywordRegex.test(lowerSource)) {  // ✅ Improved Matching Logic
+                        const category = keywordMap[keyword];
+
+                        // Ensure the category exists in the monitoring coverage object
+                        if (!(category in assetMonitoringCoverage)) {
+                            console.warn(`Category '${category}' is not found in assetMonitoringCoverage.`);
+                            return;
+                        }
+
+                        // Determine weight based on user-selected monitoring coverage
+                        const monitoringLevel = assetMonitoringCoverage[category]; // "None", "Low", "Medium", "High"
+
+                        let weight = 0;
+                        switch (monitoringLevel) {
+                            case "None":
+                                weight = staticVariables.weight_score_none;
+                                break;
+                            case "Low":
+                                weight = staticVariables.weight_score_low;
+                                break;
+                            case "Medium":
+                                weight = staticVariables.weight_score_medium;
+                                break;
+                            case "High":
+                                weight = staticVariables.weight_score_high;
+                                break;
+                            default:
+                                weight = 0; // Default to zero if no valid selection
+                        }
+
+                        // Assign highest weight found for this category
+                        categoryWeights[category] = Math.max(categoryWeights[category], weight);
+                    }
+                });
+            });
+
+            // Compute final weight sum
+            const weightSum = Object.values(categoryWeights).reduce((sum, weight) => sum + weight, 0);
+
+            // console.log(`Final weight sum for ${techniqueId}: ${weightSum}`);
+            return weightSum;
+        }
+
+
+
+        // Helper function to fetch JSON files
+        async function fetchJSON(filename) {
+            try {
+                const response = await fetch(filename);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error(`Error fetching JSON file: ${filename}`, error);
+                return {};
+            }
+        }
+
+        
+        async function calculateFinalScore(techniqueId, assetObject) {
+            // console.log(`Calculating score for Technique ID: ${techniqueId}`);
+
+            if (!assetObject || !assetObject.monitoring_coverage) {
+                console.error(`Error: assetMonitoringCoverage is undefined for technique ID ${techniqueId}`);
+                return 0; // Prevent further execution
+            }
+            // Load data sources
+            const attackPrev = await fetchJSON('attack-prev-tid.json');
+            const nistMappings = await fetchJSON('nist_800_53-rev5_attack-14.1-enterprise.json');
+            const cisMappings = await fetchJSON('cis_safeguard_to_techniques.json');
+            const enterpriseAttack = await fetchJSON('enterprise-attack.json');
+            const staticVariables = await fetchJSON('static-variables.json');
+            const weightKeywords = await fetchJSON('weight-keywords.json');
+
+            // console.log("Data loaded successfully.");
+
+            // Calculate weights based on keywords
+            // console.log(`Calculating score for Technique ID: ${techniqueId} with monitoring coverage:`, assetMonitoringCoverage);
+            const weight_sum = await calculateMonitoringCoverageWeightSum(techniqueId, assetObject.monitoring_coverage);
+            //return weight_sum;
+            // console.log(`Weight sum for ${techniqueId}: ${weight_sum}`);
+
+            // Extract prevalence score
+            const prevEntry = attackPrev.find(t => t.attack_object_id === techniqueId);
+            const prevalenceScore = prevEntry ? parseFloat(prevEntry.calc_prev_score) : 0;
+            const tidBefore = prevEntry ? parseFloat(prevEntry.calc_tid_before) : 0;
+            const tidAfter = prevEntry ? parseFloat(prevEntry.calc_tid_after) : 0;
+            // console.log(`Prevalence Score: ${prevalenceScore}`);
+
+            // Count security controls mapped to this technique
+            const nistCount = nistMappings.mapping_objects
+                ? nistMappings.mapping_objects.filter(obj => obj.attack_object_id === techniqueId).length
+                : 0;
+            // console.log(`NIST Count: ${nistCount}`);
+
+            const cisCount = cisMappings
+                ? cisMappings.filter(obj => obj.attack_techniques.some(t => t.technique_id === techniqueId)).length
+                : 0;
+            // console.log(`CIS Count: ${cisCount}`);
+
+            // Count detections from enterprise-attack.json
+            let detectionCount = 0;
+            if (enterpriseAttack.objects) {
+                const attackPattern = enterpriseAttack.objects.find(obj =>
+                    obj.type === 'attack-pattern' &&
+                    obj.external_references &&
+                    obj.external_references.some(ref => ref.external_id === techniqueId)
+                );
+
+                if (attackPattern) {
+                    detectionCount = enterpriseAttack.objects.filter(obj =>
+                        obj.type === 'relationship' &&
+                        obj.target_ref === attackPattern.id &&
+                        obj.relationship_type === 'detects'
+                    ).length;
+                }
+            }
+            // console.log(`Detection Count: ${detectionCount}`);
+
+            // Apply cutoffs and weights from static-variables.json
+            const mitigationsUtility = Math.min(Math.max(
+                (nistCount + cisCount - staticVariables.actionability_mitigations_lower_cutoff) /
+                (staticVariables.actionability_mitigations_upper_cutoff - staticVariables.actionability_mitigations_lower_cutoff),
+                0), 1);
+            // console.log(`Mitigations Utility: ${mitigationsUtility}`);
+
+            const detectionsUtility = Math.min(Math.max(
+                (detectionCount - staticVariables.actionability_detections_lower_cutoff) /
+                (staticVariables.actionability_detections_upper_cutoff - staticVariables.actionability_detections_lower_cutoff),
+                0), 1);
+            // console.log(`Detections Utility: ${detectionsUtility}`);
+            actionability_w_detect1 = staticVariables.actionability_w_miti1 / staticVariables.actionability_mitigations_to_detections_ratio * (staticVariables.actionability_detections_upper_cutoff - staticVariables.actionability_detections_lower_cutoff) / (staticVariables.actionability_mitigations_upper_cutoff - staticVariables.actionability_mitigations_lower_cutoff)
+            const actionability_w_miti = staticVariables.actionability_w_miti1 / (actionability_w_detect1 + staticVariables.actionability_w_miti1)
+            const actionability_w_detect = actionability_w_detect1 / (actionability_w_detect1 + staticVariables.actionability_w_miti1)
+            const actionabilityScore = actionability_w_miti * mitigationsUtility + actionability_w_detect * detectionsUtility;
+            // console.log(`actionability_w_miti1 for ${techniqueId}: ${staticVariables.actionability_w_miti1}`);
+            // console.log(`actionability_w_detect1 for ${techniqueId}: ${actionability_w_detect1}`);
+            // console.log(`Actionability Score for ${techniqueId}: ${actionabilityScore}`);
+
+            // chokepoint_w_after1 = chokepoint_w_before1 / chokepoint_before_to_after_ratio * (chokepoint_after_upper_cutoff - chokepoint_after_lower_cutoff) / (chokepoint_before_upper_cutoff - chokepoint_before_lower_cutoff)
+            chokepoint_w_after1 = staticVariables.chokepoint_w_before1 / staticVariables.chokepoint_before_to_after_ratio * (staticVariables.chokepoint_after_upper_cutoff - staticVariables.chokepoint_after_lower_cutoff) / (staticVariables.chokepoint_before_upper_cutoff - staticVariables.chokepoint_before_lower_cutoff)
+            // console.log(`chokepoint_w_after1 for ${techniqueId}: ${chokepoint_w_after1}`);
+
+            // chokepoint_w_before = chokepoint_w_before1 / (chokepoint_w_after1 + chokepoint_w_before1)
+            chokepoint_w_before = staticVariables.chokepoint_w_before1 / (chokepoint_w_after1 + staticVariables.chokepoint_w_before1)
+            // console.log(`chokepoint_w_before for ${techniqueId}: ${chokepoint_w_before}`);
+
+            // chokepoint_w_after = chokepoint_w_after1 / (chokepoint_w_after1 + chokepoint_w_before1)
+            chokepoint_w_after = chokepoint_w_after1 / (chokepoint_w_after1 + staticVariables.chokepoint_w_before1)
+            // console.log(`chokepoint_w_after for ${techniqueId}: ${chokepoint_w_after}`);
+
+            // Before Utility = (tidBefore - chokepoint_before_lower_cutoff)/(chokepoint_before_upper_cutoff - chokepoint_before_lower_cutoff), must be between 0 and 1
+            const before_utility = Math.min(Math.max(
+                (tidBefore - staticVariables.chokepoint_before_lower_cutoff) /
+                (staticVariables.chokepoint_before_upper_cutoff - staticVariables.chokepoint_before_lower_cutoff),
+                0), 1);
+            // console.log(`Before Utility for ${techniqueId}: ${before_utility}`);
+
+            // After Utility = (tidAfter - chokepoint_after_lower_cutoff)/(chokepoint_after_upper_cutoff - chokepoint_after_lower_cutoff), must be between 0 and 1 
+            const after_utility = Math.min(Math.max(
+                (tidAfter - staticVariables.chokepoint_after_lower_cutoff) /
+                (staticVariables.chokepoint_after_upper_cutoff - staticVariables.chokepoint_after_lower_cutoff),
+                0), 1);    
+            // console.log(`After Utility for ${techniqueId}: ${after_utility}`);
+
+            // calculate chokepointScore
+            chokepointScore = chokepoint_w_before * before_utility + chokepoint_w_after * after_utility
+            // console.log(`Chokepoint Score for ${techniqueId}: ${chokepointScore}`);
+
+            // Initial ATT&CK Score Calculation
+            const initialScore = prevalenceScore + chokepointScore + actionabilityScore;
+            // console.log(`initial Score for ${techniqueId}: ${initialScore} = ${prevalenceScore} + ${chokepointScore} + ${actionabilityScore}`);
+
+            finalScore = initialScore * (1 + weight_sum);
+            // finalScore = initialScore * (1 + weight_sum);
+            return finalScore;
+        }
+
+        // Helper function to fetch JSON files
+        async function fetchJSON(filename) {
+            try {
+                const response = await fetch(filename);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error(`Error fetching JSON file: ${filename}`, error);
+                return {};
+            }
+        }
+
+
+        // async function displayTechniquesTable(techniquesJSON, assetType) {
+        //     const techniques = JSON.parse(techniquesJSON);
+        //     const tableBody = document.getElementById("techniques-body");
+        //     tableBody.innerHTML = "";
+
+        //     document.getElementById("selected-asset-type").textContent = assetType;
+        //     document.getElementById("techniques-container").classList.remove("hidden");
+
+        //     for (const technique of techniques) {
+        //         const row = document.createElement("tr");
+        //         row.innerHTML = `
+        //             <td class="border border-gray-300 px-4 py-2">${technique.attack_object_id}</td>
+        //             <td class="border border-gray-300 px-4 py-2">${technique.attack_object_name}</td>
+        //             <td class="border border-gray-300 px-4 py-2" id="score-${technique.attack_object_id}">Calculating...</td>
+        //         `;
+        //         tableBody.appendChild(row);
+
+        //         // Calculate and populate score
+        //         const score = await calculateFinalScore(technique.attack_object_id);
+        //         document.getElementById(`score-${technique.attack_object_id}`).textContent = score.toFixed(4);
+        //     }
+        // }
+    </script>
+  
+</body>
+
+</html>

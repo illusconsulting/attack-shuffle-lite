@@ -1,0 +1,3830 @@
+[
+    {
+        "attack_object_id":  "T1001",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.011577"
+    },
+    {
+        "attack_object_id":  "T1001.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1001.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1001.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "5",
+        "calc_prev_score":  "0.326998"
+    },
+    {
+        "attack_object_id":  "T1003.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1003.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1003.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1003.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1003.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1003.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1003.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1003.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1005",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.002668"
+    },
+    {
+        "attack_object_id":  "T1006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1010",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1011",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1011.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1012",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "5",
+        "calc_prev_score":  "0.129078"
+    },
+    {
+        "attack_object_id":  "T1014",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.000874"
+    },
+    {
+        "attack_object_id":  "T1016",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.024515"
+    },
+    {
+        "attack_object_id":  "T1016.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1016.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1018",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.01949"
+    },
+    {
+        "attack_object_id":  "T1020",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.000212"
+    },
+    {
+        "attack_object_id":  "T1020.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1021",
+        "calc_tid_before":  "4",
+        "calc_tid_after":  "5",
+        "calc_prev_score":  "0.666052"
+    },
+    {
+        "attack_object_id":  "T1021.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1021.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1021.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1021.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1021.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1021.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1021.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1021.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1025",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1026",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.772886"
+    },
+    {
+        "attack_object_id":  "T1027.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.010",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.011",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1027.012",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1029",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1030",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1033",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.000465"
+    },
+    {
+        "attack_object_id":  "T1034",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1036",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1036.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1036.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1036.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1036.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1036.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1036.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1036.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1036.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1036.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1037",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.007066"
+    },
+    {
+        "attack_object_id":  "T1037.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1037.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1037.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1037.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1037.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1039",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1040",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.021899"
+    },
+    {
+        "attack_object_id":  "T1041",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.000722"
+    },
+    {
+        "attack_object_id":  "T1043",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1046",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.015708"
+    },
+    {
+        "attack_object_id":  "T1047",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "12",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1048",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.001829"
+    },
+    {
+        "attack_object_id":  "T1048.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1048.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1048.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1049",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1051",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1052",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1052.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1053",
+        "calc_tid_before":  "7",
+        "calc_tid_after":  "5",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1053.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1053.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1053.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1053.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1053.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1053.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "6",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1055.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.011",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.012",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.013",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.014",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1055.015",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1056",
+        "calc_tid_before":  "4",
+        "calc_tid_after":  "3",
+        "calc_prev_score":  "0.257826"
+    },
+    {
+        "attack_object_id":  "T1056.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1056.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1056.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1056.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1057",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.117773"
+    },
+    {
+        "attack_object_id":  "T1059",
+        "calc_tid_before":  "10",
+        "calc_tid_after":  "15",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1059.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1059.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1059.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1059.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1059.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1059.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1059.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1059.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1059.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1061",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1062",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1064",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1068",
+        "calc_tid_before":  "5",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.00222"
+    },
+    {
+        "attack_object_id":  "T1069",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.022145"
+    },
+    {
+        "attack_object_id":  "T1069.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1069.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1069.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1070",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.596056"
+    },
+    {
+        "attack_object_id":  "T1070.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1070.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1070.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1070.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1070.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1070.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1070.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1070.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1070.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1071",
+        "calc_tid_before":  "5",
+        "calc_tid_after":  "5",
+        "calc_prev_score":  "0.104915"
+    },
+    {
+        "attack_object_id":  "T1071.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1071.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1071.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1071.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1072",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "6",
+        "calc_prev_score":  "0.00165"
+    },
+    {
+        "attack_object_id":  "T1074",
+        "calc_tid_before":  "8",
+        "calc_tid_after":  "4",
+        "calc_prev_score":  "0.105489"
+    },
+    {
+        "attack_object_id":  "T1074.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1074.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1078",
+        "calc_tid_before":  "6",
+        "calc_tid_after":  "5",
+        "calc_prev_score":  "0.007723"
+    },
+    {
+        "attack_object_id":  "T1078.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1078.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1078.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1078.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1080",
+        "calc_tid_before":  "4",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.000282"
+    },
+    {
+        "attack_object_id":  "T1082",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.447342"
+    },
+    {
+        "attack_object_id":  "T1083",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "3",
+        "calc_prev_score":  "0.058465"
+    },
+    {
+        "attack_object_id":  "T1087",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.104429"
+    },
+    {
+        "attack_object_id":  "T1087.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1087.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1087.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1087.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1090",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1090.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1090.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1090.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1090.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1091",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.191704"
+    },
+    {
+        "attack_object_id":  "T1092",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1095",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1098",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.007497"
+    },
+    {
+        "attack_object_id":  "T1098.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1098.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1098.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1098.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1098.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1098.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1102",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "6",
+        "calc_prev_score":  "0.035029"
+    },
+    {
+        "attack_object_id":  "T1102.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1102.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1102.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1104",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.000127"
+    },
+    {
+        "attack_object_id":  "T1105",
+        "calc_tid_before":  "5",
+        "calc_tid_after":  "3",
+        "calc_prev_score":  "0.695786"
+    },
+    {
+        "attack_object_id":  "T1106",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "15",
+        "calc_prev_score":  "0.24088"
+    },
+    {
+        "attack_object_id":  "T1108",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1110",
+        "calc_tid_before":  "4",
+        "calc_tid_after":  "4",
+        "calc_prev_score":  "0.004521"
+    },
+    {
+        "attack_object_id":  "T1110.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1110.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1110.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1110.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1111",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1112",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1113",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.06137"
+    },
+    {
+        "attack_object_id":  "T1114",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1114.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1114.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1114.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1115",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1119",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.006021"
+    },
+    {
+        "attack_object_id":  "T1120",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.003979"
+    },
+    {
+        "attack_object_id":  "T1123",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1124",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1125",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1127",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.036197"
+    },
+    {
+        "attack_object_id":  "T1127.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1129",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.000296"
+    },
+    {
+        "attack_object_id":  "T1132",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.024805"
+    },
+    {
+        "attack_object_id":  "T1132.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1132.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1133",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1134",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.002709"
+    },
+    {
+        "attack_object_id":  "T1134.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1134.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1134.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1134.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1134.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1135",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.002651"
+    },
+    {
+        "attack_object_id":  "T1136",
+        "calc_tid_before":  "4",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.000296"
+    },
+    {
+        "attack_object_id":  "T1136.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1136.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1136.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1137",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.00457"
+    },
+    {
+        "attack_object_id":  "T1137.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1137.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1137.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1137.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1137.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1137.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1140",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.363077"
+    },
+    {
+        "attack_object_id":  "T1149",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1153",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1175",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1176",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.00055"
+    },
+    {
+        "attack_object_id":  "T1185",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.004019"
+    },
+    {
+        "attack_object_id":  "T1187",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1189",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.000635"
+    },
+    {
+        "attack_object_id":  "T1190",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.002242"
+    },
+    {
+        "attack_object_id":  "T1195",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.004019"
+    },
+    {
+        "attack_object_id":  "T1195.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1195.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1195.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1197",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "3",
+        "calc_prev_score":  "0.04993"
+    },
+    {
+        "attack_object_id":  "T1199",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1200",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.005716"
+    },
+    {
+        "attack_object_id":  "T1201",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.001119"
+    },
+    {
+        "attack_object_id":  "T1202",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.018151"
+    },
+    {
+        "attack_object_id":  "T1203",
+        "calc_tid_before":  "5",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.007069"
+    },
+    {
+        "attack_object_id":  "T1204",
+        "calc_tid_before":  "4",
+        "calc_tid_after":  "4",
+        "calc_prev_score":  "0.549907"
+    },
+    {
+        "attack_object_id":  "T1204.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1204.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1204.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1205",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1205.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1205.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1207",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1210",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1211",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.027457"
+    },
+    {
+        "attack_object_id":  "T1212",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1213",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1213.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1213.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1213.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1216",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.006042"
+    },
+    {
+        "attack_object_id":  "T1216.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1217",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1218.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.010",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.011",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.012",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.013",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1218.014",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1219",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "16",
+        "calc_prev_score":  "0.004693"
+    },
+    {
+        "attack_object_id":  "T1220",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.021471"
+    },
+    {
+        "attack_object_id":  "T1221",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1222",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "5",
+        "calc_prev_score":  "0.000969"
+    },
+    {
+        "attack_object_id":  "T1222.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1222.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1480",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1480.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1482",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.088709"
+    },
+    {
+        "attack_object_id":  "T1484",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "9",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1484.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1484.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1485",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0.0000423"
+    },
+    {
+        "attack_object_id":  "T1486",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0.013689"
+    },
+    {
+        "attack_object_id":  "T1489",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0.195332"
+    },
+    {
+        "attack_object_id":  "T1490",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.051799"
+    },
+    {
+        "attack_object_id":  "T1491",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1491.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1491.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1495",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1496",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0.000296"
+    },
+    {
+        "attack_object_id":  "T1497",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.333059"
+    },
+    {
+        "attack_object_id":  "T1497.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1497.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1497.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1498",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1498.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1498.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1499",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1499.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1499.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1499.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1499.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1505",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.009921"
+    },
+    {
+        "attack_object_id":  "T1505.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1505.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1505.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1505.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1505.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1518",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.038872"
+    },
+    {
+        "attack_object_id":  "T1518.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1525",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.000127"
+    },
+    {
+        "attack_object_id":  "T1526",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1528",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1529",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1530",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1531",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1534",
+        "calc_tid_before":  "4",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1535",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1537",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1538",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1539",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1542",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.000677"
+    },
+    {
+        "attack_object_id":  "T1542.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1542.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1542.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1542.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1542.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1543",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1543.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1543.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1543.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1543.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.241646"
+    },
+    {
+        "attack_object_id":  "T1546.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.010",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.011",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.012",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.013",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.014",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.015",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1546.016",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547",
+        "calc_tid_before":  "7",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.310831"
+    },
+    {
+        "attack_object_id":  "T1547.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.010",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.012",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.013",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.014",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1547.015",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1548",
+        "calc_tid_before":  "4",
+        "calc_tid_after":  "3",
+        "calc_prev_score":  "0.62305"
+    },
+    {
+        "attack_object_id":  "T1548.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1548.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1548.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1548.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1548.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1550",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1550.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1550.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1550.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1550.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1552",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "4",
+        "calc_prev_score":  "0.109495"
+    },
+    {
+        "attack_object_id":  "T1552.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1552.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1552.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1552.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1552.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1552.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1552.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1552.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1553",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.0394"
+    },
+    {
+        "attack_object_id":  "T1553.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1553.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1553.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1553.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1553.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1553.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1554",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1555",
+        "calc_tid_before":  "4",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.200476"
+    },
+    {
+        "attack_object_id":  "T1555.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1555.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1555.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1555.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1555.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1555.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1556",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1556.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1556.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1556.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1556.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1556.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1556.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1556.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1556.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1557",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "3",
+        "calc_prev_score":  "0.010297"
+    },
+    {
+        "attack_object_id":  "T1557.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1557.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1557.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1558",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "3",
+        "calc_prev_score":  "0.004918"
+    },
+    {
+        "attack_object_id":  "T1558.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1558.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1558.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1558.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1559",
+        "calc_tid_before":  "3",
+        "calc_tid_after":  "3",
+        "calc_prev_score":  "0.015611"
+    },
+    {
+        "attack_object_id":  "T1559.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1559.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1559.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1560",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.37974"
+    },
+    {
+        "attack_object_id":  "T1560.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1560.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1560.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1561",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0.031804"
+    },
+    {
+        "attack_object_id":  "T1561.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1561.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1562.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562.010",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562.011",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1562.012",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1563",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.000212"
+    },
+    {
+        "attack_object_id":  "T1563.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1563.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1564",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.698618"
+    },
+    {
+        "attack_object_id":  "T1564.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1564.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1564.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1564.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1564.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1564.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1564.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1564.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1564.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1564.010",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1564.011",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1565",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0.000635"
+    },
+    {
+        "attack_object_id":  "T1565.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1565.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1565.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1566",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.028424"
+    },
+    {
+        "attack_object_id":  "T1566.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1566.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1566.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1566.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1567",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1567.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1567.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1567.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1567.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1568",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1568.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1568.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1568.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1569",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.666332"
+    },
+    {
+        "attack_object_id":  "T1569.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1569.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1570",
+        "calc_tid_before":  "8",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0.000127"
+    },
+    {
+        "attack_object_id":  "T1571",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "4",
+        "calc_prev_score":  "0.079518"
+    },
+    {
+        "attack_object_id":  "T1572",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "3",
+        "calc_prev_score":  "0.000719"
+    },
+    {
+        "attack_object_id":  "T1573",
+        "calc_tid_before":  "2",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0.00046"
+    },
+    {
+        "attack_object_id":  "T1573.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1573.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574",
+        "calc_tid_before":  "4",
+        "calc_tid_after":  "3",
+        "calc_prev_score":  "1"
+    },
+    {
+        "attack_object_id":  "T1574.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.006",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.007",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.009",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.010",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.011",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.012",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1574.013",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1578",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1578.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1578.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1578.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1578.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1578.005",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1580",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1583",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1583.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1583.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1583.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1583.004",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1583.005",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1583.006",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1583.007",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1583.008",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1584",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0.004019"
+    },
+    {
+        "attack_object_id":  "T1584.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1584.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1584.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1584.004",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1584.005",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1584.006",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1584.007",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1585",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1585.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1585.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1585.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1586",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1586.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1586.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1586.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1587",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1587.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1587.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1587.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1587.004",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1588",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1588.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1588.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1588.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1588.004",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1588.005",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1588.006",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1589",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1589.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1589.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1589.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1590",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1590.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1590.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1590.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1590.004",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1590.005",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1590.006",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1591",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1591.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1591.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1591.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1591.004",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1592",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1592.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1592.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1592.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1592.004",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1593",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1593.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1593.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1593.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1594",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1595",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1595.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1595.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1595.003",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1596",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1596.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1596.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1596.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1596.004",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1596.005",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1597",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1597.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1597.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1598",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1598.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1598.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1598.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1598.004",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1599",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1599.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1600",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1600.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1600.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1601",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1601.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1601.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1602",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "0",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1602.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1602.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1606",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "2",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1606.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1606.002",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1608",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1608.001",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1608.002",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1608.003",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1608.004",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1608.005",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1608.006",
+        "calc_tid_before":  "0",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1609",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1610",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1611",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1612",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1612 ",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1613",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1614",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1614.001",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1615",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1619",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1620",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1621",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1622",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1647",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1648",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1649",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1650",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1651",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1652",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1653",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1654",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1656",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1657",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    },
+    {
+        "attack_object_id":  "T1659",
+        "calc_tid_before":  "1",
+        "calc_tid_after":  "1",
+        "calc_prev_score":  "0"
+    }
+]
