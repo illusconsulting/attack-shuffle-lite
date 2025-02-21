@@ -8,6 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/8.12.0/ajv7.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         /* Dark mode by default */
         body.dark {
@@ -198,18 +199,26 @@
         #progress-container {
             display: none;
         }
+
+        #radial-tree-container {
+            width: 100%;
+            height: 600px;
+            overflow: hidden;
+            position: relative;
+        }
+
     </style>
     
 </head>
 <body class="dark flex justify-center items-center min-h-screen">
-    <!-- Progress Bar -->
-    <div id="progress-container" class="w-full bg-gray-300 rounded mt-4 hidden">
-        <div id="progress-bar" class="h-4 bg-blue-500 rounded w-0"></div>
-    </div>
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 space-y-2 z-50"></div>
     <!-- Main Form Container -->
     <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-2xl">
+            <!-- Progress Bar -->
+            <div id="progress-container" class="w-full bg-gray-300 rounded mt-4 hidden">
+                <div id="progress-bar" class="h-4 bg-blue-500 rounded w-0"></div>
+            </div>
         <div class="flex justify-between items-center">
             <h2 class="text-xl font-bold">Data Breach Cost Estimator</h2>
             <button id="darkModeToggle" class="px-3 py-1 text-sm bg-gray-700 text-white rounded">
@@ -222,6 +231,7 @@
             <li data-step="1" class="active">Organization</li>
             <li data-step="2">Asset Types</li>
             <li data-step="3">MITRE ATT&CK Inventory</li>
+            <li data-step="4">ATT&CK Technique Visualization</li>
         </ol>
 
         <form id="multiStepForm">
@@ -334,6 +344,8 @@
                 <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
                 <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4">Next</button>
             </div>
+
+            <!-- Step 3: Technique Scoring -->
             <div class="form-step">
                 <h3 class="text-lg font-semibold mb-2">MITRE ATT&CK Techniques Inventory</h3>
                 <p class="text-sm text-gray-600 mb-4">Review the MITRE ATT&CK techniques relevant to each asset type.</p>
@@ -372,9 +384,37 @@
                     </table>
                 </div>
 
-            
+                <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button>
                 <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
+                <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4" id="go-to-visualization">Next</button>
+
             </div>
+
+            <!-- Step 4: Radial Tree Visualization -->
+            <div class="form-step">
+                <h3 class="text-lg font-semibold mb-2">ATT&CK Technique Visualization</h3>
+                <p class="text-sm text-gray-600 mb-4">Select a category to visualize:</p>
+
+                <!-- Radio Button Selection for Correlation Type -->
+                <div id="visualization-selection" class="mb-4">
+                    <label><input type="radio" name="visualization-type" value="detections" checked> ATT&CK Detections</label>
+                    <label><input type="radio" name="visualization-type" value="mitigations"> ATT&CK Mitigations</label>
+                    <label><input type="radio" name="visualization-type" value="nist"> NIST Controls</label>
+                    <label><input type="radio" name="visualization-type" value="cis"> CIS Safeguards</label>
+                    <label><input type="radio" name="visualization-type" value="aws"> AWS Capabilities</label>
+                    <label><input type="radio" name="visualization-type" value="gcp"> GCP Capabilities</label>
+                    <label><input type="radio" name="visualization-type" value="azure"> Azure Capabilities</label>
+                    <label><input type="radio" name="visualization-type" value="m365"> M365 Capabilities</label>
+                </div>
+
+                <!-- Radial Tree Visualization Container -->
+                <div id="radial-tree-container" class="w-full h-96 border border-gray-300 rounded bg-white"></div>
+
+                <!-- Navigation Buttons -->
+                <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
+                <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button>
+            </div>
+
             
         </form>
 
@@ -392,18 +432,26 @@
         
         // List of JSON files to fetch
         const jsonFiles = {
-            "enterpriseAttack": "enterprise-attack.json",
             "weightKeywords": "weight-keywords.json",
             "staticVariables": "static-variables.json",
             "attackPrevTid": "attack-prev-tid.json",
-            "cisToAttack": "cis_safeguard_to_techniques.json",
             "devicesMapping": "enterprise-assets-devices-02.20.2025_attack-16.1-enterprise_json.json",
             "networksMapping": "enterprise-assets-networks-02.20.2025_attack-16.1-enterprise_json.json",
             "applicationsMapping": "enterprise-assets-applications-02.20.2025_attack-16.1-enterprise_json.json",
             "dataMapping": "enterprise-assets-data-02.20.2025_attack-16.1-enterprise_json.json",
             "identitiesMapping": "enterprise-assets-identities-02.20.2025_attack-16.1-enterprise_json.json",
-            "nistMapping": "nist_800_53-rev5_attack-14.1-enterprise_json.json"
+            "enterpriseAttack": "enterprise-attack.json",
+            "cisToAttack": "cis_safeguard_to_techniques.json",
+            "nistMapping": "nist_800_53-rev5_attack-14.1-enterprise.json",
+            "awsMapping": "aws-12.12.2024_attack-16.1-enterprise.json",
+            "azureMapping": "azure-06.29.2021_attack-8.2-enterprise.json",
+            "gcpMapping": "gcp-06.28.2022_attack-10.0-enterprise.json",
+            "m365Mapping": "m365-12.11.2023_attack-14.1-enterprise.json"
         };
+
+        // Global variable for selected visualization type
+        let selectedVisualizationType = "detections";  // Default to "detections"
+
 
         // Function to fetch JSON files once on page load
         async function fetchJSONFiles() {
@@ -687,11 +735,13 @@
         // Function to Handle Navigation Between Steps
         let currentStep = 0;
         async function handleNavigation() {
+            await fetchJSONFiles(); // Ensure JSON data is loaded before user navigates
+
             showStep(currentStep);
 
             document.querySelectorAll(".next-step").forEach(button => {
                 button.addEventListener("click", async () => {
-                    if (currentStep < 2) {
+                    if (currentStep < 3) { // Now supports Step 4
                         if (currentStep === 0) {
                             buildOrganizationAttributes();
                         }
@@ -704,6 +754,18 @@
                             updateModelDisplay();
                             generateModelSummaryTable();
                         }
+                        if (currentStep === 2) {
+                            // ✅ Wait for JSON files to be fully loaded before updating model
+                            if (!jsonCache.nistMapping || !jsonCache.enterpriseAttack) {
+                                console.error("❌ Error: Required JSON files not loaded.");
+                                showToast("Error: Required JSON files not loaded.", "error");
+                                return;
+                            }
+
+                            await updateModelWithSecurityMappings();
+                            generateRadialTree();
+                        }
+
                         currentStep++;
                         showStep(currentStep);
                         hideDynamicElements();
@@ -721,7 +783,27 @@
                     }
                 });
             });
+        
+            // ✅ Attach event for navigating to Step 4 directly from Step 3
+            const goToVisualizationButton = document.getElementById("go-to-visualization");
+            if (goToVisualizationButton) {
+                goToVisualizationButton.addEventListener("click", async function () {
+                    await updateModelWithSecurityMappings(); // Add security mappings before visualization
+                    currentStep = 3; // Move to Step 4
+                    showStep(currentStep);
+                    generateRadialTree(); // Render the visualization
+                });
+            }
+
+            // ✅ Handle radio button selection change
+            document.querySelectorAll("input[name='visualization-type']").forEach((radio) => {
+                radio.addEventListener("change", function () {
+                    selectedVisualizationType = this.value;
+                    generateRadialTree(); // Re-render the tree on selection change
+                });
+            });
         }
+
 
         // Fetch techniques for each asset type; Run score calculations in parallel using Promise.all(); store results in modelDefinition.asset_types[].attack_scores
         async function calculateAllTechniqueScores() {
@@ -928,6 +1010,7 @@
     
         // Initialize the Script After DOM Loads
         document.addEventListener("DOMContentLoaded", () => {
+            // Preload the json files
             fetchJSONFiles();
             const drawerTab = document.getElementById("drawer-tab");
                 if (drawerTab) {
@@ -936,7 +1019,22 @@
                 } else {
                     console.log("Error: Drawer tab element not found.");
                 }
-            
+            // For rendering the radial tree visualization in step 4
+            // const visualizationContainer = document.getElementById("radial-tree-container");
+            // let selectedVisualizationType = "detections";
+            // // Handle radio button selection change fo radial tree visualization
+            document.querySelectorAll("input[name='visualization-type']").forEach((radio) => {
+                radio.addEventListener("change", function () {
+                    selectedVisualizationType = this.value;
+                    generateRadialTree(); // Re-render the tree on selection change
+                });
+            });
+
+            const radialContainer = document.getElementById("radial-tree-container");
+            if (!radialContainer) {
+                console.error("❌ Error: 'radial-tree-container' is missing from the HTML.");
+            }
+
             const toggleButton = document.getElementById("toggle-techniques-btn");
             if (toggleButton) {
                 toggleButton.addEventListener("click", toggleTechniquesTable);
@@ -1235,31 +1333,185 @@
             }
         }
 
-        
+        async function updateModelWithSecurityMappings() {
+            console.log("🔄 Updating model with security mappings...");
+
+            // Ensure JSON files are already fetched
+            const jsonData = {
+                enterpriseAttack: getJSONData("enterpriseAttack"),
+                cisToAttack: getJSONData("cisToAttack"),
+                nistMapping: getJSONData("nistMapping"),
+                awsMapping: getJSONData("awsMapping"),
+                azureMapping: getJSONData("azureMapping"),
+                gcpMapping: getJSONData("gcpMapping"),
+                m365Mapping: getJSONData("m365Mapping"),
+            };
+
+            // Check if any of the JSON mappings are missing
+            for (const [key, value] of Object.entries(jsonData)) {
+                if (!value) {
+                    console.error(`❌ Error: Missing JSON data for '${key}'`);
+                    showToast(`Error: Missing JSON data for '${key}'`, "error");
+                    return;
+                }
+            }
+
+            for (const asset of modelDefinition.asset_types) {
+                // Sort techniques by ATT&CK score and take the top 10
+                asset.attack_scores = asset.attack_scores.sort((a, b) => b.score - a.score).slice(0, 10);
+
+                for (const technique of asset.attack_scores) {
+                    const techniqueId = technique.attack_object_id;
+
+                    // Fetch correlated security measures for the selected technique
+                    technique.security_mappings = {
+                        detections: findDetections(techniqueId, jsonData.enterpriseAttack),
+                        mitigations: findMitigations(techniqueId, jsonData.enterpriseAttack),
+                        nist: findNISTControls(techniqueId, jsonData.nistMapping),
+                        cis: findCISSafeguards(techniqueId, jsonData.cisToAttack),
+                        aws: findCloudCapabilities(techniqueId, jsonData.awsMapping),
+                        azure: findCloudCapabilities(techniqueId, jsonData.azureMapping),
+                        gcp: findCloudCapabilities(techniqueId, jsonData.gcpMapping),
+                        m365: findCloudCapabilities(techniqueId, jsonData.m365Mapping),
+                    };
+                }
+            }
+
+            console.log("✅ Security mappings updated in model:", modelDefinition);
+        }
+
+        function findDetections(techniqueId, jsonData) {
+            const detections = [];
+            jsonData.objects.forEach((obj) => {
+                if (obj.type === "relationship" && obj.target_ref.includes(techniqueId) && obj.relationship_type === "detects") {
+                    detections.push(obj.source_ref);
+                }
+            });
+            return detections;
+        }
+
+        function findMitigations(techniqueId, jsonData) {
+            return jsonData.objects
+                .filter((obj) => obj.type === "relationship" && obj.target_ref.includes(techniqueId) && obj.relationship_type === "mitigates")
+                .map((obj) => obj.source_ref);
+        }
+
+        function findNISTControls(techniqueId, jsonData) {
+            return jsonData.mapping_objects.filter((obj) => obj.attack_object_id === techniqueId).map((obj) => obj.nist_control_id);
+        }
+
+        function findCISSafeguards(techniqueId, jsonData) {
+            return jsonData.filter((obj) => obj.attack_techniques.some((t) => t.technique_id === techniqueId)).map((obj) => obj.cis_safeguard_id);
+        }
+
+        function findCloudCapabilities(techniqueId, jsonData) {
+            return jsonData.mapping_objects.filter((obj) => obj.attack_object_id === techniqueId).map((obj) => obj.capability_id);
+        }
+
+        function generateRadialTree() {
+            const visualizationContainer = document.getElementById("radial-tree-container");
+            if (!visualizationContainer) {
+                console.error("❌ Error: 'radial-tree-container' not found in the DOM.");
+                return;
+            }
+
+            visualizationContainer.innerHTML = ""; // Clear previous visualization
+            const data = buildRadialTreeData();
+
+            const width = visualizationContainer.clientWidth;
+            const height = visualizationContainer.clientHeight;
+            const radius = Math.min(width, height) / 2;
+
+            const svg = d3
+                .select("#radial-tree-container")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", `translate(${width / 2},${height / 2})`);
+
+            const tree = d3.cluster().size([360, radius - 100]);
+
+            const root = d3.hierarchy(data, (d) => d.children);
+            tree(root);
+
+            const link = svg
+                .selectAll(".link")
+                .data(root.links())
+                .enter()
+                .append("path")
+                .attr("class", "link")
+                .attr("fill", "none")
+                .attr("stroke", "#ccc")
+                .attr("stroke-width", 1.5)
+                .attr(
+                    "d",
+                    d3
+                        .linkRadial()
+                        .angle((d) => (d.x * Math.PI) / 180)
+                        .radius((d) => d.y)
+                );
+
+            const node = svg
+                .selectAll(".node")
+                .data(root.descendants())
+                .enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", (d) => `rotate(${d.x - 90}) translate(${d.y},0)`);
+
+            node.append("circle").attr("r", 5).attr("fill", "#69b3a2");
+
+            node.append("text")
+                .attr("dy", ".31em")
+                .attr("x", (d) => (d.x < 180 ? 8 : -8))
+                .attr("text-anchor", (d) => (d.x < 180 ? "start" : "end"))
+                .attr("transform", (d) => (d.x >= 180 ? "rotate(180)" : ""))
+                .text((d) => d.data.name);
+        }
 
 
-        // async function displayTechniquesTable(techniquesJSON, assetType) {
-        //     const techniques = JSON.parse(techniquesJSON);
-        //     const tableBody = document.getElementById("techniques-body");
-        //     tableBody.innerHTML = "";
+        function buildRadialTreeData() {
+            const root = { name: "Model", children: [] };
 
-        //     document.getElementById("selected-asset-type").textContent = assetType;
-        //     document.getElementById("techniques-container").classList.remove("hidden");
+            const environments = {};
+            modelDefinition.asset_types.forEach((asset) => {
+                if (!environments[asset.environment]) {
+                    environments[asset.environment] = { name: asset.environment, children: {} };
+                }
+                if (!environments[asset.environment].children[asset.asset_category]) {
+                    environments[asset.environment].children[asset.asset_category] = {
+                        name: asset.asset_category,
+                        children: {},
+                    };
+                }
+                const assetCategory = environments[asset.environment].children[asset.asset_category];
 
-        //     for (const technique of techniques) {
-        //         const row = document.createElement("tr");
-        //         row.innerHTML = `
-        //             <td class="border border-gray-300 px-4 py-2">${technique.attack_object_id}</td>
-        //             <td class="border border-gray-300 px-4 py-2">${technique.attack_object_name}</td>
-        //             <td class="border border-gray-300 px-4 py-2" id="score-${technique.attack_object_id}">Calculating...</td>
-        //         `;
-        //         tableBody.appendChild(row);
+                assetCategory.children[asset.asset_type] = {
+                    name: asset.asset_type,
+                    children: asset.attack_scores.map((technique) => {
+                        return {
+                            name: technique.attack_object_name,
+                            children: technique.security_mappings?.[selectedVisualizationType] 
+                                ? technique.security_mappings[selectedVisualizationType].map((id) => ({
+                                    name: id,
+                                }))
+                                : [],
+                        };
+                    }),
+                };
+            });
 
-        //         // Calculate and populate score
-        //         const score = await calculateFinalScore(technique.attack_object_id);
-        //         document.getElementById(`score-${technique.attack_object_id}`).textContent = score.toFixed(4);
-        //     }
-        // }
+            root.children = Object.values(environments).map((env) => {
+                env.children = Object.values(env.children).map((cat) => {
+                    cat.children = Object.values(cat.children);
+                    return cat;
+                });
+                return env;
+            });
+
+            return root;
+        }
     </script>
   
 </body>
