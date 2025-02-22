@@ -1122,59 +1122,103 @@
         function findDataSources(techniqueId) {
             let dataSources = [];
 
-            // Find the attack pattern object
-            const attackPattern = stixData.attackPatterns.get(techniqueId);
-            if (!attackPattern) return [];
+            console.log(`🔎 Searching for data sources for Technique ID: ${techniqueId}`);
 
-            // Find relationships where this attack pattern is the target
-            const detectingRelationships = stixData.relationships.get(attackPattern.id) || [];
+            // ✅ 1. Retrieve the attack-pattern object using external_id field
+            const attackPattern = [...stixData.attackPatterns.values()].find(pattern =>
+                pattern.external_references?.some(ref => ref.external_id === techniqueId)
+            );
+
+            if (!attackPattern) {
+                console.warn(`⚠️ No attack pattern found for Technique ID: ${techniqueId}`);
+                return [];
+            }
+
+            // ✅ 2. Find all relationships where this attack pattern is the target and relationship_type is 'detects'
+            const detectingRelationships = [...stixData.relationships.values()].flat().filter(rel =>
+                rel.target_ref === attackPattern.id && rel.relationship_type === 'detects'
+            );
+
+            if (detectingRelationships.length === 0) {
+                console.warn(`⚠️ No detecting relationships found for Technique ID: ${techniqueId}`);
+            }
 
             for (const rel of detectingRelationships) {
-                if (rel.relationship_type === 'detects') {
-                    // Find the data component
-                    const dataComponent = stixData.dataComponents.get(rel.source_ref);
-                    if (!dataComponent || !dataComponent.x_mitre_data_source_ref) continue;
-
-                    // Find the data source
-                    const dataSource = stixData.dataSources.get(dataComponent.x_mitre_data_source_ref);
-                    if (dataSource && dataSource.external_references && dataSource.external_references.length > 0) {
-                        dataSources.push(`${dataComponent.name} (${dataSource.external_references[0].external_id})`);
-                    }
+                // ✅ 3. Retrieve the data component object using source_ref
+                const dataComponent = stixData.dataComponents.get(rel.source_ref);
+                if (!dataComponent || !dataComponent.x_mitre_data_source_ref) {
+                    console.warn(`⚠️ No valid data component found for relationship ${rel.source_ref}`);
+                    continue;
                 }
+
+                // ✅ 4. Retrieve the corresponding data source object
+                const dataSource = stixData.dataSources.get(dataComponent.x_mitre_data_source_ref);
+                if (!dataSource || !dataSource.name) {
+                    console.warn(`⚠️ Data source not found for component ${dataComponent.name}`);
+                    continue;
+                }
+
+                // ✅ 5. Ensure correct word-based matching of keywords
+                const relevantKeywords = jsonCache["weightKeywords"] || {};
+                const keywordSet = new Set(Object.keys(relevantKeywords).map(k => k.toLowerCase()));
+
+                const words = dataSource.name.toLowerCase().split(/\W+/); // Split into words
+                const matchedKeywords = [...keywordSet].filter(keyword => words.includes(keyword));
+
+                if (matchedKeywords.length > 0) {
+                    dataSources.push({
+                        name: dataComponent.name,
+                        source: dataSource.name,
+                        matched_keywords: matchedKeywords
+                    });
+                }
+            }
+
+            if (dataSources.length === 0) {
+                console.warn(`⚠️ No valid data sources found for Technique ID: ${techniqueId}`);
+            } else {
+                console.log(`✅ Found ${dataSources.length} data sources for Technique ID: ${techniqueId}`);
             }
 
             return dataSources;
         }
 
-
         // Function to calculate weight_sum based on keywords in data sources and monitoring coverage maturity selected by user
         async function calculateMonitoringCoverageWeightSum(techniqueId, assetMonitoringCoverage) {
             if (!assetMonitoringCoverage || typeof assetMonitoringCoverage !== 'object') {
-                console.error(`Error: Invalid assetMonitoringCoverage for Technique ID: ${techniqueId}`);
+                console.error(`❌ Error: Invalid assetMonitoringCoverage for Technique ID: ${techniqueId}`);
                 return 0;
             }
 
             try {
-                // Load cached JSON data instead of fetching
+                // ✅ 1. Load cached JSON data
                 const weightKeywords = getJSONData("weightKeywords") || {};
                 const staticVariables = getJSONData("staticVariables") || {};
 
-                // Get data sources detecting this technique
+                // ✅ 2. Get data sources detecting this technique
                 const dataSources = await findDataSources(techniqueId);
                 if (!Array.isArray(dataSources) || dataSources.length === 0) {
-                    console.warn(`No valid data sources found for Technique ID: ${techniqueId}`);
+                    console.warn(`⚠️ No valid data sources found for Technique ID: ${techniqueId}`);
                     return 0;
                 }
 
-                // Convert weight-keywords to a Map for fast lookup
-                const keywordMap = new Map(
-                    Object.entries(weightKeywords).map(([key, value]) => [key.toLowerCase(), value])
-                );
+                // ✅ 3. Convert weight-keywords to a Set for faster lookup
+                const keywordSet = new Set(Object.keys(weightKeywords).map(k => k.toLowerCase()));
 
-                // Convert dataSources to lowercase once before iteration
-                const lowercasedDataSources = dataSources.map(source => source.toLowerCase());
+                // ✅ 4. Convert data source names into words for exact word matching
+                const matchedCategories = new Set();
 
-                // Initialize weight categories
+                for (const source of dataSources) {
+                    const words = source.source.toLowerCase().split(/\W+/); // Split into words
+
+                    for (const keyword of keywordSet) {
+                        if (words.includes(keyword)) {
+                            matchedCategories.add(weightKeywords[keyword]); // Map keyword to category
+                        }
+                    }
+                }
+
+                // ✅ 5. Compute the highest weight for each matched category
                 let categoryWeights = {
                     process: 0,
                     network: 0,
@@ -1183,25 +1227,13 @@
                     hardware: 0
                 };
 
-                // Precompute matched categories per source to minimize redundant checks
-                const matchedCategories = new Set();
-
-                for (const source of lowercasedDataSources) {
-                    for (const [keyword, category] of keywordMap.entries()) {
-                        if (source.includes(keyword)) { // ✅ Substring Matching Fix
-                            matchedCategories.add(category);
-                        }
-                    }
-                }
-
-                // Process matched categories
                 for (const category of matchedCategories) {
                     if (!(category in assetMonitoringCoverage)) {
-                        console.warn(`Category '${category}' is not found in assetMonitoringCoverage.`);
-                        continue; // Skip invalid categories
+                        console.warn(`⚠️ Category '${category}' is not found in assetMonitoringCoverage.`);
+                        continue;
                     }
 
-                    // Determine weight based on user-selected monitoring coverage
+                    // ✅ 6. Determine weight based on monitoring coverage
                     const monitoringLevel = assetMonitoringCoverage[category]; // "None", "Low", "Medium", "High"
 
                     const weight = {
@@ -1211,17 +1243,19 @@
                         "High": staticVariables.weight_score_high || 0
                     }[monitoringLevel] || 0;
 
-                    // Assign highest weight found for this category
+                    // ✅ Assign highest weight found for this category
                     categoryWeights[category] = Math.max(categoryWeights[category], weight);
                 }
 
-                // Compute final weight sum
+                // ✅ 7. Compute final weight sum
                 return Object.values(categoryWeights).reduce((sum, weight) => sum + weight, 0);
             } catch (error) {
-                console.error(`Error in calculateMonitoringCoverageWeightSum for Technique ID ${techniqueId}:`, error);
+                console.error(`❌ Error in calculateMonitoringCoverageWeightSum for Technique ID ${techniqueId}:`, error);
                 return 0;
             }
         }
+
+
 
         async function calculateFinalScore(techniqueId, assetObject) {
             if (!assetObject || !assetObject.monitoring_coverage) {
