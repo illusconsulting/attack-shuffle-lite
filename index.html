@@ -143,49 +143,6 @@
             border-radius: 5px;
             display: none;
         }
-        /* Drawer Default Styling */
-        .model-drawer {
-            position: fixed;
-            top: 0;
-            right: -350px; /* Initially Hidden */
-            width: 350px;
-            height: 100%;
-            background-color: #2d3748;
-            color: white;
-            overflow-y: auto;
-            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
-            transition: right 0.3s ease-in-out;
-            padding: 20px;
-        }
-
-        /* When Opened */
-        .model-drawer.open {
-            right: 0;
-        }
-
-        /* Drawer Tab */
-        .drawer-tab {
-            position: absolute;
-            left: -50px;
-            top: 50%;
-            width: 50px;
-            height: 100px;
-            background-color: #3490dc;
-            color: white;
-            border: none;
-            border-radius: 5px 0 0 5px;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        /* Move Tab Inside Drawer When Expanded */
-        .model-drawer.open .drawer-tab {
-            left: 10px;
-            background-color: #1e3a8a;
-        }
 
         /* JSON Styling */
         .json-content {
@@ -234,6 +191,11 @@
             <li data-step="4">ATT&CK Technique Visualization</li>
         </ol>
 
+        <div id="form-navigation" class="flex justify-between mt-4">
+            <button type="button" id="prev-step" class="hidden bg-gray-500 text-white px-4 py-2 rounded">Back</button>
+            <button type="button" id="next-step" class="bg-blue-500 text-white px-4 py-2 rounded">Next</button>
+        </div>
+
         <form id="multiStepForm">
             <!-- Step 1: Organization Details -->
             <div class="form-step active">
@@ -267,7 +229,7 @@
                     </label>
                 </div>
 
-                <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4">Next</button>
+                <!-- <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4">Next</button> -->
             </div>
 
             <!-- Step 2: Asset Types -->
@@ -332,17 +294,17 @@
                 </button>
 
                 <!-- Button to Add Another Asset Type -->
-                <button type="button" id="add-more-assets" class="bg-gray-500 text-white px-4 py-2 rounded mt-4" style="display: none;">
+                <!-- <button type="button" id="add-more-assets" class="bg-gray-500 text-white px-4 py-2 rounded mt-4" style="display: none;">
                     Add Another Asset Type
-                </button>
+                </button> -->
 
                 <!-- Display Model Definition in JSON -->
                 <button type="button" id="view-model-definition" class="bg-gray-700 text-white px-4 py-2 rounded mt-4" style="display: none;">
                     View Model JSON
                 </button>
 
-                <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
-                <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4">Next</button>
+                <!-- <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
+                <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4">Next</button> -->
             </div>
 
             <!-- Step 3: Technique Scoring -->
@@ -385,8 +347,8 @@
                 </div>
 
                 <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button>
-                <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
-                <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4" id="go-to-visualization">Next</button>
+                <!-- <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
+                <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4" id="go-to-visualization">Next</button> -->
 
             </div>
 
@@ -411,7 +373,7 @@
                 <div id="radial-tree-container" class="w-full h-96 border border-gray-300 rounded bg-white"></div>
 
                 <!-- Navigation Buttons -->
-                <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
+                <!-- <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button> -->
                 <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button>
             </div>
 
@@ -421,12 +383,49 @@
         <!-- JSON Output -->
         <pre id="json-output" class="bg-gray-100 text-black p-4 rounded mt-4" style="display: none;"></pre>
     </div>
-    <!-- Collapsible Drawer -->
-    <div id="model-drawer" class="model-drawer">
-        <button id="drawer-tab" class="drawer-tab">Model JSON</button>
-        <pre id="json-output" class="json-content"></pre>
-    </div>
     <script>
+        // Need to add a function/query to create a consolidated mapping of techniques to mitigations, data sources, controls, and capabilities and store within IndexedDB
+        // Need to add a function/query to map the consolidated mapping of techniques to the assets mapped to those techniques
+        // Target JSON structure for asset-type:
+        // "asset-type": {
+        //     "asset-category": "devices", // from user input, enum ["devices", "networks", "applications", "data", "identities"]
+        //     "asset-type": "Linux Server OS", // from user input, enum from assetTypeMappings
+        //     "environment": "AWS", // from user input, enum from ["AWS", "GCP", "Azure", "M365"]
+        //     "monitoring-coverage": { // from user input, enum ["None", "Low", "Medium", "High"]
+        //         "network-monitoring": "High",
+        //         "process-monitoring": "Medium",
+        //         "file-monitoring": "Low",
+        //         "cloud-monitoring": "None",
+        //         "hardware-monitoring": "None"
+        //     },
+        //     "record-count": 1000,
+        //     "techniques": {
+        //         "T1001": {
+        //             "name": "Data Obfuscation",
+        //             "data-sources": [], // from STIX, in "data_sources" array inside "attack-pattern" object
+        //             "nist-controls": [], // from NIST mapex
+        //             "cis-safeguards": [], // from CIS json
+        //             "aws-capabilities": [], // from AWS mapex
+        //             "gcp-capabilities": [], // from GCP mapex
+        //             "azure-capabilities": [], // from Azure mapex
+        //             "m365-capabilities": [], // from M365 mapex
+        //             "mitigations": [], // from STIX, type = "course-of-action"
+        //             "initial-score": 0.5 // initialScore = prevalenceScore + chokepointScore + actionabilityScore
+        //         },
+        //         "T1002": {
+        //             "name": "Data Compressed",
+        //             "data-sources": [], // from STIX, in "data_sources" array inside "attack-pattern" object
+        //             "nist-controls": [], // from NIST mapex
+        //             "cis-safeguards": [], // from CIS json
+        //             "aws-capabilities": [], // from AWS mapex
+        //             "gcp-capabilities": [], // from GCP mapex
+        //             "azure-capabilities": [], // from Azure mapex
+        //             "m365-capabilities": [], // from M365 mapex
+        //             "mitigations": [], // from STIX, type = "course-of-action"
+        //             "initial-score": 0.5 // initialScore = prevalenceScore + chokepointScore + actionabilityScore
+        //         }
+        //     }
+        // }
         // Initialize IndexedDB
         async function initIndexedDB() {
             return new Promise((resolve, reject) => {
@@ -441,9 +440,15 @@
                         { name: "dataSources", keyPath: "id" },
                         { name: "securityMappings", keyPath: "attack_object_id" },
                         { name: "weightKeywords", keyPath: "keywords" },
-                        { name: "assets", keyPath: "id" },
+                        { name: "assets", keyPath: "id" }, // Stores only asset categories
+                        { name: "assetTypes", keyPath: "id" }, // Stores asset types per category
                         { name: "visualizationTree", keyPath: "id" },
-                        { name: "settings", keyPath: "key" } // Store dark mode, preferences
+                        { name: "settings", keyPath: "key" }, // Store dark mode, preferences
+                        { name: "attackPatterns", keyPath: "technique_id" }, // Stores ATT&CK techniques from STIX 2.1
+                        { name: "mitigations", keyPath: "mitigation_id" }, // Stores ATT&CK mitigations from STIX 2.1
+                        { name: "attackMitigationMappings", keyPath: "mapping_id" }, // Stores ATT&CK relationships from STIX 2.1
+                        { name: "cisSafeguardMappings", keyPath: ["cis_safeguard", "technique_id"] }, // Stores CIS safeguard mappings
+                        { name: "attackPrevTid", keyPath: "attack_object_id" } // Stores technique prevalence and tid data for ATT&CK score calcs
                     ];
     
                     stores.forEach(store => {
@@ -457,58 +462,403 @@
                 request.onerror = (event) => reject(event.target.error);
             });
         }
-    
-        // Store an object in IndexedDB
-        async function storeObject(storeName, data) {
+
+        // List of JSON files and their target IndexedDB stores
+        const jsonFileMappings = {
+            "staticVariables": "static-variables.json",
+            "weightKeywords": "weight-keywords.json"
+        };
+
+        // Fetch JSON and Store in IndexedDB
+        async function fetchAndStoreJSONFiles() {
+            const db = await initIndexedDB();
+
+            for (const [storeName, fileName] of Object.entries(jsonFileMappings)) {
+                const transaction = db.transaction(storeName, "readonly");
+                const store = transaction.objectStore(storeName);
+                const countRequest = store.count();
+
+                countRequest.onsuccess = async () => {
+                    if (countRequest.result === 0) {
+                        console.log(`Fetching ${storeName} data from ${fileName}...`);
+                        try {
+                            const response = await fetch(fileName);
+                            if (!response.ok) throw new Error(`Failed to fetch ${fileName}`);
+                            const jsonData = await response.json();
+                            await storeJSONData(storeName, jsonData);
+                            console.log(`✅ Loaded ${storeName} into IndexedDB.`);
+                        } catch (error) {
+                            console.error(`Error fetching ${storeName}:`, error);
+                        }
+                    }
+                };
+            }
+        }
+
+        // Store JSON Data into IndexedDB
+        async function storeJSONData(storeName, jsonData) {
             const db = await initIndexedDB();
             const transaction = db.transaction(storeName, "readwrite");
             const store = transaction.objectStore(storeName);
-            store.put(data);
+
+            if (Array.isArray(jsonData)) {
+                jsonData.forEach(item => store.put(item));
+            } else {
+                store.put(jsonData);
+            }
         }
-    
-        // Get an object by ID
-        async function getObjectById(storeName, id) {
+
+        // Define MAPEX file categories
+        const mapexFiles = {
+            "assetTypeMappings": {
+                "applicationsMappings": "enterprise-assets-applications-02.16.2025_attack-16.1-enterprise_json.json",
+                "devicesMappings": "enterprise-assets-devices-02.16.2025_attack-16.1-enterprise_json.json",
+                "networksMappings": "enterprise-assets-networks-02.16.2025_attack-16.1-enterprise_json.json",
+                "dataMappings": "enterprise-assets-data-02.16.2025_attack-16.1-enterprise_json.json",
+                "identitiesMappings": "enterprise-assets-identities-02.16.2025_attack-16.1-enterprise_json.json"
+            },
+            "securityControlMappings": {
+                "nistMappings": "nist_800_53-rev5_attack-14.1-enterprise.json"
+            },
+            "cloudCapabilityMappings": {
+                "m365Mappings": "m365-12.11.2023_attack-14.1-enterprise.json",
+                "gcpMappings": "gcp-06.28.2022_attack-10.0-enterprise.json",
+                "awsMappings": "aws-12.12.2024_attack-16.1-enterprise.json",
+                "azureMappings": "azure-06.29.2021_attack-8.2-enterprise.json"
+            }
+        };
+
+        // Import MAPEX JSON Data into IndexedDB Based on Mapping Type
+        async function importMapexMappings(storeName, jsonData, mappingType) {
+            if (!jsonData || !jsonData.mapping_objects || !Array.isArray(jsonData.mapping_objects)) {
+                console.error(`Invalid JSON structure for ${storeName}`);
+                return;
+            }
+
             const db = await initIndexedDB();
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(storeName, "readonly");
-                const store = transaction.objectStore(storeName);
-                const request = store.get(id);
-    
-                request.onsuccess = () => resolve(request.result || null);
-                request.onerror = () => reject(null);
+            const transaction = db.transaction(storeName, "readwrite");
+            const store = transaction.objectStore(storeName);
+
+            jsonData.mapping_objects.forEach(mapping => {
+                let mappingEntry;
+
+                if (mappingType === "assetType") {
+                    mappingEntry = {
+                        mapping_id: `${mapping.capability_id}_${mapping.attack_object_id}_${mapping.mapping_type}`,
+                        mapping_type: "assetType",
+                        capability_id: mapping.capability_id,
+                        capability_group: mapping.capability_group,
+                        capability_description: mapping.capability_description || "",
+                        attack_object_id: mapping.attack_object_id,
+                        attack_object_name: mapping.attack_object_name,
+                        mapping_category: mapping.mapping_type,
+                        comments: mapping.comments || "",
+                        references: mapping.references || []
+                    };
+                } 
+                else if (mappingType === "securityControl") {
+                    mappingEntry = {
+                        mapping_id: `${mapping.capability_id}_${mapping.attack_object_id}_${mapping.mapping_type}`,
+                        mapping_type: "securityControl",
+                        capability_id: mapping.capability_id,
+                        capability_description: mapping.capability_description || "",
+                        attack_object_id: mapping.attack_object_id,
+                        attack_object_name: mapping.attack_object_name,
+                        score_category: mapping.score_category || "",
+                        score_value: mapping.score_value || "",
+                        comments: mapping.comments || "",
+                        references: mapping.references || []
+                    };
+                } 
+                else if (mappingType === "cloudCapability") {
+                    mappingEntry = {
+                        mapping_id: `${mapping.capability_id}_${mapping.attack_object_id}_${mapping.mapping_type}`,
+                        mapping_type: "cloudCapability",
+                        capability_id: mapping.capability_id,
+                        capability_group: mapping.capability_group || "",
+                        capability_description: mapping.capability_description || "",
+                        attack_object_id: mapping.attack_object_id,
+                        attack_object_name: mapping.attack_object_name,
+                        score_category: mapping.score_category || "",
+                        score_value: mapping.score_value || "",
+                        related_score: mapping.related_score || "",
+                        comments: mapping.comments || "",
+                        references: mapping.references || []
+                    };
+                }
+
+                store.put(mappingEntry);
             });
+
+            console.log(`✅ Imported ${jsonData.mapping_objects.length} mappings into ${storeName} (${mappingType})`);
         }
-    
-        // Get all objects in a store
-        async function getAllObjects(storeName) {
+
+        // Fetch and Import MAPEX JSON Files with Categorization
+        async function fetchAndImportMapexFiles() {
+            for (const [category, files] of Object.entries(mapexFiles)) {
+                let mappingType;
+                
+                if (category === "assetTypeMappings") {
+                    mappingType = "assetType";
+                } 
+                else if (category === "securityControlMappings") {
+                    mappingType = "securityControl";
+                } 
+                else if (category === "cloudCapabilityMappings") {
+                    mappingType = "cloudCapability";
+                }
+
+                for (const [storeName, filePath] of Object.entries(files)) {
+                    try {
+                        const response = await fetch(filePath);
+                        if (!response.ok) throw new Error(`Failed to fetch ${filePath}`);
+                        const jsonData = await response.json();
+                        await importMapexMappings(storeName, jsonData, mappingType);
+                    } catch (error) {
+                        console.error(`Error processing ${filePath}:`, error);
+                    }
+                }
+            }
+        }
+
+        async function importStixData(jsonData) {
+            if (!jsonData || !jsonData.objects || !Array.isArray(jsonData.objects)) {
+                console.error("Invalid STIX 2.1 JSON structure");
+                return;
+            }
+
             const db = await initIndexedDB();
-            return new Promise((resolve, reject) => {
-                const transaction = db.transaction(storeName, "readonly");
-                const store = transaction.objectStore(storeName);
-                const request = store.getAll();
-    
-                request.onsuccess = () => resolve(request.result || []);
-                request.onerror = () => reject([]);
+            const techniquesTransaction = db.transaction("attackPatterns", "readwrite");
+            const mitigationsTransaction = db.transaction("mitigations", "readwrite");
+            const mappingsTransaction = db.transaction("attackMitigationMappings", "readwrite");
+
+            const techniquesStore = techniquesTransaction.objectStore("attackPatterns");
+            const mitigationsStore = mitigationsTransaction.objectStore("mitigations");
+            const mappingsStore = mappingsTransaction.objectStore("attackMitigationMappings");
+
+            const techniques = {};
+            const mitigations = {};
+            const relationships = [];
+
+            // Process each STIX object
+            jsonData.objects.forEach(obj => {
+                // Skip objects that are deprecated or revoked
+                if (obj.x_mitre_deprecated === true || obj.revoked === true) return;
+
+                if (obj.type === "attack-pattern") {
+                    const externalRef = obj.external_references?.find(ref => ref.source_name === "mitre-attack") || {};
+                    techniques[obj.id] = {
+                        technique_id: externalRef.external_id || "Unknown",
+                        technique_name: obj.name,
+                        description: obj.description || "",
+                        kill_chain_phases: obj.kill_chain_phases || [],
+                        data_sources: obj.x_mitre_data_sources || [],
+                        platforms: obj.x_mitre_platforms || [],
+                        version: obj.x_mitre_version || "N/A",
+                        external_references: obj.external_references || [],
+                        detection: obj.x_mitre_detection || ""
+                    };
+                    techniquesStore.put(techniques[obj.id]);
+                }
+
+                if (obj.type === "course-of-action") {
+                    const externalRef = obj.external_references?.find(ref => ref.source_name === "mitre-attack") || {};
+                    mitigations[obj.id] = {
+                        mitigation_id: externalRef.external_id || "Unknown",
+                        mitigation_name: obj.name,
+                        description: obj.description || "",
+                        external_references: obj.external_references || []
+                    };
+                    mitigationsStore.put(mitigations[obj.id]);
+                }
+
+                if (obj.type === "relationship" && obj.relationship_type === "mitigates") {
+                    relationships.push({
+                        relationship_id: obj.id,
+                        mitigation_id: obj.source_ref,
+                        technique_id: obj.target_ref,
+                        description: obj.description || "",
+                        created: obj.created,
+                        modified: obj.modified
+                    });
+                }
             });
-        }
-    
-        // Multi-Step Form Navigation
-        function showStep(step) {
-            document.querySelectorAll(".form-step").forEach((el, index) => {
-                el.style.display = index === step ? "block" : "none";
+
+            // Store technique-mitigation mappings
+            relationships.forEach(mapping => {
+                if (techniques[mapping.technique_id] && mitigations[mapping.mitigation_id]) {
+                    mappingsStore.put({
+                        mapping_id: mapping.relationship_id,
+                        mitigation_id: mitigations[mapping.mitigation_id].mitigation_id,
+                        mitigation_name: mitigations[mapping.mitigation_id].mitigation_name,
+                        technique_id: techniques[mapping.technique_id].technique_id,
+                        technique_name: techniques[mapping.technique_id].technique_name,
+                        description: mapping.description,
+                        created: mapping.created,
+                        modified: mapping.modified
+                    });
+                }
             });
+
+            console.log(`✅ Imported ${Object.keys(techniques).length} techniques, ${Object.keys(mitigations).length} mitigations, and ${relationships.length} relationships.`);
         }
-    
-        document.addEventListener("DOMContentLoaded", () => {
-            showStep(0); // Show first step
+
+        async function fetchAndImportStixFile() {
+            try {
+                const response = await fetch("enterprise-attack.json");
+                if (!response.ok) throw new Error("Failed to fetch enterprise-attack.json");
+                const jsonData = await response.json();
+                await importStixData(jsonData);
+            } catch (error) {
+                console.error("Error processing enterprise-attack.json:", error);
+            }
+        }
+
+        async function importCISSafeguardMappings(jsonData) {
+            if (!jsonData || !Array.isArray(jsonData)) {
+                console.error("Invalid CIS Safeguard JSON structure");
+                return;
+            }
+
+            const db = await initIndexedDB();
+            const transaction = db.transaction("cisSafeguardMappings", "readwrite");
+            const store = transaction.objectStore("cisSafeguardMappings");
+
+            const mappings = [];
+
+            jsonData.forEach(entry => {
+                const cisSafeguard = entry.cis_safeguard;
+                if (!entry.attack_techniques || !Array.isArray(entry.attack_techniques)) return;
+
+                entry.attack_techniques.forEach(technique => {
+                    mappings.push({
+                        cis_safeguard: cisSafeguard,
+                        technique_id: technique.technique_id,
+                        technique_name: technique.technique_name
+                    });
+                });
+            });
+
+            // Store CIS safeguard mappings
+            mappings.forEach(mapping => store.put(mapping));
+
+            console.log(`✅ Imported ${mappings.length} CIS safeguard mappings into IndexedDB.`);
+        }
+
+        async function fetchAndImportCISSafeguardFile() {
+            try {
+                const response = await fetch("cis_safeguard_to_techniques.json");
+                if (!response.ok) throw new Error("Failed to fetch cis_safeguard_to_techniques.json");
+                const jsonData = await response.json();
+                await importCISSafeguardMappings(jsonData);
+            } catch (error) {
+                console.error("Error processing cis_safeguard_to_techniques.json:", error);
+            }
+        }
+
+        async function importAttackPrevTid(jsonData) {
+            if (!jsonData || !Array.isArray(jsonData)) {
+                console.error("Invalid attack-prev-tid JSON structure");
+                return;
+            }
+
+            const db = await initIndexedDB();
+            const transaction = db.transaction("attackPrevTid", "readwrite");
+            const store = transaction.objectStore("attackPrevTid");
+
+            const mappings = jsonData.map(entry => ({
+                attack_object_id: entry.attack_object_id,
+                calc_tid_before: parseInt(entry.calc_tid_before, 10),
+                calc_tid_after: parseInt(entry.calc_tid_after, 10),
+                calc_prev_score: parseFloat(entry.calc_prev_score)
+            }));
+
+            mappings.forEach(mapping => store.put(mapping));
+
+            console.log(`✅ Imported ${mappings.length} ATT&CK prevalence mappings into IndexedDB.`);
+        }
+
+        async function fetchAndImportAttackPrevTidFile() {
+            try {
+                const response = await fetch("attack-prev-tid.json");
+                if (!response.ok) throw new Error("Failed to fetch attack-prev-tid.json");
+                const jsonData = await response.json();
+                await importAttackPrevTid(jsonData);
+            } catch (error) {
+                console.error("Error processing attack-prev-tid.json:", error);
+            }
+        }
+
+        async function dataLoading() {
+            await initIndexedDB();
+            await fetchAndStoreJSONFiles();  // Load general JSON files
+            await fetchAndImportMapexFiles();  // Load MAPEX mappings
+            await fetchAndImportStixFile();  // Load STIX data
+            await fetchAndImportCISSafeguardFile();  // Load CIS Safeguard data
+            await fetchAndImportAttackPrevTidFile();  // Load technique prevalence and tid data for ATT&CK score calcs
+            await populateAssetCategories(); // Now categories should be available
+
+            console.log("All data loaded successfully.");
+        }
+
+
+        // Run the function when the page loads
+        document.addEventListener("DOMContentLoaded", async () => {
+            await initIndexedDB();
+            await fetchAndStoreJSONFiles();  // Load general JSON files
+            await fetchAndImportMapexFiles();  // Load MAPEX mappings
+            await fetchAndImportStixFile();  // Load STIX data
+            await fetchAndImportCISSafeguardFile();  // Load CIS Safeguard data
+            await fetchAndImportAttackPrevTidFile();  // Load technique prevalence and tid data for ATT&CK score calcs
+            await populateAssetCategories(); // Now categories should be available
+            showStep(0);
+
+            // set dark mode
+            const savedMode = await getObjectById("settings", "darkMode");
+            if (savedMode) document.body.classList.toggle("dark", savedMode.value === "dark");
+
             document.querySelectorAll(".next-step").forEach(btn => btn.addEventListener("click", () => showStep(1)));
             document.querySelectorAll(".prev-step").forEach(btn => btn.addEventListener("click", () => showStep(0)));
         });
     
-        // Populate Asset Categories & Types
+        // Preload Default Asset Categories (No Asset Types)
+        async function preloadAssetCategories() {
+            const db = await initIndexedDB();
+            const transaction = db.transaction("assets", "readonly");
+            const store = transaction.objectStore("assets");
+            const countRequest = store.count();
+    
+            countRequest.onsuccess = async () => {
+                if (countRequest.result === 0) {
+                    console.log("Preloading asset categories...");
+                    const defaultCategories = [
+                        { id: "devices", name: "Devices" },
+                        { id: "networks", name: "Networks" },
+                        { id: "applications", name: "Applications & Workloads" },
+                        { id: "data", name: "Data" },
+                        { id: "identities", name: "Identities" }
+                    ];
+    
+                    const writeTransaction = db.transaction("assets", "readwrite");
+                    const writeStore = writeTransaction.objectStore("assets");
+    
+                    for (const category of defaultCategories) {
+                        writeStore.put(category);
+                    }
+                }
+            };
+        }
+    
+        // Retrieve Asset Categories from IndexedDB
         async function populateAssetCategories() {
             const assetCategories = await getAllObjects("assets");
             const container = document.getElementById("asset-category-container");
+    
+            if (assetCategories.length === 0) {
+                container.innerHTML = `<p class="text-red-500">No asset categories found. Please refresh the page.</p>`;
+                return;
+            }
+    
             container.innerHTML = assetCategories.map(asset => `
                 <button class="asset-category" data-category="${asset.id}">${asset.name}</button>
             `).join("");
@@ -518,25 +868,225 @@
             });
         }
     
+        // Retrieve Asset Types from IndexedDB for Selected Category
         async function populateAssetTypes(categoryId) {
-            const asset = await getObjectById("assets", categoryId);
+            const assetTypes = await getObjectsByIndex("assetTypes", "categoryId", categoryId);
             const dropdown = document.getElementById("asset-type-dropdown");
-            dropdown.innerHTML = asset.types.map(type => `<option value="${type}">${type}</option>`).join("");
+    
+            if (assetTypes.length === 0) {
+                dropdown.innerHTML = `<option value="">No asset types available</option>`;
+                dropdown.disabled = true;
+                return;
+            }
+    
+            dropdown.innerHTML = assetTypes.map(type => `<option value="${type.name}">${type.name}</option>`).join("");
+            dropdown.disabled = false;
         }
     
-        // Calculate ATT&CK Technique Scores
-        async function calculateAllTechniqueScores() {
-            const techniques = await getAllObjects("techniques");
-            techniques.forEach(async technique => {
-                technique.score = await calculateTechniqueScore(technique.id);
-                await storeObject("techniques", technique);
-            });
-            showToast("Technique scores updated.");
+        // Retrieve and Store Monitoring Coverage Settings
+        async function saveMonitoringCoverage(assetId, coverageData) {
+            await storeObject("monitoringCoverage", { id: assetId, coverage: coverageData });
         }
     
-        async function calculateTechniqueScore(techniqueId) {
-            const technique = await getObjectById("techniques", techniqueId);
-            return technique.riskScore.total;
+        async function getMonitoringCoverage(assetId) {
+            return await getObjectById("monitoringCoverage", assetId);
+        }
+    
+        // // Calculate ATT&CK Technique Scores
+        // async function calculateTechniqueScores() {
+        //     const techniques = await getAllObjects("techniques");
+        //     for (let technique of techniques) {
+        //         technique.score = Math.random() * 10; // Placeholder for real calculation
+        //         await storeObject("techniques", technique);
+        //     }
+        //     showToast("Technique scores calculated.");
+        // }
+
+        // Need to update this function to use the new monitoring coverage data structure
+        async function calculateMonitoringCoverageWeightSum(techniqueId, assetMonitoringCoverage) {
+            if (!assetMonitoringCoverage || typeof assetMonitoringCoverage !== 'object') {
+                console.error(`Error: Invalid assetMonitoringCoverage for Technique ID: ${techniqueId}`);
+                return 0;
+            }
+
+            try {
+                // Load cached JSON data instead of fetching
+                const weightKeywords = getJSONData("weightKeywords") || {};
+                const staticVariables = getJSONData("staticVariables") || {};
+
+                // Get data sources detecting this technique
+                const dataSources = await findDataSources(techniqueId);
+                if (!Array.isArray(dataSources) || dataSources.length === 0) {
+                    console.warn(`No valid data sources found for Technique ID: ${techniqueId}`);
+                    return 0;
+                }
+
+                // Convert weight-keywords to a Map for fast lookup
+                const keywordMap = new Map(
+                    Object.entries(weightKeywords).map(([key, value]) => [key.toLowerCase(), value])
+                );
+
+                // Convert dataSources to lowercase once before iteration
+                const lowercasedDataSources = dataSources.map(source => source.toLowerCase());
+
+                // Initialize weight categories
+                let categoryWeights = {
+                    process: 0,
+                    network: 0,
+                    file: 0,
+                    cloud: 0,
+                    hardware: 0
+                };
+
+                // Precompute matched categories per source to minimize redundant checks
+                const matchedCategories = new Set();
+
+                for (const source of lowercasedDataSources) {
+                    for (const [keyword, category] of keywordMap.entries()) {
+                        if (source.includes(keyword)) { // ✅ Substring Matching Fix
+                            matchedCategories.add(category);
+                        }
+                    }
+                }
+
+                // Process matched categories
+                for (const category of matchedCategories) {
+                    if (!(category in assetMonitoringCoverage)) {
+                        console.warn(`Category '${category}' is not found in assetMonitoringCoverage.`);
+                        continue; // Skip invalid categories
+                    }
+
+                    // Determine weight based on user-selected monitoring coverage
+                    const monitoringLevel = assetMonitoringCoverage[category]; // "None", "Low", "Medium", "High"
+
+                    const weight = {
+                        "None": staticVariables.weight_score_none || 0,
+                        "Low": staticVariables.weight_score_low || 0,
+                        "Medium": staticVariables.weight_score_medium || 0,
+                        "High": staticVariables.weight_score_high || 0
+                    }[monitoringLevel] || 0;
+
+                    // Assign highest weight found for this category
+                    categoryWeights[category] = Math.max(categoryWeights[category], weight);
+                }
+
+                // Compute final weight sum
+                return Object.values(categoryWeights).reduce((sum, weight) => sum + weight, 0);
+            } catch (error) {
+                console.error(`Error in calculateMonitoringCoverageWeightSum for Technique ID ${techniqueId}:`, error);
+                return 0;
+            }
+        }
+
+        // Need to update this function to use the new IndexedDB structure
+        async function calculateFinalScore(techniqueId, assetObject) {
+            if (!assetObject || !assetObject.monitoring_coverage) {
+                console.error(`Error: Asset monitoring coverage is undefined for technique ID ${techniqueId}`);
+                return 0; // Prevent further execution
+            }
+
+            try {
+                // Load cached JSON data using correct keys from jsonFiles
+                const attackPrev = getJSONData("attackPrevTid") || [];
+                const nistMappings = getJSONData("nistMapping") || { mapping_objects: [] };
+                const cisMappings = getJSONData("cisToAttack") || [];
+                const enterpriseAttack = getJSONData("enterpriseAttack") || { objects: [] };
+                const staticVariables = getJSONData("staticVariables") || {};
+                const weightKeywords = getJSONData("weightKeywords") || {};
+
+                // Compute weight sum based on monitoring coverage
+                const weightSum = await calculateMonitoringCoverageWeightSum(techniqueId, assetObject.monitoring_coverage);
+
+                // Extract prevalence score
+                const prevEntry = attackPrev.find(t => t.attack_object_id === techniqueId);
+                const prevalenceScore = prevEntry ? parseFloat(prevEntry.calc_prev_score) : 0;
+                const tidBefore = prevEntry ? parseFloat(prevEntry.calc_tid_before) : 0;
+                const tidAfter = prevEntry ? parseFloat(prevEntry.calc_tid_after) : 0;
+
+                // Count security controls mapped to this technique
+                const nistCount = (nistMappings.mapping_objects || []).filter(obj => obj.attack_object_id === techniqueId).length;
+                const cisCount = (cisMappings || []).filter(obj => obj.attack_techniques.some(t => t.technique_id === techniqueId)).length;
+
+                // Count detections from enterprise-attack.json
+                let detectionCount = 0;
+                const attackPattern = enterpriseAttack.objects.find(obj =>
+                    obj.type === 'attack-pattern' &&
+                    obj.external_references &&
+                    obj.external_references.some(ref => ref.external_id === techniqueId)
+                );
+
+                if (attackPattern) {
+                    detectionCount = enterpriseAttack.objects.filter(obj =>
+                        obj.type === 'relationship' &&
+                        obj.target_ref === attackPattern.id &&
+                        obj.relationship_type === 'detects'
+                    ).length;
+                }
+
+                // Ensure static variable defaults exist to prevent NaN issues
+                const mitigationsLowerCutoff = staticVariables.actionability_mitigations_lower_cutoff || 0;
+                const mitigationsUpperCutoff = staticVariables.actionability_mitigations_upper_cutoff || 1;
+                const detectionsLowerCutoff = staticVariables.actionability_detections_lower_cutoff || 0;
+                const detectionsUpperCutoff = staticVariables.actionability_detections_upper_cutoff || 1;
+
+                // Compute actionability score
+                const mitigationsUtility = Math.min(Math.max(
+                    (nistCount + cisCount - mitigationsLowerCutoff) / (mitigationsUpperCutoff - mitigationsLowerCutoff),
+                    0), 1);
+
+                const detectionsUtility = Math.min(Math.max(
+                    (detectionCount - detectionsLowerCutoff) / (detectionsUpperCutoff - detectionsLowerCutoff),
+                    0), 1);
+
+                const actionabilityWeightDetect1 = (staticVariables.actionability_w_miti1 || 1) /
+                    (staticVariables.actionability_mitigations_to_detections_ratio || 1) *
+                    (detectionsUpperCutoff - detectionsLowerCutoff) /
+                    (mitigationsUpperCutoff - mitigationsLowerCutoff);
+
+                const actionabilityWeightMiti = (staticVariables.actionability_w_miti1 || 1) /
+                    (actionabilityWeightDetect1 + (staticVariables.actionability_w_miti1 || 1));
+
+                const actionabilityWeightDetect = actionabilityWeightDetect1 /
+                    (actionabilityWeightDetect1 + (staticVariables.actionability_w_miti1 || 1));
+
+                const actionabilityScore = actionabilityWeightMiti * mitigationsUtility + actionabilityWeightDetect * detectionsUtility;
+
+                // Compute chokepoint score
+                const chokepointBeforeLower = staticVariables.chokepoint_before_lower_cutoff || 0;
+                const chokepointBeforeUpper = staticVariables.chokepoint_before_upper_cutoff || 1;
+                const chokepointAfterLower = staticVariables.chokepoint_after_lower_cutoff || 0;
+                const chokepointAfterUpper = staticVariables.chokepoint_after_upper_cutoff || 1;
+
+                const chokepointWeightAfter1 = (staticVariables.chokepoint_w_before1 || 1) /
+                    (staticVariables.chokepoint_before_to_after_ratio || 1) *
+                    (chokepointAfterUpper - chokepointAfterLower) /
+                    (chokepointBeforeUpper - chokepointBeforeLower);
+
+                const chokepointWeightBefore = (staticVariables.chokepoint_w_before1 || 1) /
+                    (chokepointWeightAfter1 + (staticVariables.chokepoint_w_before1 || 1));
+
+                const chokepointWeightAfter = chokepointWeightAfter1 /
+                    (chokepointWeightAfter1 + (staticVariables.chokepoint_w_before1 || 1));
+
+                const beforeUtility = Math.min(Math.max(
+                    (tidBefore - chokepointBeforeLower) / (chokepointBeforeUpper - chokepointBeforeLower),
+                    0), 1);
+
+                const afterUtility = Math.min(Math.max(
+                    (tidAfter - chokepointAfterLower) / (chokepointAfterUpper - chokepointAfterLower),
+                    0), 1);
+
+                const chokepointScore = chokepointWeightBefore * beforeUtility + chokepointWeightAfter * afterUtility;
+
+                // Compute final score
+                const initialScore = prevalenceScore + chokepointScore + actionabilityScore;
+                const finalScore = initialScore * (1 + weightSum);
+
+                return finalScore;
+            } catch (error) {
+                console.error(`Error in calculateFinalScore for technique ${techniqueId}:`, error);
+                return 0; // Return a default score in case of an error
+            }
         }
     
         // Generate Radial Tree Visualization
@@ -559,6 +1109,180 @@
                 .attr("x2", d => d.target.x).attr("y2", d => d.target.y)
                 .attr("stroke", "black");
         }
+
+        // Function to Handle Navigation Between Steps
+        let currentStep = 0;
+        const steps = document.querySelectorAll(".form-step");
+        const nextButton = document.getElementById("next-step");
+        const prevButton = document.getElementById("prev-step");
+        const progressItems = document.querySelectorAll(".progress-bar li");
+
+        // Function to update steps
+        function showStep(step) {
+            // Hide all steps and remove active class
+            steps.forEach((el, index) => {
+                el.classList.toggle("active", index === step);
+                el.style.display = index === step ? "block" : "none";
+            });
+
+            // Update progress bar
+            progressItems.forEach((el, index) => {
+                el.classList.toggle("active", index === step);
+            });
+
+            // Hide back button on first step
+            prevButton.classList.toggle("hidden", step === 0);
+
+            // Change "Next" button to "Finish" on the last step
+            nextButton.innerText = step === steps.length - 1 ? "Finish" : "Next";
+        }
+
+        // Function to Hide the Techniques Table and JSON Output
+        function hideDynamicElements() {
+            document.getElementById("techniques-container").classList.add("hidden");
+            document.getElementById("json-output").style.display = "none";
+        }
+
+        // Next Button Click Event
+        nextButton.addEventListener("click", async () => {
+            if (currentStep < steps.length - 1) {
+                if (currentStep === 0) {
+                    buildOrganizationAttributes();
+                }
+                if (currentStep === 1) {
+                    // ✅ Only recalculate if scores do not exist
+                    const scoresExist = modelDefinition.asset_types.some(asset => asset.attack_scores?.length > 0);
+                    if (!scoresExist) {
+                        await calculateAllTechniqueScores();
+                    }
+                    updateModelDisplay();
+                    generateModelSummaryTable();
+                }
+                if (currentStep === 2) {
+                    // ✅ Wait for JSON files to be fully loaded before updating model
+                    if (!jsonCache.nistMapping || !jsonCache.enterpriseAttack) {
+                        console.error("❌ Error: Required JSON files not loaded.");
+                        showToast("Error: Required JSON files not loaded.", "error");
+                        return;
+                    }
+                    await updateModelWithSecurityMappings();
+                    generateRadialTree();
+                }
+
+                currentStep++;
+                showStep(currentStep);
+                hideDynamicElements();
+            } else {
+                alert("Form Submitted!"); // Replace this with actual form submission logic
+            }
+        });
+
+        // Back Button Click Event
+        prevButton.addEventListener("click", () => {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+                hideDynamicElements();
+                updateModelDisplay(); // ✅ Ensure JSON output is updated
+            }
+        });
+
+        // ✅ Attach event for navigating to Step 4 directly from Step 3
+        const goToVisualizationButton = document.getElementById("go-to-visualization");
+        if (goToVisualizationButton) {
+            goToVisualizationButton.addEventListener("click", async function () {
+                await updateModelWithSecurityMappings(); // Add security mappings before visualization
+                currentStep = 3; // Move to Step 4
+                showStep(currentStep);
+                generateRadialTree(); // Render the visualization
+            });
+        }
+
+        // ✅ Handle radio button selection change
+        document.querySelectorAll("input[name='visualization-type']").forEach((radio) => {
+            radio.addEventListener("change", function () {
+                selectedVisualizationType = this.value;
+                generateRadialTree(); // Re-render the tree on selection change
+            });
+        });
+
+        // Initialize the first step
+        showStep(currentStep);
+
+
+        // // Function to Handle Navigation Between Steps
+        // let currentStep = 0;
+        // async function handleNavigation() {
+        //     await dataLoading(); // Ensure data is loaded before user navigates
+
+        //     showStep(currentStep);
+
+        //     document.querySelectorAll(".next-step").forEach(button => {
+        //         button.addEventListener("click", async () => {
+        //             if (currentStep < 2) {
+        //                 if (currentStep < 3) { // Now supports Step 4
+        //                     if (currentStep === 0) {
+        //                         buildOrganizationAttributes();
+        //                     }
+        //                     if (currentStep === 1) {
+        //                         // ✅ Only recalculate if scores do not exist
+        //                         const scoresExist = modelDefinition.asset_types.some(asset => asset.attack_scores?.length > 0);
+        //                         if (!scoresExist) {
+        //                             await calculateAllTechniqueScores();
+        //                         }
+        //                         updateModelDisplay();
+        //                         generateModelSummaryTable();
+        //                     }
+        //                     if (currentStep === 2) {
+        //                         // ✅ Wait for JSON files to be fully loaded before updating model
+        //                         if (!jsonCache.nistMapping || !jsonCache.enterpriseAttack) {
+        //                             console.error("❌ Error: Required JSON files not loaded.");
+        //                             showToast("Error: Required JSON files not loaded.", "error");
+        //                             return;
+        //                         }
+
+        //                         await updateModelWithSecurityMappings();
+        //                         generateRadialTree();
+        //                     }
+
+        //                     currentStep++;
+        //                     showStep(currentStep);
+        //                     hideDynamicElements();
+        //                 }
+        //             }
+        //         })
+        //     });
+
+        //     document.querySelectorAll(".prev-step").forEach(button => {
+        //         button.addEventListener("click", () => {
+        //             if (currentStep > 0) {
+        //                 currentStep--;
+        //                 showStep(currentStep);
+        //                 hideDynamicElements();
+        //                 updateModelDisplay(); // ✅ Ensure JSON output is updated
+        //             }
+        //         });
+        //     });
+        
+        //     // ✅ Attach event for navigating to Step 4 directly from Step 3
+        //     const goToVisualizationButton = document.getElementById("go-to-visualization");
+        //     if (goToVisualizationButton) {
+        //         goToVisualizationButton.addEventListener("click", async function () {
+        //             await updateModelWithSecurityMappings(); // Add security mappings before visualization
+        //             currentStep = 3; // Move to Step 4
+        //             showStep(currentStep);
+        //             generateRadialTree(); // Render the visualization
+        //         });
+        //     }
+
+        //     // ✅ Handle radio button selection change
+        //     document.querySelectorAll("input[name='visualization-type']").forEach((radio) => {
+        //         radio.addEventListener("change", function () {
+        //             selectedVisualizationType = this.value;
+        //             generateRadialTree(); // Re-render the tree on selection change
+        //         });
+        //     });
+        // }
     
         // Dark Mode Toggle
         async function toggleDarkMode() {
@@ -567,11 +1291,6 @@
             const mode = body.classList.contains("dark") ? "dark" : "light";
             await storeObject("settings", { key: "darkMode", value: mode });
         }
-    
-        document.addEventListener("DOMContentLoaded", async () => {
-            const savedMode = await getObjectById("settings", "darkMode");
-            if (savedMode) document.body.classList.toggle("dark", savedMode.value === "dark");
-        });
     
         // JSON Export & Download
         async function exportModelAsJSON() {
@@ -588,21 +1307,102 @@
     
         document.getElementById("download-json").addEventListener("click", exportModelAsJSON);
     
-        // Toast Notification
-        function showToast(message) {
-            const toast = document.getElementById("toast");
-            toast.innerText = message;
-            toast.style.display = "block";
-            setTimeout(() => toast.style.display = "none", 3000);
+        // // Multi-Step Form Navigation
+        // function showStep(step) {
+        //     document.querySelectorAll(".form-step").forEach((el, index) => {
+        //         el.style.display = index === step ? "block" : "none";
+        //     });
+        // }
+
+        // // Function to Hide the Techniques Table and JSON Output
+        // function hideDynamicElements() {
+        //     document.getElementById("techniques-container").classList.add("hidden");
+        //     document.getElementById("json-output").style.display = "none";
+        // }
+
+        // // Function to Show the Current Step
+        // function showStep(step) {
+        //     const formSteps = document.querySelectorAll(".form-step");
+        //     const progressItems = document.querySelectorAll(".progress-bar li");
+
+        //     formSteps.forEach((el, i) => {
+        //         el.classList.toggle("active", i === step);
+        //     });
+        //     progressItems.forEach((el, i) => {
+        //         el.classList.toggle("active", i === step);
+        //     });
+        // }
+
+        // Function to Build Organization Attributes from Checkboxes
+        function buildOrganizationAttributes() {
+            document.querySelectorAll("#organization-details input[type='checkbox']").forEach(input => {
+                modelDefinition.organization_attributes[input.id] = input.checked;  // ✅ Ensure proper assignment
+            });
+
+            // console.log("Saved Organization Attributes:", modelDefinition.organization_attributes);
+        }
+
+        function generateModelSummaryTable() {
+            const tableBody = document.getElementById("model-summary-body");
+            tableBody.innerHTML = "";
+
+            modelDefinition.asset_types.forEach(asset => {
+                const techniques = asset.attack_scores || [];
+
+                const avgScore = techniques.length
+                    ? (techniques.reduce((sum, t) => sum + parseFloat(t.score), 0) / techniques.length).toFixed(4)
+                    : "N/A";
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td class="border border-gray-300 px-4 py-2">${asset.environment}</td>
+                    <td class="border border-gray-300 px-4 py-2">${asset.asset_category}</td>
+                    <td class="border border-gray-300 px-4 py-2">${asset.asset_type}</td>
+                    <td class="border border-gray-300 px-4 py-2 text-blue-500 cursor-pointer">
+                        ${techniques.length} techniques (Avg Score: ${avgScore})
+                    </td>
+                `;
+
+                // ✅ Pass asset type name instead of JSON
+                row.querySelector("td:last-child").addEventListener("click", () => {
+                    displayTechniquesTable(asset.asset_type);
+                });
+
+                tableBody.appendChild(row);
+            });
+        }
+
+
+        async function displayTechniquesTable(assetTypeName) {
+            const tableBody = document.getElementById("techniques-body");
+            tableBody.innerHTML = "";
+
+            document.getElementById("selected-asset-type").textContent = assetTypeName;
+            document.getElementById("techniques-container").classList.remove("hidden");
+
+            // Find the asset type object
+            const selectedAssetType = modelDefinition.asset_types.find(asset => asset.asset_type === assetTypeName);
+            if (!selectedAssetType) {
+                console.error(`Error: Asset type '${assetTypeName}' not found in model definition.`);
+                return;
+            }
+
+            // Use precomputed attack scores
+            const techniques = selectedAssetType.attack_scores || [];
+
+            techniques.forEach(technique => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td class="border border-gray-300 px-4 py-2">${technique.attack_object_id}</td>
+                    <td class="border border-gray-300 px-4 py-2">${technique.attack_object_name}</td>
+                    <td class="border border-gray-300 px-4 py-2">${technique.score}</td>
+                `;
+                tableBody.appendChild(row);
+            });
         }
     
-        // Initialize App
-        document.addEventListener("DOMContentLoaded", async () => {
-            await initIndexedDB();
-            await populateAssetCategories();
-            await generateRadialTree();
-        });
-    </script>     
+    </script>
+         
   
 </body>
 
