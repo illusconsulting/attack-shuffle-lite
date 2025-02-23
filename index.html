@@ -185,7 +185,7 @@
 
         <!-- Progress Bar -->
         <ol class="progress-bar flex">
-            <li data-step="1" class="active">Organization</li>
+            <li data-step="1" class="active">Organization Details</li>
             <li data-step="2">Asset Types</li>
             <li data-step="3">MITRE ATT&CK Inventory</li>
             <li data-step="4">ATT&CK Technique Visualization</li>
@@ -228,8 +228,6 @@
                         Encrypt Stored Data (Beyond Disk Encryption)
                     </label>
                 </div>
-
-                <!-- <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4">Next</button> -->
             </div>
 
             <!-- Step 2: Asset Types -->
@@ -293,18 +291,10 @@
                     Add Asset Type
                 </button>
 
-                <!-- Button to Add Another Asset Type -->
-                <!-- <button type="button" id="add-more-assets" class="bg-gray-500 text-white px-4 py-2 rounded mt-4" style="display: none;">
-                    Add Another Asset Type
-                </button> -->
-
                 <!-- Display Model Definition in JSON -->
                 <button type="button" id="view-model-definition" class="bg-gray-700 text-white px-4 py-2 rounded mt-4" style="display: none;">
                     View Model JSON
                 </button>
-
-                <!-- <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
-                <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4">Next</button> -->
             </div>
 
             <!-- Step 3: Technique Scoring -->
@@ -347,8 +337,6 @@
                 </div>
 
                 <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button>
-                <!-- <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button>
-                <button type="button" class="next-step bg-blue-500 text-white px-4 py-2 rounded mt-4" id="go-to-visualization">Next</button> -->
 
             </div>
 
@@ -372,8 +360,6 @@
                 <!-- Radial Tree Visualization Container -->
                 <div id="radial-tree-container" class="w-full h-96 border border-gray-300 rounded bg-white"></div>
 
-                <!-- Navigation Buttons -->
-                <!-- <button type="button" class="prev-step bg-gray-500 text-white px-4 py-2 rounded mt-4">Back</button> -->
                 <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button>
             </div>
 
@@ -387,21 +373,24 @@
         // Need to add a function/query to create a consolidated mapping of techniques to mitigations, data sources, controls, and capabilities and store within IndexedDB
         // Need to add a function/query to map the consolidated mapping of techniques to the assets mapped to those techniques
         // Target JSON structure for asset-type:
-        // "asset-type": {
-        //     "asset-category": "devices", // from user input, enum ["devices", "networks", "applications", "data", "identities"]
-        //     "asset-type": "Linux Server OS", // from user input, enum from assetTypeMappings
-        //     "environment": "AWS", // from user input, enum from ["AWS", "GCP", "Azure", "M365"]
-        //     "monitoring-coverage": { // from user input, enum ["None", "Low", "Medium", "High"]
-        //         "network-monitoring": "High",
-        //         "process-monitoring": "Medium",
-        //         "file-monitoring": "Low",
-        //         "cloud-monitoring": "None",
-        //         "hardware-monitoring": "None"
+        // "Linux Server OS": { // from assetTypeMappings.mapping_objects.[].capability_id
+        //     "asset-category": "devices", // from assetTypeMappings.mapping_objects.[].capability_group
+        //     "asset-type": "Linux Server OS", // from assetTypeMappings
+        //     "model-values": { // "model-values" is not present in the indexeddb asset types store, it is added to the asset type instance in the model json when the user clicks the "Add Asset Type" button in step 2
+        //         "environment": "AWS", // from user input, enum from ["AWS", "GCP", "Azure", "M365"]
+        //         "monitoring-coverage": { // from user input, enum ["None", "Low", "Medium", "High"]
+        //             "network-monitoring": "High",
+        //             "process-monitoring": "Medium",
+        //             "file-monitoring": "Low",
+        //             "cloud-monitoring": "None",
+        //             "hardware-monitoring": "None"
+        //         }
+        //         "record-count": 1000, // from user drop-down selection, "record-count" is only present if "asset-category" is "data"
         //     },
-        //     "record-count": 1000,
-        //     "techniques": {
-        //         "T1001": {
-        //             "name": "Data Obfuscation",
+        //     "techniques": { // contextualized technique objects for each unique technique mapped to the asset type
+        //         "T1001": { // from assetTypeMappings.mapping_objects.[].attack_object_id 
+        //             "name": "Data Obfuscation", // from assetTypeMappings.mapping_objects.[].attack_object_name
+        //             "prevEntry": [calc_tid_before, calc_tid_after, calc_prev_score], // from attack-prev-tid.json
         //             "data-sources": [], // from STIX, in "data_sources" array inside "attack-pattern" object
         //             "nist-controls": [], // from NIST mapex
         //             "cis-safeguards": [], // from CIS json
@@ -410,10 +399,18 @@
         //             "azure-capabilities": [], // from Azure mapex
         //             "m365-capabilities": [], // from M365 mapex
         //             "mitigations": [], // from STIX, type = "course-of-action"
+        //             "monitoring-coverage-eval": {
+        //                 "process": true, // Boolean based on whether keys with value "process" from weight-keywords.json are present in "data-sources"
+        //                 "network": false, // Boolean based on whether keys with value "network" from weight-keywords.json are present in "data-sources"
+        //                 "file": true, // Boolean based on whether keys with value "file" from weight-keywords.json are present in "data-sources"
+        //                 "cloud": false, // Boolean based on whether keys with value "cloud" from weight-keywords.json are present in "data-sources"
+        //                 "hardware": true // Boolean based on whether keys with value "hardware" from weight-keywords.json are present in "data-sources"
+        //             },
         //             "initial-score": 0.5 // initialScore = prevalenceScore + chokepointScore + actionabilityScore
         //         },
         //         "T1002": {
         //             "name": "Data Compressed",
+        //             "prevEntry": [calc_tid_before, calc_tid_after, calc_prev_score], // from attack-prev-tid.json
         //             "data-sources": [], // from STIX, in "data_sources" array inside "attack-pattern" object
         //             "nist-controls": [], // from NIST mapex
         //             "cis-safeguards": [], // from CIS json
@@ -422,6 +419,13 @@
         //             "azure-capabilities": [], // from Azure mapex
         //             "m365-capabilities": [], // from M365 mapex
         //             "mitigations": [], // from STIX, type = "course-of-action"
+        //             "monitoring-coverage-eval": {
+        //                 "process": true, // Boolean based on whether keys with value "process" from weight-keywords.json are present in "data-sources"
+        //                 "network": false, // Boolean based on whether keys with value "network" from weight-keywords.json are present in "data-sources"
+        //                 "file": true, // Boolean based on whether keys with value "file" from weight-keywords.json are present in "data-sources"
+        //                 "cloud": false, // Boolean based on whether keys with value "cloud" from weight-keywords.json are present in "data-sources"
+        //                 "hardware": true // Boolean based on whether keys with value "hardware" from weight-keywords.json are present in "data-sources"
+        //             },
         //             "initial-score": 0.5 // initialScore = prevalenceScore + chokepointScore + actionabilityScore
         //         }
         //     }
@@ -439,16 +443,22 @@
                         { name: "techniques", keyPath: "id" },
                         { name: "dataSources", keyPath: "id" },
                         { name: "securityMappings", keyPath: "attack_object_id" },
-                        { name: "weightKeywords", keyPath: "keywords" },
+                        { name: "weightKeywords", autoIncrement: true },
+                        { name: "staticVariables", autoIncrement: true },
                         { name: "assets", keyPath: "id" }, // Stores only asset categories
-                        { name: "assetTypes", keyPath: "id" }, // Stores asset types per category
+                        { name: "mapping", keyPath: ["capability_id", "attack_object_id", "mapping_type"] },
+                        { name: "assetType", keyPath: ["capability_id", "attack_object_id", "mapping_type"] }, // Stores asset types per category
+                        { name: "securityControl", keyPath: ["capability_id", "attack_object_id", "mapping_type"] }, // Stores NIST mappings
+                        { name: "cloudCapability", keyPath: ["capability_id", "attack_object_id", "mapping_type"] }, // Stores AWS, Azure, GCP, and M365 mappings
                         { name: "visualizationTree", keyPath: "id" },
                         { name: "settings", keyPath: "key" }, // Store dark mode, preferences
                         { name: "attackPatterns", keyPath: "technique_id" }, // Stores ATT&CK techniques from STIX 2.1
                         { name: "mitigations", keyPath: "mitigation_id" }, // Stores ATT&CK mitigations from STIX 2.1
                         { name: "attackMitigationMappings", keyPath: "mapping_id" }, // Stores ATT&CK relationships from STIX 2.1
                         { name: "cisSafeguardMappings", keyPath: ["cis_safeguard", "technique_id"] }, // Stores CIS safeguard mappings
-                        { name: "attackPrevTid", keyPath: "attack_object_id" } // Stores technique prevalence and tid data for ATT&CK score calcs
+                        { name: "attackPrevTid", keyPath: "attack_object_id" }, // Stores technique prevalence and tid data for ATT&CK score calcs
+                        { name: "contextualizedAssetTypes", keyPath: "assetTypeId" }, // Stores contextualized asset types
+                        { name: "contextualizedTechniques", keyPath: "techniqueId" } // Stores contextualized techniques
                     ];
     
                     stores.forEach(store => {
@@ -511,11 +521,11 @@
         // Define MAPEX file categories
         const mapexFiles = {
             "assetTypeMappings": {
-                "applicationsMappings": "enterprise-assets-applications-02.16.2025_attack-16.1-enterprise_json.json",
-                "devicesMappings": "enterprise-assets-devices-02.16.2025_attack-16.1-enterprise_json.json",
-                "networksMappings": "enterprise-assets-networks-02.16.2025_attack-16.1-enterprise_json.json",
-                "dataMappings": "enterprise-assets-data-02.16.2025_attack-16.1-enterprise_json.json",
-                "identitiesMappings": "enterprise-assets-identities-02.16.2025_attack-16.1-enterprise_json.json"
+                "applicationsMappings": "enterprise-assets-applications-02.20.2025_attack-16.1-enterprise_json.json",
+                "devicesMappings": "enterprise-assets-devices-02.20.2025_attack-16.1-enterprise_json.json",
+                "networksMappings": "enterprise-assets-networks-02.20.2025_attack-16.1-enterprise_json.json",
+                "dataMappings": "enterprise-assets-data-02.20.2025_attack-16.1-enterprise_json.json",
+                "identitiesMappings": "enterprise-assets-identities-02.20.2025_attack-16.1-enterprise_json.json"
             },
             "securityControlMappings": {
                 "nistMappings": "nist_800_53-rev5_attack-14.1-enterprise.json"
@@ -536,8 +546,8 @@
             }
 
             const db = await initIndexedDB();
-            const transaction = db.transaction(storeName, "readwrite");
-            const store = transaction.objectStore(storeName);
+            const transaction = db.transaction(mappingType, "readwrite");
+            const store = transaction.objectStore(mappingType);
 
             jsonData.mapping_objects.forEach(mapping => {
                 let mappingEntry;
@@ -586,7 +596,7 @@
                         references: mapping.references || []
                     };
                 }
-
+                console.log("importMapexMappings mapping_id:" `${mapping.capability_id}_${mapping.attack_object_id}_${mapping.mapping_type}`)
                 store.put(mappingEntry);
             });
 
@@ -613,7 +623,8 @@
                         const response = await fetch(filePath);
                         if (!response.ok) throw new Error(`Failed to fetch ${filePath}`);
                         const jsonData = await response.json();
-                        await importMapexMappings(storeName, jsonData, mappingType);
+                        console.log("fetchAndImportMapexFiles", mappingType, jsonData, mappingType)
+                        await importMapexMappings(mappingType, jsonData, mappingType);
                     } catch (error) {
                         console.error(`Error processing ${filePath}:`, error);
                     }
@@ -789,36 +800,43 @@
             }
         }
 
-        async function dataLoading() {
-            await initIndexedDB();
-            await fetchAndStoreJSONFiles();  // Load general JSON files
-            await fetchAndImportMapexFiles();  // Load MAPEX mappings
-            await fetchAndImportStixFile();  // Load STIX data
-            await fetchAndImportCISSafeguardFile();  // Load CIS Safeguard data
-            await fetchAndImportAttackPrevTidFile();  // Load technique prevalence and tid data for ATT&CK score calcs
-            await populateAssetCategories(); // Now categories should be available
+        // async function dataLoading() {
+        //     await initIndexedDB();
+        //     await fetchAndStoreJSONFiles();  // Load general JSON files
+        //     await fetchAndImportMapexFiles();  // Load MAPEX mappings
+        //     await fetchAndImportStixFile();  // Load STIX data
+        //     await fetchAndImportCISSafeguardFile();  // Load CIS Safeguard data
+        //     await fetchAndImportAttackPrevTidFile();  // Load technique prevalence and tid data for ATT&CK score calcs
+        //     await populateAssetCategories(); // Now categories should be available
 
-            console.log("All data loaded successfully.");
-        }
+        //     console.log("All data loaded successfully.");
+        // }
 
 
         // Run the function when the page loads
         document.addEventListener("DOMContentLoaded", async () => {
             await initIndexedDB();
+            console.log("IndexedDB initialized.");
             await fetchAndStoreJSONFiles();  // Load general JSON files
+            console.log("General JSON files loaded.");
             await fetchAndImportMapexFiles();  // Load MAPEX mappings
+            console.log("MAPEX mappings loaded.");
             await fetchAndImportStixFile();  // Load STIX data
+            console.log("STIX data loaded.");
             await fetchAndImportCISSafeguardFile();  // Load CIS Safeguard data
+            console.log("CIS Safeguard data loaded.");
             await fetchAndImportAttackPrevTidFile();  // Load technique prevalence and tid data for ATT&CK score calcs
+            console.log("Technique prevalence and tid data loaded.");
             await populateAssetCategories(); // Now categories should be available
+            console.log("Asset categories populated.");
             showStep(0);
 
             // set dark mode
             const savedMode = await getObjectById("settings", "darkMode");
             if (savedMode) document.body.classList.toggle("dark", savedMode.value === "dark");
 
-            document.querySelectorAll(".next-step").forEach(btn => btn.addEventListener("click", () => showStep(1)));
-            document.querySelectorAll(".prev-step").forEach(btn => btn.addEventListener("click", () => showStep(0)));
+            // document.querySelectorAll(".next-step").forEach(btn => btn.addEventListener("click", () => showStep(1)));
+            // document.querySelectorAll(".prev-step").forEach(btn => btn.addEventListener("click", () => showStep(0)));
         });
     
         // Preload Default Asset Categories (No Asset Types)
@@ -851,7 +869,7 @@
     
         // Retrieve Asset Categories from IndexedDB
         async function populateAssetCategories() {
-            const assetCategories = await getAllObjects("assets");
+            const assetCategories = await getAllFromStore("assets");
             const container = document.getElementById("asset-category-container");
     
             if (assetCategories.length === 0) {
@@ -890,203 +908,6 @@
     
         async function getMonitoringCoverage(assetId) {
             return await getObjectById("monitoringCoverage", assetId);
-        }
-    
-        // // Calculate ATT&CK Technique Scores
-        // async function calculateTechniqueScores() {
-        //     const techniques = await getAllObjects("techniques");
-        //     for (let technique of techniques) {
-        //         technique.score = Math.random() * 10; // Placeholder for real calculation
-        //         await storeObject("techniques", technique);
-        //     }
-        //     showToast("Technique scores calculated.");
-        // }
-
-        // Need to update this function to use the new monitoring coverage data structure
-        async function calculateMonitoringCoverageWeightSum(techniqueId, assetMonitoringCoverage) {
-            if (!assetMonitoringCoverage || typeof assetMonitoringCoverage !== 'object') {
-                console.error(`Error: Invalid assetMonitoringCoverage for Technique ID: ${techniqueId}`);
-                return 0;
-            }
-
-            try {
-                // Load cached JSON data instead of fetching
-                const weightKeywords = getJSONData("weightKeywords") || {};
-                const staticVariables = getJSONData("staticVariables") || {};
-
-                // Get data sources detecting this technique
-                const dataSources = await findDataSources(techniqueId);
-                if (!Array.isArray(dataSources) || dataSources.length === 0) {
-                    console.warn(`No valid data sources found for Technique ID: ${techniqueId}`);
-                    return 0;
-                }
-
-                // Convert weight-keywords to a Map for fast lookup
-                const keywordMap = new Map(
-                    Object.entries(weightKeywords).map(([key, value]) => [key.toLowerCase(), value])
-                );
-
-                // Convert dataSources to lowercase once before iteration
-                const lowercasedDataSources = dataSources.map(source => source.toLowerCase());
-
-                // Initialize weight categories
-                let categoryWeights = {
-                    process: 0,
-                    network: 0,
-                    file: 0,
-                    cloud: 0,
-                    hardware: 0
-                };
-
-                // Precompute matched categories per source to minimize redundant checks
-                const matchedCategories = new Set();
-
-                for (const source of lowercasedDataSources) {
-                    for (const [keyword, category] of keywordMap.entries()) {
-                        if (source.includes(keyword)) { // ✅ Substring Matching Fix
-                            matchedCategories.add(category);
-                        }
-                    }
-                }
-
-                // Process matched categories
-                for (const category of matchedCategories) {
-                    if (!(category in assetMonitoringCoverage)) {
-                        console.warn(`Category '${category}' is not found in assetMonitoringCoverage.`);
-                        continue; // Skip invalid categories
-                    }
-
-                    // Determine weight based on user-selected monitoring coverage
-                    const monitoringLevel = assetMonitoringCoverage[category]; // "None", "Low", "Medium", "High"
-
-                    const weight = {
-                        "None": staticVariables.weight_score_none || 0,
-                        "Low": staticVariables.weight_score_low || 0,
-                        "Medium": staticVariables.weight_score_medium || 0,
-                        "High": staticVariables.weight_score_high || 0
-                    }[monitoringLevel] || 0;
-
-                    // Assign highest weight found for this category
-                    categoryWeights[category] = Math.max(categoryWeights[category], weight);
-                }
-
-                // Compute final weight sum
-                return Object.values(categoryWeights).reduce((sum, weight) => sum + weight, 0);
-            } catch (error) {
-                console.error(`Error in calculateMonitoringCoverageWeightSum for Technique ID ${techniqueId}:`, error);
-                return 0;
-            }
-        }
-
-        // Need to update this function to use the new IndexedDB structure
-        async function calculateFinalScore(techniqueId, assetObject) {
-            if (!assetObject || !assetObject.monitoring_coverage) {
-                console.error(`Error: Asset monitoring coverage is undefined for technique ID ${techniqueId}`);
-                return 0; // Prevent further execution
-            }
-
-            try {
-                // Load cached JSON data using correct keys from jsonFiles
-                const attackPrev = getJSONData("attackPrevTid") || [];
-                const nistMappings = getJSONData("nistMapping") || { mapping_objects: [] };
-                const cisMappings = getJSONData("cisToAttack") || [];
-                const enterpriseAttack = getJSONData("enterpriseAttack") || { objects: [] };
-                const staticVariables = getJSONData("staticVariables") || {};
-                const weightKeywords = getJSONData("weightKeywords") || {};
-
-                // Compute weight sum based on monitoring coverage
-                const weightSum = await calculateMonitoringCoverageWeightSum(techniqueId, assetObject.monitoring_coverage);
-
-                // Extract prevalence score
-                const prevEntry = attackPrev.find(t => t.attack_object_id === techniqueId);
-                const prevalenceScore = prevEntry ? parseFloat(prevEntry.calc_prev_score) : 0;
-                const tidBefore = prevEntry ? parseFloat(prevEntry.calc_tid_before) : 0;
-                const tidAfter = prevEntry ? parseFloat(prevEntry.calc_tid_after) : 0;
-
-                // Count security controls mapped to this technique
-                const nistCount = (nistMappings.mapping_objects || []).filter(obj => obj.attack_object_id === techniqueId).length;
-                const cisCount = (cisMappings || []).filter(obj => obj.attack_techniques.some(t => t.technique_id === techniqueId)).length;
-
-                // Count detections from enterprise-attack.json
-                let detectionCount = 0;
-                const attackPattern = enterpriseAttack.objects.find(obj =>
-                    obj.type === 'attack-pattern' &&
-                    obj.external_references &&
-                    obj.external_references.some(ref => ref.external_id === techniqueId)
-                );
-
-                if (attackPattern) {
-                    detectionCount = enterpriseAttack.objects.filter(obj =>
-                        obj.type === 'relationship' &&
-                        obj.target_ref === attackPattern.id &&
-                        obj.relationship_type === 'detects'
-                    ).length;
-                }
-
-                // Ensure static variable defaults exist to prevent NaN issues
-                const mitigationsLowerCutoff = staticVariables.actionability_mitigations_lower_cutoff || 0;
-                const mitigationsUpperCutoff = staticVariables.actionability_mitigations_upper_cutoff || 1;
-                const detectionsLowerCutoff = staticVariables.actionability_detections_lower_cutoff || 0;
-                const detectionsUpperCutoff = staticVariables.actionability_detections_upper_cutoff || 1;
-
-                // Compute actionability score
-                const mitigationsUtility = Math.min(Math.max(
-                    (nistCount + cisCount - mitigationsLowerCutoff) / (mitigationsUpperCutoff - mitigationsLowerCutoff),
-                    0), 1);
-
-                const detectionsUtility = Math.min(Math.max(
-                    (detectionCount - detectionsLowerCutoff) / (detectionsUpperCutoff - detectionsLowerCutoff),
-                    0), 1);
-
-                const actionabilityWeightDetect1 = (staticVariables.actionability_w_miti1 || 1) /
-                    (staticVariables.actionability_mitigations_to_detections_ratio || 1) *
-                    (detectionsUpperCutoff - detectionsLowerCutoff) /
-                    (mitigationsUpperCutoff - mitigationsLowerCutoff);
-
-                const actionabilityWeightMiti = (staticVariables.actionability_w_miti1 || 1) /
-                    (actionabilityWeightDetect1 + (staticVariables.actionability_w_miti1 || 1));
-
-                const actionabilityWeightDetect = actionabilityWeightDetect1 /
-                    (actionabilityWeightDetect1 + (staticVariables.actionability_w_miti1 || 1));
-
-                const actionabilityScore = actionabilityWeightMiti * mitigationsUtility + actionabilityWeightDetect * detectionsUtility;
-
-                // Compute chokepoint score
-                const chokepointBeforeLower = staticVariables.chokepoint_before_lower_cutoff || 0;
-                const chokepointBeforeUpper = staticVariables.chokepoint_before_upper_cutoff || 1;
-                const chokepointAfterLower = staticVariables.chokepoint_after_lower_cutoff || 0;
-                const chokepointAfterUpper = staticVariables.chokepoint_after_upper_cutoff || 1;
-
-                const chokepointWeightAfter1 = (staticVariables.chokepoint_w_before1 || 1) /
-                    (staticVariables.chokepoint_before_to_after_ratio || 1) *
-                    (chokepointAfterUpper - chokepointAfterLower) /
-                    (chokepointBeforeUpper - chokepointBeforeLower);
-
-                const chokepointWeightBefore = (staticVariables.chokepoint_w_before1 || 1) /
-                    (chokepointWeightAfter1 + (staticVariables.chokepoint_w_before1 || 1));
-
-                const chokepointWeightAfter = chokepointWeightAfter1 /
-                    (chokepointWeightAfter1 + (staticVariables.chokepoint_w_before1 || 1));
-
-                const beforeUtility = Math.min(Math.max(
-                    (tidBefore - chokepointBeforeLower) / (chokepointBeforeUpper - chokepointBeforeLower),
-                    0), 1);
-
-                const afterUtility = Math.min(Math.max(
-                    (tidAfter - chokepointAfterLower) / (chokepointAfterUpper - chokepointAfterLower),
-                    0), 1);
-
-                const chokepointScore = chokepointWeightBefore * beforeUtility + chokepointWeightAfter * afterUtility;
-
-                // Compute final score
-                const initialScore = prevalenceScore + chokepointScore + actionabilityScore;
-                const finalScore = initialScore * (1 + weightSum);
-
-                return finalScore;
-            } catch (error) {
-                console.error(`Error in calculateFinalScore for technique ${techniqueId}:`, error);
-                return 0; // Return a default score in case of an error
-            }
         }
     
         // Generate Radial Tree Visualization
@@ -1207,83 +1028,8 @@
         });
 
         // Initialize the first step
-        showStep(currentStep);
-
-
-        // // Function to Handle Navigation Between Steps
-        // let currentStep = 0;
-        // async function handleNavigation() {
-        //     await dataLoading(); // Ensure data is loaded before user navigates
-
-        //     showStep(currentStep);
-
-        //     document.querySelectorAll(".next-step").forEach(button => {
-        //         button.addEventListener("click", async () => {
-        //             if (currentStep < 2) {
-        //                 if (currentStep < 3) { // Now supports Step 4
-        //                     if (currentStep === 0) {
-        //                         buildOrganizationAttributes();
-        //                     }
-        //                     if (currentStep === 1) {
-        //                         // ✅ Only recalculate if scores do not exist
-        //                         const scoresExist = modelDefinition.asset_types.some(asset => asset.attack_scores?.length > 0);
-        //                         if (!scoresExist) {
-        //                             await calculateAllTechniqueScores();
-        //                         }
-        //                         updateModelDisplay();
-        //                         generateModelSummaryTable();
-        //                     }
-        //                     if (currentStep === 2) {
-        //                         // ✅ Wait for JSON files to be fully loaded before updating model
-        //                         if (!jsonCache.nistMapping || !jsonCache.enterpriseAttack) {
-        //                             console.error("❌ Error: Required JSON files not loaded.");
-        //                             showToast("Error: Required JSON files not loaded.", "error");
-        //                             return;
-        //                         }
-
-        //                         await updateModelWithSecurityMappings();
-        //                         generateRadialTree();
-        //                     }
-
-        //                     currentStep++;
-        //                     showStep(currentStep);
-        //                     hideDynamicElements();
-        //                 }
-        //             }
-        //         })
-        //     });
-
-        //     document.querySelectorAll(".prev-step").forEach(button => {
-        //         button.addEventListener("click", () => {
-        //             if (currentStep > 0) {
-        //                 currentStep--;
-        //                 showStep(currentStep);
-        //                 hideDynamicElements();
-        //                 updateModelDisplay(); // ✅ Ensure JSON output is updated
-        //             }
-        //         });
-        //     });
-        
-        //     // ✅ Attach event for navigating to Step 4 directly from Step 3
-        //     const goToVisualizationButton = document.getElementById("go-to-visualization");
-        //     if (goToVisualizationButton) {
-        //         goToVisualizationButton.addEventListener("click", async function () {
-        //             await updateModelWithSecurityMappings(); // Add security mappings before visualization
-        //             currentStep = 3; // Move to Step 4
-        //             showStep(currentStep);
-        //             generateRadialTree(); // Render the visualization
-        //         });
-        //     }
-
-        //     // ✅ Handle radio button selection change
-        //     document.querySelectorAll("input[name='visualization-type']").forEach((radio) => {
-        //         radio.addEventListener("change", function () {
-        //             selectedVisualizationType = this.value;
-        //             generateRadialTree(); // Re-render the tree on selection change
-        //         });
-        //     });
-        // }
-    
+        // showStep(currentStep);
+   
         // Dark Mode Toggle
         async function toggleDarkMode() {
             const body = document.body;
@@ -1306,32 +1052,6 @@
         }
     
         document.getElementById("download-json").addEventListener("click", exportModelAsJSON);
-    
-        // // Multi-Step Form Navigation
-        // function showStep(step) {
-        //     document.querySelectorAll(".form-step").forEach((el, index) => {
-        //         el.style.display = index === step ? "block" : "none";
-        //     });
-        // }
-
-        // // Function to Hide the Techniques Table and JSON Output
-        // function hideDynamicElements() {
-        //     document.getElementById("techniques-container").classList.add("hidden");
-        //     document.getElementById("json-output").style.display = "none";
-        // }
-
-        // // Function to Show the Current Step
-        // function showStep(step) {
-        //     const formSteps = document.querySelectorAll(".form-step");
-        //     const progressItems = document.querySelectorAll(".progress-bar li");
-
-        //     formSteps.forEach((el, i) => {
-        //         el.classList.toggle("active", i === step);
-        //     });
-        //     progressItems.forEach((el, i) => {
-        //         el.classList.toggle("active", i === step);
-        //     });
-        // }
 
         // Function to Build Organization Attributes from Checkboxes
         function buildOrganizationAttributes() {
@@ -1400,7 +1120,895 @@
                 tableBody.appendChild(row);
             });
         }
-    
+
+        document.getElementById("submit-asset-type").addEventListener("click", async () => {
+            const assetTypeName = document.getElementById("asset-type-dropdown").value;
+            const environment   = document.getElementById("environment-dropdown").value;
+            const selectedCategory = document.querySelector('input[name="asset-category"]:checked').value;
+            // gather monitoring coverage inputs, e.g.:
+            const coverage = {
+                "network-monitoring": selectedNetworkCoverage,
+                "process-monitoring": selectedProcessCoverage,
+                "file-monitoring": selectedFileCoverage,
+                "cloud-monitoring": selectedCloudCoverage,
+                "hardware-monitoring": selectedHardwareCoverage
+            };
+            let recordCount;
+            if (selectedCategory === "data") {
+                recordCount = parseInt(document.getElementById("record-count-dropdown").value, 10);
+            }
+
+            await updateModelValuesForAssetType(assetTypeName, environment, coverage, recordCount);
+            // Possibly show a success message or move to the next step.
+        });
+
+        //
+        // ATT&CK Score Calculation Functions
+        //
+        /**
+         * Returns the prevalence score for a given technique.
+         * 
+         * @param {string} techniqueId - The ATT&CK Technique ID (e.g., "T1003").
+         * @returns {Promise<number>} - The numeric prevalence score, or 0 if not found.
+         */
+        async function calculatePrevalenceScore(techniqueId) {
+            try {
+                // 1. Attempt to read from in-memory data if loaded via getJSONData.
+                const attackPrev = getJSONData("attackPrevTid");
+                if (attackPrev && Array.isArray(attackPrev)) {
+                const prevEntry = attackPrev.find(
+                    entry => entry.attack_object_id === techniqueId
+                );
+                if (prevEntry && typeof prevEntry.calc_prev_score === "number") {
+                    return prevEntry.calc_prev_score;
+                } else if (prevEntry && typeof prevEntry.calc_prev_score === "string") {
+                    return parseFloat(prevEntry.calc_prev_score) || 0;
+                }
+                }
+
+                // 2. If not found in memory, check the IndexedDB "attackPrevTid" store.
+                const db = await initIndexedDB();
+                const tx = db.transaction("attackPrevTid", "readonly");
+                const store = tx.objectStore("attackPrevTid");
+
+                // Because the store’s primary key is "attack_object_id",
+                // you can directly get by the techniqueId if it matches the key.
+                const dbEntry = await new Promise((resolve, reject) => {
+                const request = store.get(techniqueId);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+                });
+
+                if (dbEntry && dbEntry.calc_prev_score !== undefined) {
+                return parseFloat(dbEntry.calc_prev_score) || 0;
+                }
+
+                // 3. Default to 0 if no matching entry is found.
+                return 0;
+
+            } catch (error) {
+                console.error("Error in calculatePrevalenceScore for technique:", techniqueId, error);
+                return 0;
+            }
+        }
+
+        /**
+         * Computes the chokepoint score given calc_tid_before and calc_tid_after values.
+         * 
+         * @param {number} tidBefore - parseFloat(calc_tid_before) or 0 if missing
+         * @param {number} tidAfter  - parseFloat(calc_tid_after)  or 0 if missing
+         * @returns {number}         - The computed chokepointScore
+         */
+        function computeChokepointFromValues(tidBefore, tidAfter) {
+            try {
+                // 1. Retrieve your staticVariables from memory (or however you normally do).
+                const staticVariables = getJSONData("staticVariables") || {};
+
+                // Provide short references to all the cutoffs and weights:
+                const beforeLower = staticVariables.chokepoint_before_lower_cutoff || 0;
+                const beforeUpper = staticVariables.chokepoint_before_upper_cutoff || 1;
+                const afterLower  = staticVariables.chokepoint_after_lower_cutoff  || 0;
+                const afterUpper  = staticVariables.chokepoint_after_upper_cutoff  || 1;
+                const wBefore1    = staticVariables.chokepoint_w_before1           || 1;
+                const ratio       = staticVariables.chokepoint_before_to_after_ratio || 1;
+
+                // 2. Clamp function to ensure values stay within [0, 1]
+                function clamp(value, min, max) {
+                return Math.min(Math.max(value, min), max);
+                }
+
+                // 3. Compute the clamped "utilities" for before/after
+                //    Scale tidBefore and tidAfter based on lower/upper cutoffs and clamp
+                const beforeClamped = clamp(
+                (tidBefore - beforeLower) / (beforeUpper - beforeLower),
+                0, 
+                1
+                );
+                const afterClamped  = clamp(
+                (tidAfter  - afterLower)  / (afterUpper  - afterLower),
+                0, 
+                1
+                );
+
+                // 4. Compute weights for the formula
+                //    a) Weight portion for "after" (wAfter1)
+                const wAfter1 = (wBefore1 / ratio) 
+                                * (afterUpper - afterLower)
+                                / (beforeUpper - beforeLower);
+
+                //    b) WeightBefore & WeightAfter
+                const weightBefore = wBefore1 / (wAfter1 + wBefore1);
+                const weightAfter  = wAfter1 / (wAfter1 + wBefore1);
+
+                // 5. Combine them for the final chokepointScore
+                const chokepointScore = (weightBefore * beforeClamped) 
+                                    + (weightAfter  * afterClamped);
+
+                return chokepointScore;
+
+            } catch (error) {
+                console.error("Error in computeChokepointFromValues:", error);
+                return 0; // Return 0 if something goes wrong
+            }
+        }
+
+        /**
+         * Computes the "actionabilityScore" for a given contextualized technique object.
+         * 
+         * Assumes the technique object already contains arrays for:
+         *  - "nist-controls"       (array of NIST control objects)
+         *  - "cis-safeguards"      (array of CIS safeguard objects)
+         *  - "detections"          (array or some structure representing how many detections apply)
+         * 
+         * Also applies user-defined cutoffs and weighting factors from staticVariables:
+         *   - actionability_mitigations_lower_cutoff
+         *   - actionability_mitigations_upper_cutoff
+         *   - actionability_detections_lower_cutoff
+         *   - actionability_detections_upper_cutoff
+         *   - actionability_w_miti1
+         *   - actionability_mitigations_to_detections_ratio
+         * 
+         * @param {Object} techniqueObj - A contextualized technique object, e.g.:
+         *   {
+         *      "nist-controls": [...],
+         *      "cis-safeguards": [...],
+         *      "detections": [...], // optional
+         *      ...
+         *   }
+         * @returns {number} - The computed actionability score (0..1, typically)
+         */
+        function computeActionablityScore(techniqueObj) {
+            try {
+                // 1. Extract the relevant counts from the technique object.
+                //    If the arrays aren't present, default to an empty array.
+                const nistCount = Array.isArray(techniqueObj["nist-controls"])
+                ? techniqueObj["nist-controls"].length
+                : 0;
+                const cisCount = Array.isArray(techniqueObj["cis-safeguards"])
+                ? techniqueObj["cis-safeguards"].length
+                : 0;
+                
+                // If your contextual object includes a direct detection array or count:
+                const detectionCount = Array.isArray(techniqueObj.detections)
+                ? techniqueObj.detections.length
+                : 0;
+
+                // 2. Load actionability cutoffs and weighting factors from staticVariables
+                const staticVariables = getJSONData("staticVariables") || {};
+
+                const mitigationsLowerCutoff = staticVariables.actionability_mitigations_lower_cutoff || 0;
+                const mitigationsUpperCutoff = staticVariables.actionability_mitigations_upper_cutoff || 1;
+                const detectionsLowerCutoff  = staticVariables.actionability_detections_lower_cutoff  || 0;
+                const detectionsUpperCutoff  = staticVariables.actionability_detections_upper_cutoff  || 1;
+
+                // 3. Compute the "mitigationsUtility" (clamped between 0 and 1)
+                const rawMiti = (nistCount + cisCount) - mitigationsLowerCutoff;
+                const mitigationsUtility = Math.min(
+                Math.max(rawMiti / (mitigationsUpperCutoff - mitigationsLowerCutoff), 0),
+                1
+                );
+
+                // 4. Compute the "detectionsUtility" (clamped as well)
+                const rawDetect = detectionCount - detectionsLowerCutoff;
+                const detectionsUtility = Math.min(
+                Math.max(rawDetect / (detectionsUpperCutoff - detectionsLowerCutoff), 0),
+                1
+                );
+
+                // 5. Weigh them according to your actionability formula
+                const wMiti1 = staticVariables.actionability_w_miti1 || 1;
+                const ratio  = staticVariables.actionability_mitigations_to_detections_ratio || 1;
+
+                // The partial weight for detections
+                const actionabilityWeightDetect1 = (wMiti1 / ratio) *
+                (detectionsUpperCutoff - detectionsLowerCutoff) /
+                (mitigationsUpperCutoff - mitigationsLowerCutoff);
+
+                // The relative weights for mitigations & detections
+                const actionabilityWeightMiti   = wMiti1 / (actionabilityWeightDetect1 + wMiti1);
+                const actionabilityWeightDetect = actionabilityWeightDetect1 / (actionabilityWeightDetect1 + wMiti1);
+
+                // 6. Combine them for the final "actionabilityScore"
+                const actionabilityScore =
+                (actionabilityWeightMiti   * mitigationsUtility) +
+                (actionabilityWeightDetect * detectionsUtility);
+
+                return actionabilityScore;
+
+            } catch (error) {
+                console.error("Error in computeActionablityScore:", error);
+                return 0; // fallback if something goes wrong
+            }
+        }
+
+
+        /**
+         * Build a dictionary of contextualized technique objects.
+         * Each technique object has all required attributes EXCEPT "initial-score".
+         * 
+         * @returns {Promise<Object>} - Returns an object of shape:
+         *   {
+         *     "T1001": {
+         *        name: "...",
+         *        prevEntry: [calc_tid_before, calc_tid_after, calc_prev_score],
+         *        "data-sources": [...],
+         *        "nist-controls": [...],
+         *        "cis-safeguards": [...],
+         *        "aws-capabilities": [...],
+         *        "gcp-capabilities": [...],
+         *        "azure-capabilities": [...],
+         *        "m365-capabilities": [...],
+         *        "mitigations": [...],
+         *        "monitoring-coverage-eval": {
+         *           process: true/false,
+         *           network: ...
+         *           file: ...
+         *           cloud: ...
+         *           hardware: ...
+         *        }
+         *        // NO "initial-score" yet
+         *     },
+         *     "T1002": { ... },
+         *     ...
+         *   }
+         */
+        async function buildContextualTechniqueObjects() {
+            // 1. Initialize or open IndexedDB
+            const db = await initIndexedDB();
+
+            // 2. Create or open the new store that will hold these contextual technique objects.
+            //    If your schema is already set to create "contextualizedTechniques" (or similar),
+            //    it should exist. Otherwise, you'll need an upgrade function.
+            //    For brevity, assume it already exists:
+            const tx = db.transaction(
+                ["attackPrevTid", "attackPatterns", "nistMappings", "cisSafeguardMappings", 
+                "awsMappings", "gcpMappings", "azureMappings", "m365Mappings", 
+                "attackMitigationMappings", "weightKeywords", "contextualizedTechniques"],
+                "readonly"
+            );
+
+            const attackPrevStore    = tx.objectStore("attackPrevTid");
+            const attackPatternsStore= tx.objectStore("attackPatterns");
+            const nistStore          = tx.objectStore("nistMappings");
+            const cisStore           = tx.objectStore("cisSafeguardMappings");
+            const awsStore           = tx.objectStore("awsMappings");
+            const gcpStore           = tx.objectStore("gcpMappings");
+            const azureStore         = tx.objectStore("azureMappings");
+            const m365Store          = tx.objectStore("m365Mappings");
+            const mitigationStore    = tx.objectStore("attackMitigationMappings");
+            const weightKeywordStore = tx.objectStore("weightKeywords");
+            // We'll write to "contextualizedTechniques" in a separate "readwrite" transaction below
+
+            // 3. Fetch all relevant data into memory arrays for easier processing.
+            //    (You can also do partial queries, but usually getAll is simpler if data isn't huge.)
+            const [
+                attackPrevAll,
+                attackPatternsAll,
+                nistAll,
+                cisAll,
+                awsAll,
+                gcpAll,
+                azureAll,
+                m365All,
+                mitigationAll,
+                weightKeywordsAll
+            ] = await Promise.all([
+                getAllFromStore(attackPrevStore),
+                getAllFromStore(attackPatternsStore),
+                getAllFromStore(nistStore),
+                getAllFromStore(cisStore),
+                getAllFromStore(awsStore),
+                getAllFromStore(gcpStore),
+                getAllFromStore(azureStore),
+                getAllFromStore(m365Store),
+                getAllFromStore(mitigationStore),
+                getAllFromStore(weightKeywordStore)
+            ]);
+
+            // 4. Convert these arrays into dictionaries or indexes for quick lookups.
+            //    For instance, attackPatternsAll might be an array of objects with:
+            //    { technique_id: "T1001", data_sources: [...], ... }
+            //    So let's build a map from technique_id => object
+            const attackPatternsMap = new Map(
+                attackPatternsAll.map(obj => [obj.technique_id, obj])
+            );
+
+            // Similarly, build maps for prevalence data: attack_object_id => object
+            const attackPrevMap = new Map(
+                attackPrevAll.map(obj => [obj.attack_object_id, obj])
+            );
+
+            // NIST, CIS, cloud capabilities typically have "attack_object_id" or "technique_id".
+            // We'll group them by technique for easy retrieval.
+            const nistMap = buildGroupedMap(nistAll, "attack_object_id");      // technique => [control entries]
+            const cisMap  = buildCisSafeguardMap(cisAll);                      // technique => [safeguard entries]
+            const awsMap  = buildGroupedMap(awsAll, "attack_object_id");       // technique => [AWS capability entries]
+            const gcpMap  = buildGroupedMap(gcpAll, "attack_object_id");
+            const azureMap= buildGroupedMap(azureAll, "attack_object_id");
+            const m365Map = buildGroupedMap(m365All, "attack_object_id");
+
+            // Mitigation map
+            const mitigationGroupedMap = buildGroupedMap(mitigationAll, "technique_id");
+
+            // Weight keywords is typically an array of:
+            //   { keywords: "process creation, exec", category: "process" } etc.
+            // We'll store them in an array or map as needed.
+            const weightKeywordsArray = weightKeywordsAll; // or convert to map if desired
+
+            // 5. Figure out the complete set of technique IDs to process.
+            //    We can gather them from attackPatternsMap keys or from the union of all maps.
+            const allTechniqueIds = new Set([
+                ...attackPatternsMap.keys(),
+                ...attackPrevMap.keys(),
+                ...nistMap.keys(),
+                ...cisMap.keys(),
+                ...awsMap.keys(),
+                ...gcpMap.keys(),
+                ...azureMap.keys(),
+                ...m365Map.keys(),
+                ...mitigationGroupedMap.keys()
+            ]);
+
+            // 6. For each technique ID, build the contextual object (without "initial-score").
+            const techniqueObjects = {};
+            
+            for (const techniqueId of allTechniqueIds) {
+                const obj = {};
+
+                // a) name
+                const patternObj = attackPatternsMap.get(techniqueId);
+                obj.name = patternObj ? patternObj.technique_name : techniqueId;
+
+                // b) prevEntry => [calc_tid_before, calc_tid_after, calc_prev_score]
+                const prev = attackPrevMap.get(techniqueId);
+                obj.prevEntry = prev
+                ? [prev.calc_tid_before, prev.calc_tid_after, prev.calc_prev_score]
+                : [0, 0, 0];
+
+                // c) data-sources => from patternObj.x_mitre_data_sources (or data_sources)
+                obj["data-sources"] = patternObj && Array.isArray(patternObj.data_sources)
+                ? patternObj.data_sources
+                : [];
+
+                // d) nist-controls => from nistMap
+                obj["nist-controls"] = nistMap.get(techniqueId) || [];
+
+                // e) cis-safeguards => from cisMap
+                obj["cis-safeguards"] = cisMap.get(techniqueId) || [];
+
+                // f) Cloud capabilities: AWS, GCP, Azure, M365
+                obj["aws-capabilities"]   = awsMap.get(techniqueId)   || [];
+                obj["gcp-capabilities"]   = gcpMap.get(techniqueId)   || [];
+                obj["azure-capabilities"] = azureMap.get(techniqueId) || [];
+                obj["m365-capabilities"]  = m365Map.get(techniqueId)  || [];
+
+                // g) mitigations => from mitigationGroupedMap
+                //    The stored objects might have "mitigation_id", "mitigation_name", etc.
+                //    We store them as an array or object as you see fit.
+                obj["mitigations"] = mitigationGroupedMap.get(techniqueId) || [];
+
+                // h) monitoring-coverage-eval => boolean fields for process, network, file, cloud, hardware
+                //    We'll set them based on whether data-sources includes any substring
+                //    that matches a keyword whose category is "process", "network", etc.
+                obj["monitoring-coverage-eval"] = evaluateMonitoringCoverage(
+                obj["data-sources"],
+                weightKeywordsArray
+                );
+
+                techniqueObjects[techniqueId] = obj;
+            }
+
+            // 7. Optionally store them in a separate IDB store "contextualizedTechniques"
+            //    If you want to store them permanently, do so in a readwrite transaction.
+            const txWrite = db.transaction("contextualizedTechniques", "readwrite");
+            const storeWrite = txWrite.objectStore("contextualizedTechniques");
+
+            for (const [techId, techniqueData] of Object.entries(techniqueObjects)) {
+                // We can store them as: { id: "T1001", data: { ... } }
+                // or simply store them keyed by "techniqueId".
+                storeWrite.put({ techniqueId: techId, ...techniqueData });
+            }
+
+            await new Promise((resolve, reject) => {
+                txWrite.oncomplete = () => resolve();
+                txWrite.onerror = () => reject(txWrite.error);
+            });
+
+            // 8. Return the newly built dictionary so you can also use it in memory
+            return techniqueObjects;
+            }
+
+            /**
+             * Helper function to retrieve all objects from an objectStore as an array.
+             */
+            function getAllFromStore(store) {
+            return new Promise((resolve, reject) => {
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result);
+                req.onerror   = () => reject(req.error);
+            });
+        }
+
+        /**
+         * Helper to group an array of store objects by a "keyField".
+         *   e.g. buildGroupedMap([{attack_object_id:'T1001', ...}, {...}], 'attack_object_id')
+         * 
+         * Returns a Map { techniqueId => [ all matching objects ] }
+         */
+        function buildGroupedMap(array, keyField) {
+            const map = new Map();
+            array.forEach(item => {
+                const techId = item[keyField];
+                if (!techId) return; // skip if no key
+                if (!map.has(techId)) {
+                map.set(techId, []);
+                }
+                map.get(techId).push(item);
+            });
+            return map;
+            }
+
+            /**
+             * Example of building a technique => [CIS entries[]] map from cisSafeguardMappings,
+             * which might store records like: { cis_safeguard: 'CIS-3.14', technique_id: 'T1001', ... }
+             */
+            function buildCisSafeguardMap(array) {
+            const map = new Map();
+            array.forEach(item => {
+                const techniqueId = item.technique_id;
+                if (!map.has(techniqueId)) {
+                map.set(techniqueId, []);
+                }
+                map.get(techniqueId).push(item);
+            });
+            return map;
+        }
+
+        /**
+         * Evaluate the presence of process/network/file/etc for data-sources based on weight-keywords.
+         * 
+         * dataSources - e.g. ["Process command-line parameters", "File creation", ...]
+         * weightKeywordsArray - e.g. [ { keywords: "process,exec", category: "process" }, ... ]
+         * 
+         * Returns an object:
+         *  {
+         *     process:  true/false,
+         *     network:  true/false,
+         *     file:     ...,
+         *     cloud:    ...,
+         *     hardware: ...
+         *  }
+         */
+        function evaluateMonitoringCoverage(dataSources, weightKeywordsArray) {
+            const coverage = {
+                process: false,
+                network: false,
+                file: false,
+                cloud: false,
+                hardware: false
+            };
+
+            // Convert data sources to lowercase for substring matching
+            const lowerSources = dataSources.map(s => s.toLowerCase());
+
+            // For each weight-keywords entry, see if any data-source includes any of the keywords
+            // If so, set coverage[category] = true
+            weightKeywordsArray.forEach(item => {
+                // item might look like: {keywords: "process creation, exec, etc", category: "process"}
+                if (!item.keywords || !item.category) return;
+
+                // split the keywords on commas if needed
+                const keywordsList = item.keywords.split(",").map(kw => kw.trim().toLowerCase());
+
+                // check if any data source includes a keyword
+                const matched = lowerSources.some(ds => 
+                keywordsList.some(kw => ds.includes(kw))
+                );
+
+                if (matched && coverage.hasOwnProperty(item.category)) {
+                coverage[item.category] = true;
+                }
+            });
+
+            return coverage;
+        }
+
+        /**
+         * Calculates and sets the "initial-score" for a single technique object,
+         * using the existing partial data inside it.
+         * 
+         * initialScore = prevalenceScore + chokepointScore + actionabilityScore
+         * 
+         * @param {Object} techniqueObj - The contextualized technique object, e.g.:
+         *    {
+         *      name: "Data Obfuscation",
+         *      prevEntry: [tidBefore, tidAfter, prevScore],
+         *      "data-sources": [...],
+         *      ...
+         *      "monitoring-coverage-eval": { process: true, ... }
+         *    }
+         * @returns {number} - The numeric initial-score
+         */
+        function computeTechniqueInitialScore(techniqueObj) {
+            // 1. Extract the relevant fields
+            const [calc_tid_before, calc_tid_after, calc_prev_score] = techniqueObj.prevEntry || [0, 0, 0];
+
+            // Prevalence is typically calc_prev_score
+            // If you have a separate function, e.g., calculatePrevalenceScore, you can call it instead.
+            const prevalenceScore = parseFloat(calc_prev_score) || 0;
+
+            // Chokepoint might rely on tidBefore / tidAfter. 
+            // If you have a separate function, e.g. calculateChokepointScore, you can call it:
+            //   const chokepointScore = await calculateChokepointScore(techniqueId);
+            // But if you're just doing it inline here:
+            const chokepointScore = computeChokepointFromValues(
+                parseFloat(calc_tid_before) || 0,
+                parseFloat(calc_tid_after)  || 0
+            );
+
+            // Actionability might require counting NIST, CIS, Detections, etc.
+            // If you have a function like calculateActionabilityScore(techniqueId),
+            // you need the technique ID. But here, you can also do it from the arrays:
+            const actionabilityScore = computeActionablityScore(techniqueObj);
+
+            // 2. Summation
+            const initialScore = prevalenceScore + chokepointScore + actionabilityScore;
+
+            // 3. Return
+            return initialScore;
+        }
+
+        async function generateTechniquesAndScores() {
+            const techniqueDictionary = await buildContextualTechniqueObjects();
+
+            for (const techniqueId in techniqueDictionary) {
+                const techObj = techniqueDictionary[techniqueId];
+                // Now that "techObj" has prevEntry, data-sources, etc., we can compute initial-score
+                const initScore = computeTechniqueInitialScore(techObj);
+                techObj["initial-score"] = initScore;
+            }
+
+            // If you want to save the updated "initial-score" back to IndexedDB,
+            // do so in a readwrite transaction to "contextualizedTechniques" store.
+            const db = await initIndexedDB();
+            const txWrite = db.transaction("contextualizedTechniques", "readwrite");
+            const store = txWrite.objectStore("contextualizedTechniques");
+            
+            for (const techniqueId in techniqueDictionary) {
+                store.put({
+                techniqueId,
+                ...techniqueDictionary[techniqueId] // includes "initial-score" now
+                });
+            }
+
+            await new Promise((resolve, reject) => {
+                txWrite.oncomplete = () => resolve();
+                txWrite.onerror = () => reject(txWrite.error);
+            });
+
+            console.log("All contextual technique objects updated with initial-score and stored.");
+        }  
+        
+
+        //
+        // Contextual Asset Type Construction
+        //
+        /**
+         * Builds a contextual asset-type object for each unique assetType found in your
+         * MAPEX “assetTypeMappings” (devicesMappings, networksMappings, etc.) and enriches
+         * them with the relevant technique data (prevEntry, data-sources, etc.).
+         * 
+         * Finally, writes them to the "contextualizedAssetTypes" store in IndexedDB,
+         * keyed by a field "assetTypeId" (e.g. "Linux Server OS").
+         */
+        async function buildContextualAssetTypes() {
+            try {
+                const db = await initIndexedDB();
+
+                // 1. Gather all assetTypeMappings from your MAPEX store(s).
+                //    For example, if you've stored them in "devicesMappings", "networksMappings", etc.,
+                //    you can fetch them all or you can unify them into a single store. 
+                //    Here is a conceptual example of retrieving them:
+                const storeNames = [
+                "devicesMappings",
+                "networksMappings",
+                "applicationsMappings",
+                "dataMappings",
+                "identitiesMappings"
+                ];
+
+                // We'll gather them into a single array in memory
+                let allAssetMappings = [];
+                for (const storeName of storeNames) {
+                // If these object stores exist, fetch everything
+                if (db.objectStoreNames.contains(storeName)) {
+                    const storeData = await getAllFromStore(db, storeName);
+                    allAssetMappings = allAssetMappings.concat(storeData);
+                }
+                }
+
+                // 2. Group assetTypeMappings by capability_id (e.g. "Linux Server OS").
+                //    We'll create a dictionary: { "Linux Server OS": [ {capability_id..., attack_object_id..., ...}, ... ] }
+                const groupedByAssetType = {};
+                for (const entry of allAssetMappings) {
+                const assetTypeName = entry.capability_id;    // e.g. "Linux Server OS"
+                const assetCategory = entry.capability_group; // e.g. "devices"
+
+                if (!groupedByAssetType[assetTypeName]) {
+                    groupedByAssetType[assetTypeName] = {
+                    assetCategory,
+                    entries: [] // all technique mappings referencing this asset type
+                    };
+                }
+                groupedByAssetType[assetTypeName].entries.push(entry);
+                }
+
+                // 3. For each unique asset type, build the final object shape:
+                //    {
+                //       assetTypeId: "Linux Server OS",
+                //       "asset-category": "devices",
+                //       "asset-type": "Linux Server OS",
+                //       "model-values": {},  // We'll populate in Step 2 (Add Asset Type) 
+                //       "techniques": { "T1001": {...}, "T1002": {...} }
+                //    }
+                const contextualAssetTypes = {};
+
+                for (const [assetTypeName, info] of Object.entries(groupedByAssetType)) {
+                const assetCategory = info.assetCategory;
+                // Build the skeleton object
+                const assetTypeObj = {
+                    assetTypeId: assetTypeName,  // our unique keyPath
+                    "asset-category": assetCategory,
+                    "asset-type": assetTypeName,
+                    "model-values": {}, 
+                    "techniques": {}
+                };
+
+                // For each technique mapping referencing this asset type
+                for (const mapping of info.entries) {
+                    const techniqueId   = mapping.attack_object_id;   // e.g. "T1001"
+                    const techniqueName = mapping.attack_object_name; // e.g. "Data Obfuscation"
+
+                    // Build the partial technique object
+                    // We'll call a helper "buildContextualTechniqueObject(techniqueId, techniqueName)" 
+                    // that merges in STIX data (data-sources, mitigations, prevEntry, etc.).
+                    // Or you can do it inline. For clarity, let's just call a helper:
+                    const techniqueObj = await buildContextualTechniqueObject(techniqueId, techniqueName);
+
+                    // Add it to the assetTypeObj
+                    assetTypeObj.techniques[techniqueId] = techniqueObj;
+                }
+
+                contextualAssetTypes[assetTypeName] = assetTypeObj;
+                }
+
+                // 4. Write these new objects to the "contextualizedAssetTypes" store in a single transaction
+                const txWrite = db.transaction("contextualizedAssetTypes", "readwrite");
+                const store = txWrite.objectStore("contextualizedAssetTypes");
+
+                for (const [assetTypeName, assetTypeObj] of Object.entries(contextualAssetTypes)) {
+                store.put(assetTypeObj);
+                }
+
+                await new Promise((resolve, reject) => {
+                txWrite.oncomplete = () => resolve();
+                txWrite.onerror = () => reject(txWrite.error);
+                });
+
+                console.log("✅ Built contextual asset types and stored in 'contextualizedAssetTypes'.");
+                return contextualAssetTypes;
+
+            } catch (error) {
+                console.error("Error in buildContextualAssetTypes:", error);
+                return {};
+            }
+        }
+
+        /**
+         * Build a single technique object with all fields except "initial-score".
+         * 
+         * @param {string} techniqueId   e.g. "T1001"
+         * @param {string} techniqueName e.g. "Data Obfuscation"
+         * @returns {Promise<Object>} e.g. {
+         *   name: "Data Obfuscation",
+         *   prevEntry: [tidBefore, tidAfter, prevScore],
+         *   "data-sources": [...],
+         *   "nist-controls": [...],
+         *   "cis-safeguards": [...],
+         *   ...
+         *   "monitoring-coverage-eval": {...}
+         * }
+         */
+        async function buildContextualTechniqueObject(techniqueId, techniqueName) {
+            // 1. Fetch from IDB anything you need: "attackPrevTid", "attackPatterns", "nistMappings", etc.
+            const db = await initIndexedDB();
+            const tx = db.transaction([
+                "attackPrevTid",
+                "attackPatterns",
+                "nistMappings",
+                "cisSafeguardMappings",
+                "awsMappings",
+                "gcpMappings",
+                "azureMappings",
+                "m365Mappings",
+                "attackMitigationMappings",
+                "weightKeywords"
+            ], "readonly");
+
+            // Just for convenience
+            const attackPrevStore = tx.objectStore("attackPrevTid");
+            const patternsStore    = tx.objectStore("attackPatterns");
+            const nistStore        = tx.objectStore("nistMappings");
+            const cisStore         = tx.objectStore("cisSafeguardMappings");
+            const awsStore         = tx.objectStore("awsMappings");
+            const gcpStore         = tx.objectStore("gcpMappings");
+            const azureStore       = tx.objectStore("azureMappings");
+            const m365Store        = tx.objectStore("m365Mappings");
+            const mitigationStore  = tx.objectStore("attackMitigationMappings");
+            const weightKwStore    = tx.objectStore("weightKeywords");
+
+            // 2. Retrieve the necessary data from each store 
+            // (You can read everything or do partial queries. For brevity, let's do partial .getAll() and filter in memory.)
+            const [
+                attackPrevAll, 
+                attackPatternsAll, 
+                nistAll,
+                cisAll,
+                awsAll,
+                gcpAll,
+                azureAll,
+                m365All,
+                mitigationAll,
+                weightKwAll
+            ] = await Promise.all([
+                getAllFromStoreIDB(attackPrevStore),
+                getAllFromStoreIDB(patternsStore),
+                getAllFromStoreIDB(nistStore),
+                getAllFromStoreIDB(cisStore),
+                getAllFromStoreIDB(awsStore),
+                getAllFromStoreIDB(gcpStore),
+                getAllFromStoreIDB(azureStore),
+                getAllFromStoreIDB(m365Store),
+                getAllFromStoreIDB(mitigationStore),
+                getAllFromStoreIDB(weightKwStore)
+            ]);
+
+            // 3. Find the relevant records for techniqueId
+            //    a) attackPrevTid => tidBefore, tidAfter, prevScore
+            let tidBefore = 0, tidAfter = 0, prevScore = 0;
+            const foundPrev = attackPrevAll.find(item => item.attack_object_id === techniqueId);
+            if (foundPrev) {
+                tidBefore = parseFloat(foundPrev.calc_tid_before) || 0;
+                tidAfter  = parseFloat(foundPrev.calc_tid_after)  || 0;
+                prevScore = parseFloat(foundPrev.calc_prev_score) || 0;
+            }
+
+            //    b) data-sources from "attackPatterns"
+            let dataSources = [];
+            const foundPattern = attackPatternsAll.find(p => p.technique_id === techniqueId);
+            if (foundPattern && Array.isArray(foundPattern.data_sources)) {
+                dataSources = foundPattern.data_sources;
+            }
+
+            //    c) nist-controls from nistAll, where item.attack_object_id === techniqueId
+            const nistControls = nistAll.filter(item => item.attack_object_id === techniqueId);
+
+            //    d) cis-safeguards
+            const cisSafeguards = cisAll.filter(item => item.technique_id === techniqueId);
+
+            //    e) AWS, GCP, Azure, M365 capabilities
+            const awsCaps   = awsAll.filter(item => item.attack_object_id === techniqueId);
+            const gcpCaps   = gcpAll.filter(item => item.attack_object_id === techniqueId);
+            const azureCaps = azureAll.filter(item => item.attack_object_id === techniqueId);
+            const m365Caps  = m365All.filter(item => item.attack_object_id === techniqueId);
+
+            //    f) mitigations from "attackMitigationMappings"
+            const techniqueMitigations = mitigationAll.filter(m => m.technique_id === techniqueId);
+
+            // 4. Evaluate monitoring coverage
+            const coverageEval = evaluateMonitoringCoverage(dataSources, weightKwAll);
+
+            // 5. Build and return final technique object
+            return {
+                name: techniqueName || techniqueId,
+                prevEntry: [ tidBefore, tidAfter, prevScore ],
+                "data-sources": dataSources,
+                "nist-controls": nistControls,
+                "cis-safeguards": cisSafeguards,
+                "aws-capabilities": awsCaps,
+                "gcp-capabilities": gcpCaps,
+                "azure-capabilities": azureCaps,
+                "m365-capabilities": m365Caps,
+                "mitigations": techniqueMitigations,
+                "monitoring-coverage-eval": coverageEval
+                // "initial-score" is computed later
+            };
+            }
+
+            /**
+             * Helper to read all data from an object store in a given transaction.
+             */
+            function getAllFromStoreIDB(store) {
+            return new Promise((resolve, reject) => {
+                const req = store.getAll();
+                req.onsuccess = () => resolve(req.result);
+                req.onerror   = () => reject(req.error);
+            });
+        }
+
+        /**
+         * Called when the user clicks "Add Asset Type" in Step 2,
+         * after selecting environment, coverage, record count, etc.
+         * This attaches "model-values" to the relevant record in "contextualizedAssetTypes".
+         * 
+         * @param {string} assetTypeName  e.g. "Linux Server OS"
+         * @param {string} environment    e.g. "AWS"
+         * @param {Object} coverageObj    e.g. { "network-monitoring": "High", ...}
+         * @param {number} [recordCount]  e.g. 1000 (if user selected it, and assetCategory === "data")
+         */
+        async function updateModelValuesForAssetType(assetTypeName, environment, coverageObj, recordCount) {
+            try {
+                const db = await initIndexedDB();
+                const tx = db.transaction("contextualizedAssetTypes", "readwrite");
+                const store = tx.objectStore("contextualizedAssetTypes");
+
+                // 1. Retrieve the existing assetType record by key. The keyPath is "assetTypeId" (the name).
+                const existingRecord = await new Promise((resolve, reject) => {
+                const req = store.get(assetTypeName);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror   = () => reject(req.error);
+                });
+
+                if (!existingRecord) {
+                console.warn(`No record found for assetTypeId: ${assetTypeName}`);
+                return;
+                }
+
+                // 2. Attach/update the "model-values"
+                existingRecord["model-values"] = {
+                environment,
+                "monitoring-coverage": coverageObj || {}
+                };
+                if (recordCount != null) {
+                existingRecord["model-values"]["record-count"] = recordCount;
+                }
+
+                // 3. Write it back to the store
+                store.put(existingRecord);
+
+                await new Promise((resolve, reject) => {
+                tx.oncomplete = () => resolve();
+                tx.onerror    = () => reject(tx.error);
+                });
+
+                console.log(`✅ Updated model-values for assetTypeId: ${assetTypeName}`);
+            } catch (error) {
+                console.error("Error in updateModelValuesForAssetType:", error);
+            }
+        }
+
+
+
     </script>
          
   
