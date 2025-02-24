@@ -161,7 +161,7 @@
     <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-2xl">
             <!-- Progress Bar -->
             <div id="progress-container" class="w-full bg-gray-300 rounded mt-4 hidden">
-                <div id="progress-bar" class="h-4 bg-blue-500 rounded w-0"></div>
+                <div id="loading-progress-bar" class="h-4 bg-blue-500 rounded w-0 hidden"></div>
             </div>
         <div class="flex justify-between items-center">
             <h2 class="text-xl font-bold">Data Breach Cost Estimator</h2>
@@ -204,19 +204,19 @@
                 <!-- Asset Category Selection -->
                 <div id="asset-category-container">
                     <label class="block mt-2">
-                        <input type="radio" name="asset-category" value="devices" class="mr-2"> Devices
+                        <input type="radio" name="asset-category" value="Devices" class="mr-2"> Devices
                     </label>
                     <label class="block mt-2">
-                        <input type="radio" name="asset-category" value="networks" class="mr-2"> Networks
+                        <input type="radio" name="asset-category" value="Networks" class="mr-2"> Networks
                     </label>
                     <label class="block mt-2">
-                        <input type="radio" name="asset-category" value="applications" class="mr-2"> Applications & Workloads
+                        <input type="radio" name="asset-category" value="Applications & Workloads" class="mr-2"> Applications & Workloads
                     </label>
                     <label class="block mt-2">
-                        <input type="radio" name="asset-category" value="data" class="mr-2"> Data
+                        <input type="radio" name="asset-category" value="Data" class="mr-2"> Data
                     </label>
                     <label class="block mt-2">
-                        <input type="radio" name="asset-category" value="identities" class="mr-2"> Identities
+                        <input type="radio" name="asset-category" value="Identities" class="mr-2"> Identities
                     </label>
                 </div>
 
@@ -250,6 +250,15 @@
                     <div id="cloud-monitoring" data-label="Cloud Monitoring"></div>
                     <div id="hardware-monitoring" data-label="Hardware Monitoring"></div>
                 </div>
+                
+                <!-- Submit Asset Type -->
+                <button type="button" id="submit-asset-type" class="bg-green-500 text-white px-4 py-2 rounded mt-4" style="display: block;">
+                    Add Asset Type
+                </button>
+                <!-- Display Model Definition in JSON -->
+                <button type="button" id="view-model-definition" class="bg-gray-700 text-white px-4 py-2 rounded mt-4" style="display: none;">
+                    View Model JSON
+                </button>
 
                 <!-- Table listing the existing modelInstances asset-type records -->
                 <div class="mt-6">
@@ -268,16 +277,6 @@
                     <tbody id="asset-type-instances-body"></tbody>
                     </table>
                 </div>
-
-                <!-- Submit Asset Type -->
-                <button type="button" id="submit-asset-type" class="bg-green-500 text-white px-4 py-2 rounded mt-4" style="display: none;">
-                    Add Asset Type
-                </button>
-
-                <!-- Display Model Definition in JSON -->
-                <button type="button" id="view-model-definition" class="bg-gray-700 text-white px-4 py-2 rounded mt-4" style="display: none;">
-                    View Model JSON
-                </button>
             </div>
 
             <!-- Step 3: Technique Scoring -->
@@ -330,14 +329,15 @@
 
                 <!-- Radio Button Selection for Correlation Type -->
                 <div id="visualization-selection" class="mb-4">
-                    <label><input type="radio" name="visualization-type" value="detections" checked> ATT&CK Detections</label>
+                    <!-- commenting out detections for now until we add detections to technique obj -->
+                    <!-- <label><input type="radio" name="visualization-type" value="detections" checked> ATT&CK Detections</label> -->
                     <label><input type="radio" name="visualization-type" value="mitigations"> ATT&CK Mitigations</label>
-                    <label><input type="radio" name="visualization-type" value="nist"> NIST Controls</label>
-                    <label><input type="radio" name="visualization-type" value="cis"> CIS Safeguards</label>
-                    <label><input type="radio" name="visualization-type" value="aws"> AWS Capabilities</label>
-                    <label><input type="radio" name="visualization-type" value="gcp"> GCP Capabilities</label>
-                    <label><input type="radio" name="visualization-type" value="azure"> Azure Capabilities</label>
-                    <label><input type="radio" name="visualization-type" value="m365"> M365 Capabilities</label>
+                    <label><input type="radio" name="visualization-type" value="nist-controls" checked> NIST Controls</label>
+                    <label><input type="radio" name="visualization-type" value="cis-safeguards"> CIS Safeguards</label>
+                    <label><input type="radio" name="visualization-type" value="aws-capabilities"> AWS Capabilities</label>
+                    <label><input type="radio" name="visualization-type" value="gcp-capabilities"> GCP Capabilities</label>
+                    <label><input type="radio" name="visualization-type" value="azure-capabilities"> Azure Capabilities</label>
+                    <label><input type="radio" name="visualization-type" value="m365-capabilities"> M365 Capabilities</label>
                 </div>
 
                 <!-- Radial Tree Visualization Container -->
@@ -399,38 +399,38 @@
         //         "cloud-monitoring": "None",
         //         "hardware-monitoring": "None"
         //     },
-        //     "abused-by-techniques": { // contextualized technique objects for each unique technique mapped to the asset type where mapping_type = "abused-by"
-        //         "T1001": { // from capabilities.[].attack_object_id where capabilities.[].capability_id = asset-type for this record, capabilities.[].record_type = "asset-type" and capabilities.[].mapping_type = "abused-by"
-        //             "technique_name": "Data Obfuscation", // from attack store
-        //             "prevEntry": [calc_tid_before, calc_tid_after, calc_prev_score, calc_detections], // from staticVariables and attack stores
-        //             "data-sources": [], // from the attack store
-        //             "nist-controls": [], // from capabilities where record_type is "nist-controls"
-        //             "cis-safeguards": [], // from capabilities where record_type is "cis-safeguards"
-        //             "aws-capabilities": [], // from capabilities where record_type is "aws-capabilities"
-        //             "gcp-capabilities": [], // from capabilities where record_type is "gcp-capabilities"
-        //             "azure-capabilities": [], // from capabilities where record_type is "azure-capabilities"
-        //             "m365-capabilities": [], // from capabilities where record_type is "m265-capabilities"
-        //             "mitigations": {}, // from attack store, for the object where type = "attack-pattern" and external_references.[].external_id = technique_id of this object, get id; for each object where type="relationship" and target_ref = id, get source_ref; for each object where type="course-of-action" and id = source_ref, get external_references.[].external_id
-        //             "monitoring-coverage-eval": [ "process", "network", "file", "cloud", "hardware" ], // each monitoring coverage category is present if keys from weight-keywords.json where that category is the value are present in "data-sources" mapped to that technique
-        //             "initial-score": 0.5 // float to the tenthousandths; initialScore = prevalenceScore + chokepointScore + actionabilityScore
-        //         }
-        //     },
-        //     "targeted-by-techniques": { // contextualized technique objects for each unique technique mapped to the asset type where mapping_type = "targeted-by"
-        //         "T1002": { // one technique record per attack_object_id found in the mapex files
-        //             "technique_name": "Data Compressed",
-        //             "prevEntry": [calc_tid_before, calc_tid_after, calc_prev_score, calc_detections], // from staticVariables and attack stores
-        //             "data-sources": [], // from the attack store
-        //             "nist-controls": [], // from capabilities where record_type is "nist-controls"
-        //             "cis-safeguards": [], // from capabilities where record_type is "cis-safeguards"
-        //             "aws-capabilities": [], // from capabilities where record_type is "aws-capabilities"
-        //             "gcp-capabilities": [], // from capabilities where record_type is "gcp-capabilities"
-        //             "azure-capabilities": [], // from capabilities where record_type is "azure-capabilities"
-        //             "m365-capabilities": [], // from capabilities where record_type is "m265-capabilities"
-        //             "mitigations": {}, // from attack store, for the object where type = "attack-pattern" and external_references.[].external_id = technique_id of this object, get id; for each object where type="relationship" and target_ref = id, get source_ref; for each object where type="course-of-action" and id = source_ref, get external_references.[].external_id
-        //             "monitoring-coverage-eval": [ "process", "network", "file", "cloud", "hardware" ], // each monitoring coverage category is present if keys from weight-keywords.json where that category is the value are present in "data-sources" mapped to that technique
-        //             "initial-score": 0.5265 // float to the tenthousandths; initialScore = prevalenceScore + chokepointScore + actionabilityScore
-        //         }
-        //     }
+            // "abusedByTechniques": { // contextualized technique objects for each unique technique mapped to the asset type where mapping_type = "abused-by"
+            //     "T1001": { // from capabilities.[].attack_object_id where capabilities.[].capability_id = asset-type for this record, capabilities.[].record_type = "asset-type" and capabilities.[].mapping_type = "abused-by"
+            //         "technique_name": "Data Obfuscation", // from attack store
+            //         "prevEntry": [calc_tid_before, calc_tid_after, calc_prev_score, calc_detections], // from staticVariables and attack stores
+            //         "data-sources": [], // from the attack store
+            //         "nist-controls": [], // from capabilities where record_type is "nist-controls"
+            //         "cis-safeguards": [], // from capabilities where record_type is "cis-safeguards"
+            //         "aws-capabilities": [], // from capabilities where record_type is "aws-capabilities"
+            //         "gcp-capabilities": [], // from capabilities where record_type is "gcp-capabilities"
+            //         "azure-capabilities": [], // from capabilities where record_type is "azure-capabilities"
+            //         "m365-capabilities": [], // from capabilities where record_type is "m265-capabilities"
+            //         "mitigations": {}, // from attack store, for the object where type = "attack-pattern" and external_references.[].external_id = technique_id of this object, get id; for each object where type="relationship" and target_ref = id, get source_ref; for each object where type="course-of-action" and id = source_ref, get external_references.[].external_id
+            //         "monitoring-coverage-eval": [ "process", "network", "file", "cloud", "hardware" ], // each monitoring coverage category is present if keys from weight-keywords.json where that category is the value are present in "data-sources" mapped to that technique
+            //         "attack-score": 0.5 // float to the tenthousandths; attack-score = initial-score * (1 + weightSum)
+            //     }
+            // },
+        //     "targetedByTechniques": { // contextualized technique objects for each unique technique mapped to the asset type where mapping_type = "targeted-by"
+            //     "T1002": { // one technique record per attack_object_id found in the mapex files
+            //         "technique_name": "Data Compressed",
+            //         "prevEntry": [calc_tid_before, calc_tid_after, calc_prev_score, calc_detections], // from staticVariables and attack stores
+            //         "data-sources": [], // from the attack store
+            //         "nist-controls": [], // from capabilities where record_type is "nist-controls"
+            //         "cis-safeguards": [], // from capabilities where record_type is "cis-safeguards"
+            //         "aws-capabilities": [], // from capabilities where record_type is "aws-capabilities"
+            //         "gcp-capabilities": [], // from capabilities where record_type is "gcp-capabilities"
+            //         "azure-capabilities": [], // from capabilities where record_type is "azure-capabilities"
+            //         "m365-capabilities": [], // from capabilities where record_type is "m265-capabilities"
+            //         "mitigations": {}, // from attack store, for the object where type = "attack-pattern" and external_references.[].external_id = technique_id of this object, get id; for each object where type="relationship" and target_ref = id, get source_ref; for each object where type="course-of-action" and id = source_ref, get external_references.[].external_id
+            //         "monitoring-coverage-eval": [ "process", "network", "file", "cloud", "hardware" ], // each monitoring coverage category is present if keys from weight-keywords.json where that category is the value are present in "data-sources" mapped to that technique
+            //         "attack-score": 0.5265 // float to the tenthousandths; attack-score = initial-score * (1 + weightSum)
+            //     }
+            // }
         // }
         // // from STIX, external_references.[].external_id where "type": "attack-pattern"
         // target json structure for techniques records: 
@@ -454,7 +454,7 @@
         function initShuffleDb() {
             const db = new Dexie("shuffledb");
             db.version(1).stores({
-                modelInstances: "++id, record_type, assetCategory, assetType, environment, monitoringCoverage, recordCount, abusedByTechniques, targetedByTechniques, &[assetType+environment+monitoringCoverage]", // tracks all info about asset type instances selected by the user
+                modelInstances: "++id, record_type, assetCategory, assetType, environment, monitoringCoverage, recordCount, abusedByTechniques, targetedByTechniques", // tracks all info about asset type instances selected by the user
                 techniques: "++id, technique_id, technique_name, monitoring_coverage_eval, data_sources, nist_controls, cis_safeguards, aws_capabilities, gcp_capabilities, azure_capabilities, m365_capabilities, mitigations", // imported from assetType files
                 capabilities: "++id, record_type, capability_group, capability_id, capability_description, mapping_type, attack_object_id, attack_object_name", // imported from MAPEX files and CIS_safeguard_to_technique.json file
                 staticVariables: "++id, record_type", // imported from static-variables.json and weight-keywords.json, if from static-variables.json, record_type = "static", if from weight-keywords.json, record_type = "keyword", if from attack-prev-tid.json, record_type = "calc"
@@ -619,6 +619,12 @@
                     document.getElementById("monitoring-selection").style.display = "block";
                 });
             });
+            // listen for user to select a different visualization-type for radial tree diagram
+            document.querySelectorAll('input[name="visualization-type"]').forEach(radio => {
+                radio.addEventListener("change", () => {
+                    generateRadialTree();
+                });
+            });
         });
     
         /**
@@ -674,9 +680,6 @@
             .where("record_type").equals("asset_types")
             .and(c => c.capability_group === selectedCategory)
             .toArray();
-
-        // Hide loading indicator
-        if (loadingIcon) loadingIcon.style.display = "none";
 
         // If we found none, show a “No Asset Types Available” option
         if (!entries.length) {
@@ -803,17 +806,17 @@
         }
 
         // re‑render the AssetTypeInstancesTable in Step 2 each time you insert a new asset‑type‑instance record into modelInstances store
-        async function refreshAssetTypeInstancesTable() {
+        async function refreshAssetTypeInstancesTable(db) {
             const tableBody = document.getElementById("asset-type-instances-body");
             tableBody.innerHTML = "";
 
             // Get all asset-type-instance records from Dexie
             const allInstances = await db.modelInstances
                 .where("record_type")
-                .equals("asset_type_instance")
+                .equals("asset-type-instance")
                 .toArray(); 
                 // Or adapt if you’re labeling them differently
-
+            console.log("refreshAssetTypeInstancesTable allInstances:", allInstances)
             allInstances.forEach(instance => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
@@ -830,27 +833,7 @@
         }
 
     
-        // Generate Radial Tree Visualization
-        // Must be root > environments > asset-categories > asset-types > techniques > [mitigations, detections, nist-controls, cis-safeguards, aws-capabilities, gcp-capabilities, azure-capabilities, m365-capabilities] 
-        async function generateRadialTree() {
-            const techniques = await getAllObjects("visualizationTree");
-    
-            const svg = d3.select("#radial-tree-container").append("svg")
-                .attr("width", 800).attr("height", 600)
-                .append("g").attr("transform", "translate(400,300)");
-    
-            const hierarchy = d3.hierarchy({ children: techniques });
-            const treeLayout = d3.tree().size([360, 250]);
-            treeLayout(hierarchy);
-    
-            svg.selectAll("line")
-                .data(hierarchy.links())
-                .enter()
-                .append("line")
-                .attr("x1", d => d.source.x).attr("y1", d => d.source.y)
-                .attr("x2", d => d.target.x).attr("y2", d => d.target.y)
-                .attr("stroke", "black");
-        }
+
 
         // Function to Handle Navigation Between Steps
         let currentStep = 0;
@@ -887,27 +870,35 @@
 
         // Next Button Click Event
         nextButton.addEventListener("click", async () => {
+            const db = await initShuffleDb();
+            const modelDefinition = {
+                organization_attributes: {}
+            };
             if (currentStep < steps.length - 1) {
+                
                 if (currentStep === 0) {
-                    buildOrganizationAttributes();
+                    
                 }
                 if (currentStep === 1) {
                     // ✅ Only recalculate if scores do not exist
-                    const scoresExist = modelDefinition.asset_types.some(asset => asset.attack_scores?.length > 0);
-                    if (!scoresExist) {
-                        await calculateAllTechniqueScores();
-                    }
-                    updateModelDisplay();
-                    generateModelSummaryTable();
+                    // const scoresExist = modelDefinition.asset_types.some(asset => asset.attack_scores?.length > 0);
+                    // if (!scoresExist) {
+                    //     await calculateAllTechniqueScores();
+                    // }
+                    //updateModelDisplay();
+                    generateModelSummaryTable(db);
                 }
                 if (currentStep === 2) {
                     // ✅ Wait for JSON files to be fully loaded before updating model
-                    if (!jsonCache.nistMapping || !jsonCache.enterpriseAttack) {
-                        console.error("❌ Error: Required JSON files not loaded.");
-                        showToast("Error: Required JSON files not loaded.", "error");
-                        return;
-                    }
+                    // if (!jsonCache.nistMapping || !jsonCache.enterpriseAttack) {
+                    //     console.error("❌ Error: Required JSON files not loaded.");
+                    //     showToast("Error: Required JSON files not loaded.", "error");
+                    //     return;
+                    // }
                     generateRadialTree();
+                }
+                if (currentStep === 4) {
+                    buildOrganizationAttributes(modelDefinition);
                 }
 
                 currentStep++;
@@ -924,7 +915,7 @@
                 currentStep--;
                 showStep(currentStep);
                 hideDynamicElements();
-                updateModelDisplay(); // ✅ Ensure JSON output is updated
+                updateModelDisplay(); 
             }
         });
    
@@ -957,7 +948,7 @@
         document.getElementById("download-json").addEventListener("click", exportModelAsJSON);
 
         // Function to Build Organization Attributes from Checkboxes
-        function buildOrganizationAttributes() {
+        function buildOrganizationAttributes(modelDefinition) {
             document.querySelectorAll("#organization-details input[type='checkbox']").forEach(input => {
                 modelDefinition.organization_attributes[input.id] = input.checked;  // ✅ Ensure proper assignment
             });
@@ -965,70 +956,149 @@
             // console.log("Saved Organization Attributes:", modelDefinition.organization_attributes);
         }
 
+        // Function to Update and Display Model Definition JSON
+        function updateModelDisplay() {
+            const jsonOutput = document.getElementById("json-output");
+            jsonOutput.textContent = JSON.stringify(modelDefinition, null, 4);
+        }
+    
+        document.getElementById("view-model-definition").addEventListener("click", () => {
+            const jsonOutput = document.getElementById("json-output");
+
+            // Toggle visibility
+            if (jsonOutput.style.display === "none" || jsonOutput.style.display === "") {
+                jsonOutput.style.display = "block";  // Show JSON
+            } else {
+                jsonOutput.style.display = "none";   // Hide JSON
+            }
+        });
+
         // Function to generate a table showing the asset-type-instance records and the average ATT&CK score for each
-        function generateModelSummaryTable() {
+        async function generateModelSummaryTable(db) {
             const tableBody = document.getElementById("model-summary-body");
             tableBody.innerHTML = "";
 
-            modelDefinition.asset_types.forEach(asset => {
-                const techniques = asset.attack_scores || [];
+            // 1) Query Dexie for all asset-type-instance records
+            const allAssetInstances = await db.modelInstances
+                .where("record_type")
+                .equals("asset-type-instance")
+                .toArray();
+
+            // 2) Loop through each asset and compute summary
+            for (const asset of allAssetInstances) {
+                // Assume the attack scores are stored in a property "attack_scores"
+                // Adjust if you store them differently (e.g. "abused-by-techniques")
+                const abusedArr = asset.abusedByTechniques
+                    ? Object.values(asset.abusedByTechniques)
+                    : [];
+
+                    // Similarly for targetedByTechniques
+                    const targetedArr = asset.targetedByTechniques
+                    ? Object.values(asset.targetedByTechniques)
+                    : [];
+                const techniques = [...abusedArr, ...targetedArr] || [];
+                // console.log("techniques array: ", techniques)
 
                 const avgScore = techniques.length
-                    ? (techniques.reduce((sum, t) => sum + parseFloat(t.score), 0) / techniques.length).toFixed(4)
+                    ? (
+                        techniques.reduce((sum, t) => sum + parseFloat(t["attack-score"] || 0), 0) / techniques.length
+                    ).toFixed(4)
                     : "N/A";
 
+                // 3) Create row
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td class="border border-gray-300 px-4 py-2">${asset.environment}</td>
-                    <td class="border border-gray-300 px-4 py-2">${asset.asset_category}</td>
-                    <td class="border border-gray-300 px-4 py-2">${asset.asset_type}</td>
+                    <td class="border border-gray-300 px-4 py-2">${asset.environment || ""}</td>
+                    <td class="border border-gray-300 px-4 py-2">${asset["asset-category"] || ""}</td>
+                    <td class="border border-gray-300 px-4 py-2">${asset["asset-type"] || ""}</td>
                     <td class="border border-gray-300 px-4 py-2 text-blue-500 cursor-pointer">
                         ${techniques.length} techniques (Avg Score: ${avgScore})
                     </td>
                 `;
 
-                // ✅ Pass asset type name instead of JSON
+                // 4) Pass asset type name (or ID) into your detail function
                 row.querySelector("td:last-child").addEventListener("click", () => {
-                    displayTechniquesTable(asset.asset_type);
+                    displayTechniquesTable(asset["asset-type"]);
                 });
 
                 tableBody.appendChild(row);
-            });
+            }
         }
+
+
 
         // function to create a table showing the ATT&CK techniques for a given asset type and the ATT&CK score for each technique
         async function displayTechniquesTable(assetTypeName) {
+            const db = await initShuffleDb();
             const tableBody = document.getElementById("techniques-body");
             tableBody.innerHTML = "";
 
             document.getElementById("selected-asset-type").textContent = assetTypeName;
             document.getElementById("techniques-container").classList.remove("hidden");
 
-            // Find the asset type object
-            const selectedAssetType = modelDefinition.asset_types.find(asset => asset.asset_type === assetTypeName);
-            if (!selectedAssetType) {
-                console.error(`Error: Asset type '${assetTypeName}' not found in model definition.`);
+            // 1) Fetch this asset-instance from Dexie
+            const assetRecord = await db.modelInstances
+                .where("record_type").equals("asset-type-instance")
+                .and(x => x["asset-type"] === assetTypeName)
+                .first(); // or .toArray() if you expect multiple
+
+            if (!assetRecord) {
+                console.error(`No asset instance found for asset-type '${assetTypeName}' in Dexie.`);
                 return;
             }
 
-            // Use precomputed attack scores
-            const techniques = selectedAssetType.attack_scores || [];
+            // 2) Extract technique data
+            const abusedByTechniques = assetRecord.abusedByTechniques 
+                ? Object.entries(assetRecord.abusedByTechniques)
+                : [];
+            const targetedByTechniques = assetRecord.targetedByTechniques
+            ? Object.entries(assetRecord.targetedByTechniques)
+            : [];            
+            const techniques = [...abusedByTechniques, ...targetedByTechniques]
 
-            techniques.forEach(technique => {
+            // // Getting the technique key (e.g., "T1002")
+            // const techniqueId = Object.keys(techniques)[0]; // "T1002"
+
+            // // Getting the values inside the object
+            // const techniqueDetails = techniques[techniqueId];
+
+            // // Extracting specific values
+            // const techniqueName = techniqueDetails["technique_name"]; // "Data Compressed"
+            // const attackScore = techniqueDetails["attack-score"]; // 0.5265
+
+            // 3) Build table rows
+            // for (const [techniqueId, details] of Object.entries(techniques)) {
+                for (const [techniqueId, details] of techniques) {
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td class="border border-gray-300 px-4 py-2">${technique.attack_object_id}</td>
-                    <td class="border border-gray-300 px-4 py-2">${technique.attack_object_name}</td>
-                    <td class="border border-gray-300 px-4 py-2">${technique.score}</td>
+                    <td class="border border-gray-300 px-4 py-2">${techniqueId}</td>
+                    <td class="border border-gray-300 px-4 py-2">${details["technique_name"]}</td>
+                    <td class="border border-gray-300 px-4 py-2">${details["attack-score"]}</td>
                 `;
                 tableBody.appendChild(row);
-            });
+            };
+        }
+
+
+        function getCoverageValue(id) {
+            // This grabs the checked radio button in the container with `id`
+            const checkedRadio = document.querySelector(`#${id} input[type="radio"]:checked`);
+            // If none is checked, default to "" or "None"
+            return checkedRadio ? checkedRadio.value : "None";
         }
 
         document.getElementById("submit-asset-type").addEventListener("click", async () => {
             const assetTypeName = document.getElementById("asset-type-dropdown").value;
             const environment   = document.getElementById("environment-dropdown").value;
             const selectedCategory = document.querySelector('input[name="asset-category"]:checked').value;
+            const selectedNetworkCoverage   = getCoverageValue("network-monitoring");
+            const selectedProcessCoverage   = getCoverageValue("process-monitoring");
+            const selectedFileCoverage      = getCoverageValue("file-monitoring");
+            const selectedCloudCoverage     = getCoverageValue("cloud-monitoring");
+            const selectedHardwareCoverage  = getCoverageValue("hardware-monitoring");
+
+            //console.log("getCoverageValue:", assetTypeName, environment, selectedCategory, selectedProcessCoverage, selectedFileCoverage, selectedNetworkCoverage, selectedHardwareCoverage)
+            
             // gather monitoring coverage inputs, e.g.:
             const coverage = {
                 "network-monitoring": selectedNetworkCoverage,
@@ -1038,11 +1108,11 @@
                 "hardware-monitoring": selectedHardwareCoverage
             };
             let recordCount;
-            if (selectedCategory === "data") {
-                recordCount = parseInt(document.getElementById("record-count-dropdown").value, 10);
+            if (selectedCategory === "Data") {
+                recordCount = parseInt(document.getElementById("record-count-dropdown").value, 100);
             }
 
-            await updateModelValuesForAssetType(assetTypeName, environment, coverage, recordCount);
+            await updateModelValuesForAssetType(selectedCategory, assetTypeName, environment, coverage, recordCount);
             // Possibly show a success message or move to the next step.
         });
 
@@ -1678,57 +1748,244 @@
 
         
 
-        /*
-        * IMPORTANT - Needs to be updated to use Dexie.js and new shuffledb schema
-         * Called when the user clicks "Add Asset Type" in Step 2,
-         * after selecting environment, coverage, record count, etc.
-         * This attaches "model-values" to the relevant record in "contextualizedAssetTypes".
-         * 
-         * @param {string} assetTypeName  e.g. "Linux Server OS"
-         * @param {string} environment    e.g. "AWS"
-         * @param {Object} coverageObj    e.g. { "network-monitoring": "High", ...}
-         * @param {number} [recordCount]  e.g. 1000 (if user selected it, and assetCategory === "data")
+        /**
+         * Updates (or creates) an "asset-type-instance" record in the modelInstances store
+         * when the user selects environment, coverage, and (optionally) record count.
+         *
+         * @param {string} assetCategory   e.g. "Data" or "Devices"
+         * @param {string} assetTypeName   e.g. "Linux Server OS"
+         * @param {string} environment     e.g. "AWS", "GCP", "Azure", "M365"
+         * @param {Object} coverageObj     e.g. { "network-monitoring": "High", "process-monitoring": "Medium", ... }
+         * @param {number} [recordCount]   only defined if assetCategory === "data"
          */
-        async function updateModelValuesForAssetType(assetTypeName, environment, coverageObj, recordCount) {
-            try {
-                const db = await initIndexedDB();
-                const tx = db.transaction("contextualizedAssetTypes", "readwrite");
-                const store = tx.objectStore("contextualizedAssetTypes");
+        async function updateModelValuesForAssetType(
+        assetCategory,
+        assetTypeName,
+        environment,
+        coverageObj,
+        recordCount
+        ) {
+        try {
+            // 1. Get or initialize your Dexie db
+            const db = await initShuffleDb(); // or use a global `db` if you've already opened it
 
-                // 1. Retrieve the existing assetType record by key. The keyPath is "assetTypeId" (the name).
-                const existingRecord = await new Promise((resolve, reject) => {
-                const req = store.get(assetTypeName);
-                req.onsuccess = () => resolve(req.result);
-                req.onerror   = () => reject(req.error);
-                });
+            // 2. Build the record in the shape your new schema expects
+            //    We’ll store it as record_type="asset-type-instance"
+            const newRecord = {
+            record_type: "asset-type-instance",
+            "asset-category": assetCategory,
+            "asset-type": assetTypeName,
+            environment: environment,
+            "monitoring-coverage": coverageObj || {},
+            };
 
-                if (!existingRecord) {
-                console.warn(`No record found for assetTypeId: ${assetTypeName}`);
-                return;
-                }
+            console.log("updateModelValuesForAssetType: ", newRecord)
 
-                // 2. Attach/update the "model-values"
-                existingRecord["model-values"] = {
-                environment,
-                "monitoring-coverage": coverageObj || {}
-                };
-                if (recordCount != null) {
-                existingRecord["model-values"]["record-count"] = recordCount;
-                }
-
-                // 3. Write it back to the store
-                store.put(existingRecord);
-
-                await new Promise((resolve, reject) => {
-                tx.oncomplete = () => resolve();
-                tx.onerror    = () => reject(tx.error);
-                });
-
-                console.log(`✅ Updated model-values for assetTypeId: ${assetTypeName}`);
-            } catch (error) {
-                console.error("Error in updateModelValuesForAssetType:", error);
+            // Add recordCount if provided
+            if (recordCount != null) {
+            newRecord["record-count"] = recordCount;
             }
+            console.log("updateModelValuesForAssetType: ", newRecord)
+            // 3. Insert the record. Using add() will always make a new entry,
+            //    while put() can "upsert" if you have a matching primary key.
+            //    Because modelInstances has an auto-increment “++id”,
+            //    we can just do add() for new entries:
+            const instanceId = await db.modelInstances.add(newRecord);
+            console.log("Created new modelInstance with ID:", instanceId);
+
+            // 4. Now that the instance is created, build its technique objects
+            await buildAssetTechniques(db, instanceId);
+
+            // 5. Refresh any UI table that displays modelInstances
+            await refreshAssetTypeInstancesTable(db);
+
+        } catch (error) {
+            console.error("Error in updateModelValuesForAssetType:", error);
         }
+        }
+
+        /**
+         * buildAssetTechniques(db, instanceId)
+         * 
+         * 1) Retrieves the asset instance from db.modelInstances by its primary key (instanceId).
+         * 2) Finds the relevant techniques for that asset-type via db.capabilities, grouped by mapping_type:
+         *    - "abused-by"
+         *    - "targeted-by"
+         * 3) For each technique, fetches its expanded data from db.techniques (or uses your own function).
+         * 4) Computes the final attack-score using the coverage from the asset instance.
+         * 5) Attaches them to the record (abusedByTechniques, targetedByTechniques).
+         * 6) Updates the record in db.modelInstances.
+         */
+        async function buildAssetTechniques(db, instanceId) {
+            // 1) Retrieve the instance
+            const instanceRecord = await db.modelInstances.get(instanceId);
+            if (!instanceRecord) {
+                console.error("No record found for instanceId:", instanceId);
+                return;
+            }
+
+            // 2) We'll want to fetch the relevant capabilities for that asset-type
+            const assetTypeName = instanceRecord["asset-type"];
+            const coverageObj   = instanceRecord["monitoring-coverage"] || {};
+            
+            // Because we only want items that have `capability_id = assetTypeName` and record_type="asset_types"
+            // Then we’ll group them by mapping_type. For example:
+            const allCaps = await db.capabilities
+                .where("record_type").equals("asset_types")
+                .and(c => c.capability_id === assetTypeName)
+                .toArray();
+
+            // Group them into abused vs targeted
+            const abusedCaps   = allCaps.filter(c => c.mapping_type === "abused-by");
+            const targetedCaps = allCaps.filter(c => c.mapping_type === "targeted-by");
+
+            // Build final object for each group
+            const abusedByTechniques   = {};
+            const targetedByTechniques = {};
+
+            // 3) For each technique in abusedCaps, build the technique object
+            for (const cap of abusedCaps) {
+                const techniqueId = cap.attack_object_id; // e.g. "T1001"
+                
+                // 3.1) We can either fetch an existing record from db.techniques,
+                //      or call your “buildTechniqueRecord” code directly. If you have a
+                //      prepopulated 'techniques' store, do something like:
+                const techniqueRecord = await db.techniques
+                .where("technique_id")
+                .equals(techniqueId)
+                .first();
+
+                if (!techniqueRecord) {
+                console.warn("No technique record found in db.techniques for", techniqueId);
+                continue;
+                }
+
+                // 3.2) Convert that record into the needed shape
+                const newObj = {
+                "technique_name": techniqueRecord.technique_name,
+                "prevEntry": techniqueRecord.prevEntry || [0,0,0,0],
+                "data-sources": techniqueRecord.data_sources || [],
+                "nist-controls": techniqueRecord.nist_controls || [],
+                "cis-safeguards": techniqueRecord.cis_safeguards || [],
+                "aws-capabilities": techniqueRecord.aws_capabilities || [],
+                "gcp-capabilities": techniqueRecord.gcp_capabilities || [],
+                "azure-capabilities": techniqueRecord.azure_capabilities || [],
+                "m365-capabilities": techniqueRecord.m365_capabilities || [],
+                "mitigations": techniqueRecord.mitigations || [],
+                "monitoring-coverage-eval": techniqueRecord.monitoring_coverage_eval || []
+                // We'll add "attack-score" below
+                };
+
+                // 4) Compute the final attack-score for this technique
+                //    techniqueRecord.initial_score is from your “buildTechniqueRecord”
+                const initialScore = parseFloat(techniqueRecord.initial_score) || 0;
+                const weightSum    = computeCoverageWeight(coverageObj, techniqueRecord.monitoring_coverage_eval);
+                const attackScore  = parseFloat((initialScore * (1 + weightSum)).toFixed(4));
+
+                newObj["attack-score"] = attackScore;
+
+                // 5) Attach to abusedByTechniques (keyed by techniqueId)
+                abusedByTechniques[techniqueId] = newObj;
+            }
+
+            // Similarly for "targeted-by"
+            for (const cap of targetedCaps) {
+                const techniqueId = cap.attack_object_id;
+                // Same code as above
+                const techniqueRecord = await db.techniques
+                .where("technique_id")
+                .equals(techniqueId)
+                .first();
+
+                if (!techniqueRecord) {
+                console.warn("No technique record found in db.techniques for", techniqueId);
+                continue;
+                }
+
+                const newObj = {
+                "technique_name": techniqueRecord.technique_name,
+                "prevEntry": techniqueRecord.prevEntry || [0,0,0,0],
+                "data-sources": techniqueRecord.data_sources || [],
+                "nist-controls": techniqueRecord.nist_controls || [],
+                "cis-safeguards": techniqueRecord.cis_safeguards || [],
+                "aws-capabilities": techniqueRecord.aws_capabilities || [],
+                "gcp-capabilities": techniqueRecord.gcp_capabilities || [],
+                "azure-capabilities": techniqueRecord.azure_capabilities || [],
+                "m365-capabilities": techniqueRecord.m365_capabilities || [],
+                "mitigations": techniqueRecord.mitigations || [],
+                "monitoring-coverage-eval": techniqueRecord.monitoring_coverage_eval || []
+                // We'll add "attack-score" below
+                };
+
+                const initialScore = parseFloat(techniqueRecord.initial_score) || 0;
+                const weightSum    = computeCoverageWeight(coverageObj, techniqueRecord.monitoring_coverage_eval);
+                const attackScore  = parseFloat((initialScore * (1 + weightSum))).toFixed(4);
+                newObj["attack-score"] = attackScore;
+
+                targetedByTechniques[techniqueId] = newObj;
+            }
+
+            // 6) Update the record with these new technique objects
+            instanceRecord.abusedByTechniques   = abusedByTechniques;
+            instanceRecord.targetedByTechniques = targetedByTechniques;
+
+            await db.modelInstances.update(instanceId, {
+                abusedByTechniques,
+                targetedByTechniques
+            });
+
+            console.log("Updated instance with abusedByTechniques and targetedByTechniques for instanceId:", instanceId);
+        }
+
+        /**
+         * computeCoverageWeight(coverageObj, coverageEval)
+         *
+         * coverageObj might look like:
+         *   {
+         *     "network-monitoring": "High",
+         *     "process-monitoring": "Medium",
+         *     "file-monitoring": "Low",
+         *     "cloud-monitoring": "None",
+         *     "hardware-monitoring": "None"
+         *   }
+         *
+         * coverageEval might be an array of short coverage categories, e.g.: ["process", "network", "file"]
+         *
+         * hardcoding coverage factors for now.
+         *
+         * For each coverage domain in coverageEval, see if the coverageObj for that domain is nonzero,
+         * and sum up the corresponding fraction. Return that sum as weightSum.
+         */
+        function computeCoverageWeight(coverageObj, coverageEval) {
+            // mapping from "High"/"Medium"/"Low"/"None" to numeric fraction
+            const coverageToFactor = {
+                "High":   0.002,
+                "Medium": 0.066,
+                "Low":    0.132,
+                "None":   0.198
+            };
+
+            let total = 0;
+
+            // The technique might have "process", "network", "file", ...
+            coverageEval.forEach(shortDomain => {
+                // Map from these short domain words to the coverageObj key
+                // e.g. "process" => "process-monitoring"
+                // e.g. "network" => "network-monitoring"
+                // This is up to you to define consistently
+                const coverageKey = shortDomain + "-monitoring";
+
+                // See what coverage level the user selected
+                const userCoverage = coverageObj[coverageKey] || "None";
+
+                // Add the numeric fraction
+                const fraction = coverageToFactor[userCoverage] || 0;
+                total += fraction;
+            });
+
+            return total;
+        }
+
 
         /**
          * Top-level function to iterate through the files array, fetch each JSON,
@@ -1747,12 +2004,12 @@
 
         // Function to update progress visually
         function updateProgress(logMessage) {
-            // For example, if you have 5 main tasks:
+            // For example, if you have 6 main tasks:
             const totalSteps = 6;
             let currentStep = 0;
             currentStep++;
             const progressPercent = (currentStep / totalSteps) * 100;
-            document.getElementById("progress-bar").style.width = progressPercent + "%";
+            document.getElementById("loading-progress-bar").style.width = progressPercent + "%";
 
             // Append the log
             const logsDiv = document.getElementById("loading-logs");
@@ -1771,7 +2028,7 @@
             // function updateProgress(logMessage) {
             //     currentStep++;
             //     const progressPercent = (currentStep / totalSteps) * 100;
-            //     document.getElementById("progress-bar").style.width = progressPercent + "%";
+            //     document.getElementById("loading-progress-bar").style.width = progressPercent + "%";
 
             //     // Append the log
             //     const logsDiv = document.getElementById("loading-logs");
@@ -1817,6 +2074,182 @@
             // Optional: hide the progress bar, or leave it fully at 100%
         }
 
+        async function generateRadialTree() {
+            const container = document.getElementById("radial-tree-container");
+            if (!container) {
+                console.error("❌ radial-tree-container not found in DOM.");
+                return;
+            }
+
+            // Clear previous
+            container.innerHTML = "";
+
+            // Build the data object from Dexie
+            const data = await buildRadialTreeData();
+
+            // Dimensions
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            const radius = Math.min(width, height) / 2;
+
+            // Create base SVG
+            const svg = d3
+                .select(container)
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .append("g")
+                .attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+            // Build radial "cluster" layout
+            const tree = d3.cluster().size([360, radius - 100]);
+
+            const root = d3.hierarchy(data, d => d.children);
+            tree(root);
+
+            // Draw links
+            svg
+                .selectAll(".link")
+                .data(root.links())
+                .enter()
+                .append("path")
+                .attr("class", "link")
+                .attr("fill", "none")
+                .attr("stroke", "#ccc")
+                .attr("stroke-width", 1.5)
+                .attr(
+                "d",
+                d3
+                    .linkRadial()
+                    .angle(d => (d.x * Math.PI) / 180)
+                    .radius(d => d.y)
+                );
+
+            // Draw nodes
+            const node = svg
+                .selectAll(".node")
+                .data(root.descendants())
+                .enter()
+                .append("g")
+                .attr("class", "node")
+                .attr("transform", d => `rotate(${d.x - 90}) translate(${d.y},0)`);
+
+            // Node circles
+            node.append("circle")
+                .attr("r", 4)
+                .attr("fill", "#69b3a2");
+
+            // Labels
+            node
+                .append("text")
+                .attr("dy", ".31em")
+                .attr("x", d => (d.x < 180 ? 8 : -8))
+                .attr("text-anchor", d => (d.x < 180 ? "start" : "end"))
+                .attr("transform", d => (d.x >= 180 ? "rotate(180)" : ""))
+                .text(d => d.data.name);
+        }
+
+
+
+        async function buildRadialTreeData() {
+            // 1) Retrieve all asset-type-instance records from Dexie
+            const db = await initShuffleDb();
+            const allInstances = await db.modelInstances
+                .where("record_type")
+                .equals("asset-type-instance")
+                .toArray();
+
+            // 2) Get the currently selected visualization type (e.g. "detections", "mitigations", "nist_controls", etc.)
+            const selectedVisualizationType = document.querySelector(
+                'input[name="visualization-type"]:checked'
+            )?.value || "detections";
+
+            // 3) Accumulate a hierarchical structure using a nested map:
+            //    Environment → Asset Category → Asset Type → Techniques
+            const envMap = {};
+
+            for (const instance of allInstances) {
+                const environment = instance.environment || "Unknown Environment";
+                const category = instance["asset-category"] || "Unknown Category";
+                const assetType = instance["asset-type"] || "Unnamed Asset";
+
+                // Ensure environment node exists
+                if (!envMap[environment]) {
+                envMap[environment] = {
+                    name: environment,
+                    children: {},
+                };
+                }
+
+                // Ensure category node exists
+                if (!envMap[environment].children[category]) {
+                envMap[environment].children[category] = {
+                    name: category,
+                    children: {},
+                };
+                }
+
+                // 4) Convert abusedByTechniques and targetedByTechniques (which are objects) into arrays
+                const abusedObj = instance.abusedByTechniques || {};
+                const targetedObj = instance.targetedByTechniques || {};
+                const abusedArr = Object.entries(abusedObj);
+                const targetedArr = Object.entries(targetedObj);
+
+                // If you wanted to limit top 5 by "attack-score":
+                abusedArr.sort((a, b) => parseFloat(b[1]["attack-score"]||0) - parseFloat(a[1]["attack-score"]||0));
+                targetedArr.sort((a, b) => parseFloat(b[1]["attack-score"]||0) - parseFloat(a[1]["attack-score"]||0));
+                const top5Abused   = abusedArr.slice(0, 5);
+                const top5Targeted = targetedArr.slice(0, 5);
+                const allTechs = [...top5Abused, ...top5Targeted];
+                
+                // If you do not want to limit to top 5:
+                // const allTechs = [...abusedArr, ...targetedArr];
+
+                // 5) For each technique, build its node.
+                //    When the selected visualization type is "mitigations",
+                //    we extract the mitigation_id from each mitigation object.
+                const techniqueChildren = allTechs.map(([techId, techDetails]) => {
+                let mappedArray = [];
+                if (selectedVisualizationType === "mitigations") {
+                    // If mitigations is stored as an object, extract its values and then the mitigation_id from each.
+                    const mitObj = techDetails.mitigations || {};
+                    mappedArray = Object.values(mitObj)
+                    .map((m) => m.mitigation_id)
+                    .filter(Boolean);
+                } else {
+                    // For other visualization types, assume the property holds an array.
+                    mappedArray = techDetails[selectedVisualizationType] || [];
+                }
+
+                // Build child nodes from the mapped array.
+                const mappingChildren = mappedArray.map((id) => ({ name: id }));
+
+                return {
+                    name: `${techId} - ${techDetails.technique_name || ""}`,
+                    children: mappingChildren,
+                    data: { ...techDetails }
+                };
+                });
+
+                // Insert or update the assetType node
+                envMap[environment].children[category].children[assetType] = {
+                name: assetType,
+                children: techniqueChildren
+                };
+            }
+
+            // 6) Convert the nested envMap into an array-based hierarchical object for D3
+            const root = { name: "Model", children: [] };
+            root.children = Object.values(envMap).map((envObj) => {
+                envObj.children = Object.values(envObj.children).map((catObj) => {
+                catObj.children = Object.values(catObj.children);
+                return catObj;
+                });
+                return envObj;
+            });
+
+            return root;
+        }
     </script>
          
   
