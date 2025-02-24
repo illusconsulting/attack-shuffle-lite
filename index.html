@@ -575,7 +575,7 @@
         }
         const newLine = document.createElement("div");
         newLine.textContent = message;
-        logsEl.appendChild(newLine);
+        logsEl.prepend(newLine);
         }
 
 
@@ -1055,6 +1055,7 @@
         async function createAllTechniques(db) {
         // 1) Gather all unique technique IDs from capabilities
             const uniqueTechniqueIds = await gatherUniqueTechniqueIds(db);
+            updateProgress("Starting createAllTechniques...")
             console.log("Starting createAllTechniques...")
             // 2) Build the records
             const techniqueRecords = [];
@@ -1069,6 +1070,7 @@
             // 3) Insert them into the "techniques" store
             if (techniqueRecords.length) {
                 await db.techniques.bulkPut(techniqueRecords);
+                updateProgress(`Created ${techniqueRecords.length} techniques in the techniques store.`);
                 console.log(`Created ${techniqueRecords.length} techniques in the techniques store.`);
             } else {
                 console.log(`No techniques found to create.`);
@@ -1092,6 +1094,7 @@
             });
             
             console.log("createAllTechniques: Returning techniqueIdSet...")
+            updateProgress("createAllTechniques: Returning techniqueIdSet...")
             return Array.from(techniqueIdSet);
         }
 
@@ -1150,7 +1153,8 @@
             const initialScore = chokepointScore + actionabilityScore + prevalenceScore;
 
             // 7) Return the final object shaped as desired
-            console.log("createAllTechniques: returning contextualized technique object for", $(techniqueid))
+            console.log("createAllTechniques: returning contextualized technique object for", $(techniqueId))
+            updateProgress("createAllTechniques: returning contextualized technique object for", $(techniqueId))
             return {
                 technique_id: techniqueId,
                 technique_url,
@@ -1232,7 +1236,8 @@
             }
         }
 
-        console.log("createAllTechniques: returning mitigations for", $(techniqueid))
+        console.log("createAllTechniques: returning mitigations")
+        updateProgress("createAllTechniques: returning mitigations")
         return mitigations;
         }
 
@@ -1303,6 +1308,7 @@
         }
 
         console.log("createAllTechniques: returning monitoring coverage eval array")
+        updateProgress("createAllTechniques: returning monitoring coverage eval array")
         return Array.from(coverage);
         }
 
@@ -1384,6 +1390,7 @@
                                     + (weightAfter  * afterClamped);
 
                 console.log("createAllTechniques: returning chokepointScore", $(chokepointScore))
+                updateProgress("createAllTechniques: returning chokepointScore", $(chokepointScore))
                 return chokepointScore;
 
             } catch (error) {
@@ -1438,6 +1445,7 @@
                 (actionabilityWeightDetect * detectionsUtility);
 
                 console.log("createAllTechniques: returning actionabilityScore", $(actionabilityScore))
+                updateProgress("createAllTechniques: returning actionabilityScore", $(actionabilityScore))
                 return actionabilityScore;
 
             } catch (error) {
@@ -1638,26 +1646,40 @@
             }
         }
 
+        // Function to update progress visually
+        function updateProgress(logMessage) {
+            // For example, if you have 5 main tasks:
+            const totalSteps = 6;
+            let currentStep = 0;
+            currentStep++;
+            const progressPercent = (currentStep / totalSteps) * 100;
+            document.getElementById("progress-bar").style.width = progressPercent + "%";
+
+            // Append the log
+            const logsDiv = document.getElementById("loading-logs");
+            const newLogLine = document.createElement("div");
+            newLogLine.textContent = `(${currentStep}/${totalSteps}) ${logMessage}`;
+            logsDiv.prepend(newLogLine);
+        }
+
         async function runInitializationSequence(db) {
             // Show the progress bar
             document.getElementById("progress-container").style.display = "block";
 
-            // For example, if you have 5 main tasks:
-            const totalSteps = 6;
-            let currentStep = 0;
 
-            // Function to update progress visually
-            function updateProgress(logMessage) {
-                currentStep++;
-                const progressPercent = (currentStep / totalSteps) * 100;
-                document.getElementById("progress-bar").style.width = progressPercent + "%";
 
-                // Append the log
-                const logsDiv = document.getElementById("loading-logs");
-                const newLogLine = document.createElement("div");
-                newLogLine.textContent = `(${currentStep}/${totalSteps}) ${logMessage}`;
-                logsDiv.appendChild(newLogLine);
-            }
+            // // Function to update progress visually
+            // function updateProgress(logMessage) {
+            //     currentStep++;
+            //     const progressPercent = (currentStep / totalSteps) * 100;
+            //     document.getElementById("progress-bar").style.width = progressPercent + "%";
+
+            //     // Append the log
+            //     const logsDiv = document.getElementById("loading-logs");
+            //     const newLogLine = document.createElement("div");
+            //     newLogLine.textContent = `(${currentStep}/${totalSteps}) ${logMessage}`;
+            //     logsDiv.appendChild(newLogLine);
+            // }
 
             // 1) Initialize Dexie
             await initShuffleDb(db);
