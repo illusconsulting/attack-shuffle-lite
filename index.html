@@ -181,7 +181,7 @@
 
         <div id="form-navigation" class="flex justify-between mt-4">
             <button type="button" id="prev-step" class="hidden bg-gray-500 text-white px-4 py-2 rounded">Back</button>
-            <button type="button" id="next-step" class="bg-blue-500 text-white px-4 py-2 rounded">Next</button>
+            <button type="button" id="next-step" class="bg-blue-500 text-white px-4 py-2 rounded hidden">Next</button>
         </div>
 
         <form id="multiStepForm">
@@ -193,9 +193,6 @@
                 </div>
                 <div class="mt-2 text-right">
                 <!-- On completion, show the Next button. Hide it by default. -->
-                <button type="button" id="initialNextBtn" class="bg-blue-500 text-white px-4 py-2 rounded hidden">
-                    Next
-                </button>
                 </div>
             </div>
             
@@ -458,7 +455,7 @@
             const db = new Dexie("shuffledb");
             db.version(1).stores({
                 modelInstances: "++id, record_type, assetCategory, assetType, environment, monitoringCoverage, recordCount, abusedByTechniques, targetedByTechniques, &[assetType+environment+monitoringCoverage]", // tracks all info about asset type instances selected by the user
-                techniques: "++id, &technique_id, technique_name, monitoring_coverage_eval, data_sources, nist_controls, cis_safeguards, aws_capabilities, gcp_capabilities, azure_capabilities, m365_capabilities, mitigations", // imported from assetType files
+                techniques: "++id, technique_id, technique_name, monitoring_coverage_eval, data_sources, nist_controls, cis_safeguards, aws_capabilities, gcp_capabilities, azure_capabilities, m365_capabilities, mitigations", // imported from assetType files
                 capabilities: "++id, record_type, capability_group, capability_id, capability_description, mapping_type, attack_object_id, attack_object_name", // imported from MAPEX files and CIS_safeguard_to_technique.json file
                 staticVariables: "++id, record_type", // imported from static-variables.json and weight-keywords.json, if from static-variables.json, record_type = "static", if from weight-keywords.json, record_type = "keyword", if from attack-prev-tid.json, record_type = "calc"
                 attack: "&id, type, record_type" // imported from enterprise-attack.json "objects" array
@@ -586,9 +583,11 @@
             showStep(0);
 
             // set dark mode
-            const savedMode = await getObjectById("settings", "darkMode");
-            if (savedMode) document.body.classList.toggle("dark", savedMode.value === "dark");
-            
+            // const savedMode = await getObjectById(db, "settings", "darkMode");
+            // if (savedMode) {
+            // document.body.classList.toggle("dark", savedMode.value === "dark");
+            // }
+
             // // populate environment dropdown
             // populateEnvironmentSelection();
 
@@ -622,6 +621,28 @@
             });
         });
     
+        /**
+         * getObjectById
+         * 
+         * Retrieves a single record from the specified Dexie store by its primary key.
+         * In the example call, we do: getObjectById("settings", "darkMode"),
+         * which looks up the record in the "settings" store with key="darkMode".
+         *
+         * @param {string} storeName - The name of the IndexedDB store, e.g. "settings".
+         * @param {string} objectId  - The primary key to retrieve, e.g. "darkMode".
+         * @returns {Promise<Object|null>} The matching record, or null if not found.
+         */
+        async function getObjectById(db, storeName, objectId) {
+        try {
+            // If you have a global 'db' already initialized, use that.
+            // Otherwise, call initShuffleDb() here or pass the db as a parameter.
+            return await db[storeName].get(objectId);
+        } catch (error) {
+            console.error(`Error in getObjectById(${storeName}, ${objectId}):`, error);
+            return null;
+        }
+        }
+
 
         /*******************************************************
          * 1. Populate Asset Type Dropdown
@@ -1025,154 +1046,264 @@
             // Possibly show a success message or move to the next step.
         });
 
-        /************************************************************
-         * countDetections
-         * ----------------------------------------------------------
-         * 1. From the "attack" store, find the relationship objects:
-         *    type="relationship", relationship_type="detects", target_ref=patternId
-         * 2. Return the count of detections.
-         ************************************************************/
-        async function countDetections(db, patternId) {
-        // find all relationship objects that mitigate this pattern
-        const relationships = await db.attack
-            .where("type").equals("relationship")
-            .and(rel => rel.relationship_type === "detects" && rel.target_ref === patternId)
-            .toArray();
+        /**
+         * buildInMemoryCaches
+         *
+         * Fetches and stores large collections of STIX objects, relationships,
+         * capabilities, and staticVariables in memory. This approach drastically
+         * reduces repeated DB queries and allows parallel data retrieval.
+         *
+         * @param {Dexie} db - The Dexie database instance
+         * @returns {Object}  An object containing caches:
+         *   {
+         *     allCapabilities,  // Array of all records in db.capabilities
+         *     capabilityByTechnique, // Map<string, Array<object>> keyed by attack_object_id
+         *     patternsMap,      // Map<string, object> keyed by techniqueId => STIX pattern object
+         *     relationshipsMap, // Map<string, Array<object>> keyed by "target_ref" => array of "relationship" objects
+         *     courseOfActionMap,// Map<string, object> keyed by "course-of-action" ID => STIX CoA object
+         *     staticVarsAll     // Array of all staticVariables
+         *     staticVarsCalc    // Map<string, object> keyed by techniqueId => the "calc" object
+         *     monitoringKeywords // Array of keyword entries from staticVariables
+         *   }
+         */
+        async function buildInMemoryCaches(db) {
+        // We’ll do multiple fetches in parallel using Promise.all
+        const [
+            allCapabilities,
+            allAttack,
+            staticVarsAll
+        ] = await Promise.all([
+            db.capabilities.toArray(),
+            db.attack.toArray(),
+            db.staticVariables.toArray()
+        ]);
 
-        return relationships.length;
+        // 1) Build a quick lookup of capabilities by techniqueId
+        //    e.g. capabilityByTechnique["T1001"] -> array of capabilities that have attack_object_id="T1001"
+        const capabilityByTechnique = {};
+        for (const cap of allCapabilities) {
+            if (!cap.attack_object_id) continue;
+            if (!capabilityByTechnique[cap.attack_object_id]) {
+            capabilityByTechnique[cap.attack_object_id] = [];
+            }
+            capabilityByTechnique[cap.attack_object_id].push(cap);
         }
 
-        /************************************************************
-         * Main entry point: createAllTechniques
-         * ----------------------------------------------------------
-         * 1. Gathers all unique attack_object_id values from the
-         *    "capabilities" store (the techniques).
-         * 2. Builds a technique record for each technique_id.
-         * 3. bulkPut() them all into the "techniques" store.
-         * 
-         * Adjust naming and references to match your project’s code.
-         ************************************************************/
+        // 2) Separate out STIX objects from the "attack" store
+        //    We'll want to map:
+        //      - "attack-pattern" by techniqueId
+        //      - "relationship" by target_ref (for mitigations/detections)
+        //      - "course-of-action" by ID
+        const patternsMap = new Map();
+        const relationshipsMap = new Map();  // e.g. relationshipsMap[patternId] => array of relationships
+        const courseOfActionMap = new Map();
+
+        for (const obj of allAttack) {
+            if (obj.type === "attack-pattern" && Array.isArray(obj.external_references)) {
+            // Find the external reference for "mitre-attack" to get the techniqueId
+            const mitreRef = obj.external_references.find(r => r.source_name === "mitre-attack");
+            if (mitreRef && mitreRef.external_id) {
+                const techniqueId = mitreRef.external_id; // e.g. "T1001"
+                patternsMap.set(techniqueId, obj);
+            }
+            } 
+            else if (obj.type === "relationship") {
+            // e.g. obj.target_ref might be "attack-pattern--abc123"
+            if (!relationshipsMap.has(obj.target_ref)) {
+                relationshipsMap.set(obj.target_ref, []);
+            }
+            relationshipsMap.get(obj.target_ref).push(obj);
+            }
+            else if (obj.type === "course-of-action") {
+            // Store CoA in a map keyed by obj.id
+            courseOfActionMap.set(obj.id, obj);
+            }
+        }
+
+        // 3) Partition staticVariables by record_type
+        const staticVarsCalc = {};
+        const monitoringKeywords = [];
+        for (const sv of staticVarsAll) {
+            if (sv.record_type === "calc" && sv.attack_object_id) {
+            // e.g. staticVarsCalc["T1001"] = that record
+            staticVarsCalc[sv.attack_object_id] = sv;
+            } else if (sv.record_type === "keyword") {
+            // e.g. for coverage eval
+            monitoringKeywords.push(sv);
+            }
+        }
+
+        return {
+            allCapabilities,
+            capabilityByTechnique,
+            patternsMap,
+            relationshipsMap,
+            courseOfActionMap,
+            staticVarsAll,
+            staticVarsCalc,
+            monitoringKeywords
+        };
+        }
+
+
+        /**
+         * createAllTechniques
+         *
+         * 1) Builds in-memory caches (patterns, relationships, capabilities, etc.).
+         * 2) Gathers all unique technique IDs.
+         * 3) Constructs technique records in parallel.
+         * 4) bulkPut() them into db.techniques.
+         *
+         * @param {Dexie} db
+         */
         async function createAllTechniques(db) {
-        // 1) Gather all unique technique IDs from capabilities
-            const uniqueTechniqueIds = await gatherUniqueTechniqueIds(db);
-            updateProgress("Starting createAllTechniques...")
-            console.log("Starting createAllTechniques...")
-            // 2) Build the records
-            const techniqueRecords = [];
-            for (const techniqueId of uniqueTechniqueIds) {
-                // For each techniqueId (e.g., "T1001") create a record
-                const record = await buildTechniqueRecord(db, techniqueId);
-                if (record) {
-                techniqueRecords.push(record);
-                }
-            }
-
-            // 3) Insert them into the "techniques" store
-            if (techniqueRecords.length) {
-                await db.techniques.bulkPut(techniqueRecords);
-                updateProgress(`Created ${techniqueRecords.length} techniques in the techniques store.`);
-                console.log(`Created ${techniqueRecords.length} techniques in the techniques store.`);
-            } else {
-                console.log(`No techniques found to create.`);
-            }
-        }
-
-        /************************************************************
-         * gatherUniqueTechniqueIds
-         * ----------------------------------------------------------
-         * Reads from the "capabilities" store and extracts the
-         * unique "attack_object_id" values. Returns them as a set or array.
-         ************************************************************/
-        async function gatherUniqueTechniqueIds(db) {
-            const capabilityEntries = await db.capabilities.toArray();
-            const techniqueIdSet = new Set();
-
-            capabilityEntries.forEach(entry => {
-                if (entry.attack_object_id) {
-                techniqueIdSet.add(entry.attack_object_id);
-                }
-            });
+            updateProgress("Starting createAllTechniques...");
             
-            console.log("createAllTechniques: Returning techniqueIdSet...")
-            updateProgress("createAllTechniques: Returning techniqueIdSet...")
-            return Array.from(techniqueIdSet);
+            // 1) Build caches
+            const {
+                capabilityByTechnique,
+                patternsMap,
+                relationshipsMap,
+                courseOfActionMap,
+                staticVarsCalc,
+                monitoringKeywords
+            } = await buildInMemoryCaches(db);
+
+            // 2) Gather all unique technique IDs from the capabilities
+            const uniqueTechniqueIds = gatherUniqueTechniqueIds(capabilityByTechnique);
+            console.log(`Found ${uniqueTechniqueIds.length} technique IDs.`);
+
+            // 3) Build records in parallel using Promise.all
+            const buildPromises = uniqueTechniqueIds.map(techId =>
+                buildTechniqueRecord(
+                techId,
+                patternsMap,
+                relationshipsMap,
+                courseOfActionMap,
+                capabilityByTechnique,
+                staticVarsCalc,
+                monitoringKeywords
+                )
+            );
+            const techniqueRecords = await Promise.all(buildPromises);
+
+            // Filter out any null or undefined records
+            const validRecords = techniqueRecords.filter(r => r);
+
+            // 4) Insert them into the "techniques" store
+            if (validRecords.length) {
+                await db.techniques.bulkPut(validRecords);
+                console.log(`Created ${validRecords.length} techniques in the techniques store.`);
+            } else {
+                console.log("No techniques found to create.");
+            }
         }
 
-        /************************************************************
-         * buildTechniqueRecord
-         * ----------------------------------------------------------
-         * Builds the final technique object for a given techniqueId.
-         * Follows the data sources specified in the instructions:
-         *   - "attack" store for name, data-sources, mitigations, etc.
-         *   - "capabilities" store for nist-controls, cis-safeguards, etc.
-         *   - "staticVariables" store for keywords (monitoring coverage)
-         *     and "calc" entries (prevEntry).
-         ************************************************************/
-        async function buildTechniqueRecord(db, techniqueId) {
-            // 1) From "attack" store, get the single pattern object
-            const patternObj = await db.attack
-                .where("type").equals("attack-pattern")
-                .filter(obj => hasExternalReference(obj, "mitre-attack", techniqueId))
-                .first();
 
-            // If we can’t find a matching pattern, skip
+        /**
+         * gatherUniqueTechniqueIds
+         *
+         * Extracts all unique technique IDs (like "T1001", "T1002") from the
+         * capabilityByTechnique map built in memory.
+         *
+         * @param {Object} capabilityByTechnique - from buildInMemoryCaches
+         * @returns {Array<string>}
+         */
+        function gatherUniqueTechniqueIds(capabilityByTechnique) {
+            // The keys of capabilityByTechnique are all technique IDs
+            return Object.keys(capabilityByTechnique);
+        }
+
+        /**
+         * buildTechniqueRecord
+         *
+         * Builds the final technique object for a single techniqueId, using
+         * in-memory caches to gather the pattern object, mitigations, capabilities,
+         * monitoring coverage, etc.
+         *
+         * @param {string} techniqueId            - e.g. "T1001"
+         * @param {Map} patternsMap               - Map(techniqueId => attack-pattern object)
+         * @param {Map} relationshipsMap          - Map(patternId => array of relationship objects)
+         * @param {Map} courseOfActionMap         - Map(coaId => course-of-action object)
+         * @param {Object} capabilityByTechnique  - { "T1001": [cap1, cap2], ... }
+         * @param {Object} staticVarsCalc         - { "T1001": {calc_tid_before, calc_tid_after, calc_prev_score}, ...}
+         * @param {Array} monitoringKeywords      - array of { key, value } records for coverage
+         * @returns {Object|null} The final technique record, or null if no valid pattern found
+         */
+        async function buildTechniqueRecord(
+            techniqueId,
+            patternsMap,
+            relationshipsMap,
+            courseOfActionMap,
+            capabilityByTechnique,
+            staticVarsCalc,
+            monitoringKeywords
+            ) {
+            // 1) Find the STIX pattern object for this technique
+            const patternObj = patternsMap.get(techniqueId);
             if (!patternObj) {
-                console.warn(`No attack-pattern found for techniqueId: ${techniqueId}`);
+                console.warn(`No attack-pattern found for ${techniqueId}`);
                 return null;
             }
 
-            // Extract the name, ID, data-sources, and the official technique URL
+            const patternId = patternObj.id; // e.g. "attack-pattern--abc123"
             const technique_name = patternObj.name || techniqueId;
-            const patternId = patternObj.id; // e.g. "attack-pattern--005a06c6..."
             const dataSources = patternObj.x_mitre_data_sources || [];
             const technique_url = getMitreUrlFromPattern(patternObj, techniqueId);
 
-            // 2) Gather mitigations and count detections
-            const mitigations = await gatherMitigations(db, patternId);
-            const countDetectionsVal = await countDetections(db, patternId);
+            // 2) Gather mitigations and detection count from the relationshipsMap
+            const { mitigations, detectionCount } = gatherMitigationsAndDetections(
+                patternId,
+                relationshipsMap,
+                courseOfActionMap
+            );
 
-            // 3) Gather relevant capabilities (NIST, CIS, etc.)
-            const nistControls       = await gatherCapabilityIds(db, "nist_controls",      techniqueId);
-            const cisSafeguards      = await gatherCapabilityIds(db, "cis_safeguards",     techniqueId);
-            const awsCapabilities    = await gatherCapabilityIds(db, "aws_capabilities",   techniqueId);
-            const gcpCapabilities    = await gatherCapabilityIds(db, "gcp_capabilities",   techniqueId);
-            const azureCapabilities  = await gatherCapabilityIds(db, "azure_capabilities", techniqueId);
-            const m365Capabilities   = await gatherCapabilityIds(db, "m365_capabilities",  techniqueId);
+            // 3) Gather relevant capabilities for each record_type
+            const { 
+                nistControls, cisSafeguards, awsCapabilities, 
+                gcpCapabilities, azureCapabilities, m365Capabilities 
+            } = gatherCapabilityIds(capabilityByTechnique[techniqueId] || []);
 
-            // 4) Build “monitoring-coverage-eval” by comparing data-sources to your weight-keywords
-            const monitoringCoverageEval = await buildMonitoringCoverageEval(db, dataSources);
+            // 4) Evaluate coverage
+            const monitoringCoverageEval = buildMonitoringCoverageEval(monitoringKeywords, dataSources);
 
-            // 5) Build “prevEntry” from staticVariables "calc" records
-            const prevEntry = await buildPrevEntry(db, techniqueId, patternId);
+            // 5) Build prevEntry [calc_tid_before, calc_tid_after, calc_prev_score, detectionCount]
+            const prevEntry = buildPrevEntry(staticVarsCalc[techniqueId], detectionCount);
 
-            // 6) Compute “initial-score”
-            const [calc_tid_before, calc_tid_after, calc_prev_score, calc_detections] = prevEntry;
-            const chokepointScore = computeChokepointFromValues(db, calc_tid_before, calc_tid_after);
-            const actionabilityScore = computeActionabilityScore(db, nistControls.length, cisSafeguards.length, countDetectionsVal);
+            // 6) Calculate initial-score
+            //    We assume computeChokepointFromValues/computeActionabilityScore might need
+            //    in-memory "static config" if they used Dexie. For brevity, we show local stubs here.
+            const [calc_tid_before, calc_tid_after, calc_prev_score] = prevEntry;
+            const chokepointScore = computeChokepointFromValues(calc_tid_before, calc_tid_after);
+            const actionabilityScore = computeActionabilityScore(
+                nistControls.length,
+                cisSafeguards.length,
+                detectionCount
+            );
             const prevalenceScore = parseFloat(calc_prev_score) || 0;
-            const initialScore = chokepointScore + actionabilityScore + prevalenceScore;
+            const initialScore = parseFloat(
+                (chokepointScore + actionabilityScore + prevalenceScore).toFixed(4)
+            );
 
-            // 7) Return the final object shaped as desired
-            console.log("createAllTechniques: returning contextualized technique object for", $(techniqueId))
-            updateProgress("createAllTechniques: returning contextualized technique object for", $(techniqueId))
+            // 7) Return final technique record
             return {
                 technique_id: techniqueId,
                 technique_url,
                 technique_name,
                 prevEntry,
-                "data_sources": dataSources,
-                "nist_controls": nistControls,
-                "cis_safeguards": cisSafeguards,
-                "aws_capabilities": awsCapabilities,
-                "gcp_capabilities": gcpCapabilities,
-                "azure_capabilities": azureCapabilities,
-                "m365_capabilities": m365Capabilities,
+                data_sources: dataSources,
+                nist_controls: nistControls,
+                cis_safeguards: cisSafeguards,
+                aws_capabilities: awsCapabilities,
+                gcp_capabilities: gcpCapabilities,
+                azure_capabilities: azureCapabilities,
+                m365_capabilities: m365Capabilities,
                 mitigations,
-                "monitoring_coverage_eval": monitoringCoverageEval,
-                "initial_score": parseFloat(initialScore).toFixed(4)
-                // "initial_score": parseFloat(initialScore.toFixed(4)) // keep it to four decimals if desired
+                monitoring_coverage_eval: monitoringCoverageEval,
+                initial_score: initialScore
             };
         }
+
 
         /************************************************************
          * Helper: Check if STIX object has external_references
@@ -1198,261 +1329,229 @@
         return ref && ref.url ? ref.url : "";
         }
 
-        /************************************************************
-         * gatherMitigations
-         * ----------------------------------------------------------
-         * 1. From the "attack" store, find the relationship objects:
-         *    type="relationship", relationship_type="mitigates", target_ref=patternId
-         * 2. For each relationship, retrieve the source_ref object
-         *    from "attack" store if it's type="course-of-action".
-         * 3. Extract the external_references from that course-of-action
-         *    (especially external_id, name, etc.), building an array
-         *    of mitigation info.
-         ************************************************************/
-        async function gatherMitigations(db, patternId) {
-        // find all relationship objects that mitigate this pattern
-        const relationships = await db.attack
-            .where("type").equals("relationship")
-            .and(rel => rel.relationship_type === "mitigates" && rel.target_ref === patternId)
-            .toArray();
-
+        /**
+         * gatherMitigationsAndDetections
+         *
+         * Reads the relationships for a single patternId from in-memory relationshipsMap,
+         * returning an array of mitigations plus a detectionCount.
+         *
+         * @param {string} patternId          - e.g. "attack-pattern--abc123"
+         * @param {Map} relationshipsMap      - Map(patternId => array of relationship objs)
+         * @param {Map} courseOfActionMap     - Map(coaId => course-of-action obj)
+         * @returns {Object} { mitigations: Array, detectionCount: number }
+         */
+        function gatherMitigationsAndDetections(patternId, relationshipsMap, courseOfActionMap) {
+        const rels = relationshipsMap.get(patternId) || [];
         const mitigations = [];
-        // for each relationship, get the “course-of-action” record
-        for (const rel of relationships) {
-            const sourceRefId = rel.source_ref; // e.g. "course-of-action--abc123..."
-            const coa = await db.attack
-            .where("type").equals("course-of-action")
-            .and(obj => obj.id === sourceRefId)
-            .first();
+        let detectionCount = 0;
+
+        for (const rel of rels) {
+            if (rel.relationship_type === "mitigates") {
+            // Then rel.source_ref should be a course-of-action ID
+            const coa = courseOfActionMap.get(rel.source_ref);
             if (coa && Array.isArray(coa.external_references)) {
-            // Extract external_id and name from those references
-            const foundMitreRef = coa.external_references.find(r => r.source_name === "mitre-attack");
-            const mitigation_id = foundMitreRef?.external_id || "";
-            const mitigation_name = coa.name || "";
-            mitigations.push({
+                const mitreRef = coa.external_references.find(r => r.source_name === "mitre-attack");
+                const mitigation_id = mitreRef?.external_id || "";
+                const mitigation_name = coa.name || "";
+                mitigations.push({
                 mitigation_id,
                 mitigation_name
-            });
+                });
+            }
+            } else if (rel.relationship_type === "detects") {
+            // If there's a "detects" relationship, increment detectionCount
+            detectionCount++;
             }
         }
 
-        console.log("createAllTechniques: returning mitigations")
-        updateProgress("createAllTechniques: returning mitigations")
-        return mitigations;
+        return { mitigations, detectionCount };
         }
 
-        /************************************************************
+
+        /**
          * gatherCapabilityIds
-         * ----------------------------------------------------------
-         * For the given record_type in the "capabilities" store,
-         * return an array of capability_id values where
-         * attack_object_id = techniqueId.
-         ************************************************************/
-        async function gatherCapabilityIds(db, recordType, techniqueId) {
-        const entries = await db.capabilities
-            .where("record_type").equals(recordType)
-            .and(c => c.attack_object_id === techniqueId)
-            .toArray();
+         *
+         * For the given array of capability objects (all tied to a single techniqueId),
+         * classify them by their record_type (nist_controls, cis_safeguards, etc.).
+         *
+         * @param {Array<object>} capsForTechnique - from capabilityByTechnique[techniqueId]
+         * @returns {Object} e.g. {
+         *   nistControls: [...],
+         *   cisSafeguards: [...],
+         *   awsCapabilities: [...],
+         *   gcpCapabilities: [...],
+         *   azureCapabilities: [...],
+         *   m365Capabilities: [...]
+         * }
+         */
+        function gatherCapabilityIds(capsForTechnique) {
+        const nistControls = [];
+        const cisSafeguards = [];
+        const awsCapabilities = [];
+        const gcpCapabilities = [];
+        const azureCapabilities = [];
+        const m365Capabilities = [];
 
-        return entries.map(e => e.capability_id);
+        for (const cap of capsForTechnique) {
+            if (cap.record_type === "nist_controls") {
+            nistControls.push(cap.capability_id);
+            } else if (cap.record_type === "cis_safeguards") {
+            cisSafeguards.push(cap.capability_id);
+            } else if (cap.record_type === "aws_capabilities") {
+            awsCapabilities.push(cap.capability_id);
+            } else if (cap.record_type === "gcp_capabilities") {
+            gcpCapabilities.push(cap.capability_id);
+            } else if (cap.record_type === "azure_capabilities") {
+            azureCapabilities.push(cap.capability_id);
+            } else if (cap.record_type === "m365_capabilities") {
+            m365Capabilities.push(cap.capability_id);
+            }
         }
 
-        /************************************************************
+        return {
+            nistControls,
+            cisSafeguards,
+            awsCapabilities,
+            gcpCapabilities,
+            azureCapabilities,
+            m365Capabilities
+        };
+        }
+
+
+        /**
          * buildMonitoringCoverageEval
-         * ----------------------------------------------------------
-         * - Query the "staticVariables" store for record_type="keywords".
-         * - The store presumably includes key-value pairs like:
-         *     { key: "Command", value: "process" }
-         *   or
-         *     { "Command": "process", "File": "file", ...}
-         * - For each keyword => if dataSources includes a string
-         *   that (case-insensitive) contains the keyword, push
-         *   the value into an array.
-         * - Deduplicate and return the array.
-         ************************************************************/
-        async function buildMonitoringCoverageEval(db, dataSources) {
-        // convert dataSources to lowercase for matching
-        const lowerSources = dataSources.map(s => s.toLowerCase());
+         *
+         * For each (key, value) in monitoringKeywords (where record_type="keyword"),
+         * if the technique's dataSources includes the key (case-insensitive),
+         * we add the value (like "process", "network", etc.) to coverage set.
+         *
+         * @param {Array} monitoringKeywords - array of { key, value, record_type="keyword" }
+         * @param {Array} dataSources        - from patternObj.x_mitre_data_sources
+         * @returns {Array<string>} e.g. ["process", "file"]
+         */
+        function buildMonitoringCoverageEval(monitoringKeywords, dataSources) {
+        if (!dataSources || !dataSources.length) return [];
 
-        // fetch all keyword entries
-        // your store might store them in different shapes,
-        // so adapt as needed:
-        const keywords = await db.staticVariables
-            .where("record_type").equals("keywords")
-            .toArray();
-
-        // If your “keywords” records are shaped like:
-        //   { key: "Command", value: "process" }
-        // then do this. If shaped differently, adapt accordingly.
-        // 
-        // (Some designs store them in a single record. Others store
-        // each key-value pair in separate records.)
         const coverage = new Set();
+        const lowerSources = dataSources.map(ds => ds.toLowerCase());
 
-        // Flatten out all the key-value pairs
-        // e.g. if keywords = [ { key: "Command", value: "process" },
-        //                      { key: "File",    value: "file" } ]
-        // then we just iterate each record:
-        for (const kw of keywords) {
-            const theKey = kw.key || "";
+        for (const kw of monitoringKeywords) {
+            const theKey = (kw.key || "").toLowerCase();
             const theVal = kw.value || "";
             if (!theKey || !theVal) continue;
 
-            // if dataSources contain theKey substring
-            // (case-insensitive compare)
-            const lowerKey = theKey.toLowerCase();
-            const matched = lowerSources.some(ds => ds.includes(lowerKey));
-            if (matched) {
+            // If any dataSource contains theKey substring
+            if (lowerSources.some(ds => ds.includes(theKey))) {
             coverage.add(theVal);
             }
         }
-
-        console.log("createAllTechniques: returning monitoring coverage eval array")
-        updateProgress("createAllTechniques: returning monitoring coverage eval array")
         return Array.from(coverage);
         }
 
-        /************************************************************
+
+        /**
          * buildPrevEntry
-         * ----------------------------------------------------------
-         * - From staticVariables store where record_type="calc" and
-         *   attack_object_id=techniqueId => get calc_tid_before,
-         *   calc_tid_after, calc_prev_score
-         * - From "attack" store => type="relationship",
-         *   relationship_type="detects", target_ref=patternId => count
-         *   unique relationships => that is calc_detections
-         * - Return the array: [calc_tid_before, calc_tid_after, calc_prev_score, calc_detections]
-         ************************************************************/
-        async function buildPrevEntry(db, techniqueId, patternId) {
-        // 1) Get any "calc" record from staticVariables
-        const calcEntry = await db.staticVariables
-            .where("record_type").equals("calc")
-            .and(r => r.attack_object_id === techniqueId)
-            .first();
+         *
+         * Returns [calc_tid_before, calc_tid_after, calc_prev_score, detectionCount].
+         * If the user has "calc" info from staticVarsCalc, we parse them.
+         *
+         * @param {object} calcEntry     - e.g. { calc_tid_before, calc_tid_after, calc_prev_score }
+         * @param {number} detectionCount
+         * @returns {[number, number, number, number]} [before, after, prevScore, detectionCount]
+         */
+        function buildPrevEntry(calcEntry, detectionCount) {
+        const before = parseFloat(calcEntry?.calc_tid_before) || 0;
+        const after  = parseFloat(calcEntry?.calc_tid_after)  || 0;
+        const prevScore = parseFloat(calcEntry?.calc_prev_score) || 0;
 
-        const calc_tid_before = parseFloat(calcEntry?.calc_tid_before) || 0;
-        const calc_tid_after  = parseFloat(calcEntry?.calc_tid_after)  || 0;
-        const calc_prev_score = parseFloat(calcEntry?.calc_prev_score) || 0;
-
-        // 2) Count the “detects” relationships for this pattern
-        const detectsList = await db.attack
-            .where("type").equals("relationship")
-            .and(rel => rel.relationship_type === "detects" && rel.target_ref === patternId)
-            .toArray();
-        const calc_detections = detectsList.length;
-
-        return [calc_tid_before, calc_tid_after, calc_prev_score, calc_detections];
+        return [before, after, prevScore, detectionCount];
         }
 
-        /************************************************************
+
+        /**
          * computeChokepointFromValues
-         ************************************************************/
-        async function computeChokepointFromValues(db, tidBefore, tidAfter) {
-            try {
-            // 1. Retrieve Static Variables
-            const beforeLower = await db.staticVariables.chokepoint_before_lower_cutoff || 0;
-            const beforeUpper = await db.staticVariables.chokepoint_before_upper_cutoff || 1;
-            const afterLower  = await db.staticVariables.chokepoint_after_lower_cutoff  || 0;
-            const afterUpper  = await db.staticVariables.chokepoint_after_upper_cutoff  || 1;
-            const wBefore1    = await db.staticVariables.chokepoint_w_before1           || 1;
-            const ratio       = await db.staticVariables.chokepoint_before_to_after_ratio || 1;
-            
-            // 2. Clamp function to ensure values stay within [0, 1]
-            function clamp(value, min, max) {
-                return Math.min(Math.max(value, min), max);
-                }
+         *
+         * Example of a simplified function that uses constants (or a global config).
+         * If you want to keep them dynamic, load them once and store in a config object.
+         *
+         * @param {number} tidBefore
+         * @param {number} tidAfter
+         * @returns {number} - a float in [0..1]
+         */
+        function computeChokepointFromValues(tidBefore, tidAfter) {
+        // Example constants (replace with your real values).
+        const beforeLower = 0;
+        const beforeUpper = 1;
+        const afterLower  = 0;
+        const afterUpper  = 1;
+        const wBefore1    = 1;
+        const ratio       = 1;
 
-                // 3. Compute the clamped "utilities" for before/after
-                //    Scale tidBefore and tidAfter based on lower/upper cutoffs and clamp
-                const beforeClamped = clamp(
-                (tidBefore - beforeLower) / (beforeUpper - beforeLower),
-                0, 
-                1
-                );
-                const afterClamped  = clamp(
-                (tidAfter  - afterLower)  / (afterUpper  - afterLower),
-                0, 
-                1
-                );
+        // 1. clamp helper
+        const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
 
-                // 4. Compute weights for the formula
-                //    a) Weight portion for "after" (wAfter1)
-                const wAfter1 = (wBefore1 / ratio) 
-                                * (afterUpper - afterLower)
-                                / (beforeUpper - beforeLower);
+        // 2. scale and clamp
+        const beforeClamped = clamp((tidBefore - beforeLower) / (beforeUpper - beforeLower), 0, 1);
+        const afterClamped  = clamp((tidAfter  - afterLower ) / (afterUpper  - afterLower ), 0, 1);
 
-                //    b) WeightBefore & WeightAfter
-                const weightBefore = wBefore1 / (wAfter1 + wBefore1);
-                const weightAfter  = wAfter1 / (wAfter1 + wBefore1);
+        // 3. compute partial weight for "after"
+        const wAfter1 = (wBefore1 / ratio) * (afterUpper - afterLower) / (beforeUpper - beforeLower);
 
-                // 5. Combine them for the final chokepointScore
-                const chokepointScore = (weightBefore * beforeClamped) 
-                                    + (weightAfter  * afterClamped);
+        const weightBefore = wBefore1 / (wAfter1 + wBefore1);
+        const weightAfter  = wAfter1  / (wAfter1 + wBefore1);
 
-                console.log("createAllTechniques: returning chokepointScore", $(chokepointScore))
-                updateProgress("createAllTechniques: returning chokepointScore", $(chokepointScore))
-                return chokepointScore;
-
-            } catch (error) {
-                console.error("Error in computeChokepointFromValues:", error);
-                return 0; // Return 0 if something goes wrong
-            }
-        } 
-
-        /************************************************************
-         * computeActionabilityScore
-         * ----------------------------------------------------------
-         * Another placeholder that might rely on static variables
-         * for weighting. Provide your actual logic here.
-         ************************************************************/
-        async function computeActionabilityScore(db, nistCount, cisCount, detectionCount) {
-            try {
-                const mitigationsLowerCutoff = await db.staticVariables.actionability_mitigations_lower_cutoff || 0;
-                const mitigationsUpperCutoff = await db.staticVariables.actionability_mitigations_upper_cutoff || 1;
-                const detectionsLowerCutoff  = await db.staticVariables.actionability_detections_lower_cutoff  || 0;
-                const detectionsUpperCutoff  = await db.staticVariables.actionability_detections_upper_cutoff  || 1;
-
-                // 1. Compute the "mitigationsUtility" (clamped between 0 and 1)
-                const rawMiti = (nistCount + cisCount) - mitigationsLowerCutoff;
-                const mitigationsUtility = Math.min(
-                Math.max(rawMiti / (mitigationsUpperCutoff - mitigationsLowerCutoff), 0),
-                1
-                );
-
-                // 2. Compute the "detectionsUtility" (clamped as well)
-                const rawDetect = detectionCount - detectionsLowerCutoff;
-                const detectionsUtility = Math.min(
-                Math.max(rawDetect / (detectionsUpperCutoff - detectionsLowerCutoff), 0),
-                1
-                );
-
-                // 3. Weigh them according to your actionability formula
-                const wMiti1 = await db.staticVariables.actionability_w_miti1 || 1;
-                const ratio  = await db.staticVariables.actionability_mitigations_to_detections_ratio || 1;
-
-                // 4. The partial weight for detections
-                const actionabilityWeightDetect1 = (wMiti1 / ratio) *
-                (detectionsUpperCutoff - detectionsLowerCutoff) /
-                (mitigationsUpperCutoff - mitigationsLowerCutoff);
-
-                // 5. The relative weights for mitigations & detections
-                const actionabilityWeightMiti   = wMiti1 / (actionabilityWeightDetect1 + wMiti1);
-                const actionabilityWeightDetect = actionabilityWeightDetect1 / (actionabilityWeightDetect1 + wMiti1);
-
-                // 6. Combine them for the final "actionabilityScore"
-                const actionabilityScore =
-                (actionabilityWeightMiti   * mitigationsUtility) +
-                (actionabilityWeightDetect * detectionsUtility);
-
-                console.log("createAllTechniques: returning actionabilityScore", $(actionabilityScore))
-                updateProgress("createAllTechniques: returning actionabilityScore", $(actionabilityScore))
-                return actionabilityScore;
-
-            } catch (error) {
-                console.error("Error in computeActionablityScore:", error);
-                return 0; // fallback if something goes wrong
-            }
+        // 4. combine
+        return (weightBefore * beforeClamped) + (weightAfter * afterClamped);
         }
+
+
+        /**
+         * computeActionabilityScore
+         *
+         * Example function that uses local or globally cached constants instead
+         * of repeatedly querying Dexie in a loop.
+         *
+         * @param {number} nistCount
+         * @param {number} cisCount
+         * @param {number} detectionCount
+         * @returns {number} float in [0..1]
+         */
+        function computeActionabilityScore(nistCount, cisCount, detectionCount) {
+        // Example placeholders:
+        const mitigationsLowerCutoff = 0;
+        const mitigationsUpperCutoff = 5;
+        const detectionsLowerCutoff  = 0;
+        const detectionsUpperCutoff  = 5;
+
+        const wMiti1 = 1;
+        const ratio  = 1;
+
+        // 1. clamp
+        const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+
+        // 2. mitigationsUtility
+        const rawMiti = (nistCount + cisCount) - mitigationsLowerCutoff;
+        const mitigationsUtility = clamp(rawMiti / (mitigationsUpperCutoff - mitigationsLowerCutoff), 0, 1);
+
+        // 3. detectionsUtility
+        const rawDetect = detectionCount - detectionsLowerCutoff;
+        const detectionsUtility = clamp(rawDetect / (detectionsUpperCutoff - detectionsLowerCutoff), 0, 1);
+
+        // 4. partial weight for detections
+        const actionabilityWeightDetect1 = (wMiti1 / ratio) *
+            (detectionsUpperCutoff - detectionsLowerCutoff) /
+            (mitigationsUpperCutoff - mitigationsLowerCutoff);
+
+        // 5. relative weights
+        const actionabilityWeightMiti   = wMiti1 / (actionabilityWeightDetect1 + wMiti1);
+        const actionabilityWeightDetect = actionabilityWeightDetect1 / (actionabilityWeightDetect1 + wMiti1);
+
+        // 6. final score
+        return (actionabilityWeightMiti * mitigationsUtility)
+            + (actionabilityWeightDetect * detectionsUtility);
+        }
+
 
         /************************************************************
          * USAGE (example)
@@ -1575,7 +1674,7 @@
                 console.error("Error in buildContextualAssetTypes:", error);
                 return {};
             }
-        }
+        };
 
         
 
@@ -1714,7 +1813,7 @@
             updateProgress("Monitoring coverage selections populated.");
 
             // All done: reveal the Next button
-            document.getElementById("initialNextBtn").classList.remove("hidden");
+            document.getElementById("next-step").classList.remove("hidden");
             // Optional: hide the progress bar, or leave it fully at 100%
         }
 

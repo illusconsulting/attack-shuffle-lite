@@ -1,0 +1,875 @@
+(index):821 General JSON files loaded.
+(index):493 Fetching staticVariables data from static-variables.json...
+(index):493 Fetching weightKeywords data from weight-keywords.json...
+(index):501  Error fetching staticVariables: DataError: Failed to execute 'put' on 'IDBObjectStore': The object store uses out-of-line keys and has no key generator and the key parameter was not provided.
+    at storeJSONData ((index):517:23)
+    at async countRequest.onsuccess ((index):498:29)
+countRequest.onsuccess @ (index):501
+(index):501  Error fetching weightKeywords: DataError: Failed to execute 'put' on 'IDBObjectStore': The object store uses out-of-line keys and has no key generator and the key parameter was not provided.
+    at storeJSONData ((index):517:23)
+    at async countRequest.onsuccess ((index):498:29)
+countRequest.onsuccess @ (index):501
+
+(index):626 fetchAndImportMapexFiles assetType {metadata: {…}, mapping_objects: Array(1879)}mapping_objects: Array(1879)[0 … 99]0: attack_object_id: "T1053.005"attack_object_name: "Scheduled Task"capability_description: "A Web Application is a software application that runs on a web server and is accessed via a web browser over a network, such as the internet or an intranet. Web applications can range from simple static web pages to complex, dynamic applications that interact with databases and other services. They are a crucial component of modern business infrastructure, enabling everything from e-commerce to data analysis to collaboration. However, they also present significant security challenges. These include potential vulnerabilities in the application code, user authentication mechanisms, and data handling practices. Threat vectors can range from injection attacks, cross-site scripting (XSS), to session hijacking. Security considerations include the configuration of access controls, encryption of sensitive data, and the security of the server on which the web application is hosted."capability_group: "Applications & Workloads"capability_id: "Web Application"comments: "While the Scheduled Task technique does not directly target web applications, it can be abused in scenarios where a web application server runs on a Windows operating system. An adversary could leverage scheduled tasks to maintain persistence or execute malicious code on the server hosting the web application, thereby indirectly affecting the web application."mapping_type: "abused-by"references: [][[Prototype]]: Object1: attack_object_id: "T1205.002"attack_object_name: "Socket Filters"capability_description: "A Web Application is a software application that runs on a web server and is accessed via a web browser over a network, such as the internet or an intranet. Web applications can range from simple static web pages to complex, dynamic applications that interact with databases and other services. They are a crucial component of modern business infrastructure, enabling everything from e-commerce to data analysis to collaboration. However, they also present significant security challenges. These include potential vulnerabilities in the application code, user authentication mechanisms, and data handling practices. Threat vectors can range from injection attacks, cross-site scripting (XSS), to session hijacking. Security considerations include the configuration of access controls, encryption of sensitive data, and the security of the server on which the web application is hosted."capability_group: "Applications & Workloads"capability_id: "Web Application"comments: "Web applications can be abused by the 'Socket Filters' technique if they are used as a conduit for network traffic that is monitored or manipulated by socket filters. For example, if a web application is used to send or receive network packets that match the filter criteria, it can be leveraged as a tool for adversaries to trigger backdoors or command shells on the host system. This makes the web application an indirect participant in the attack, as it facilitates the network communication that the socket filters are designed to intercept or manipulate."mapping_type: "abused-by"references: [][[Prototype]]: Object2: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1560.001', attack_object_name: 'Archive via Utility', …}3: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1021.005', attack_object_name: 'VNC', …}4: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1027.011', attack_object_name: 'Fileless Storage', …}5: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1557', attack_object_name: 'Adversary-in-the-Middle', …}6: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1033', attack_object_name: 'System Owner/User Discovery', …}7: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1583', attack_object_name: 'Acquire Infrastructure', …}8: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1613', attack_object_name: 'Container and Resource Discovery', …}9: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1583.007', attack_object_name: 'Serverless', …}10: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1132.001', attack_object_name: 'Standard Encoding', …}11: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1027.009', attack_object_name: 'Embedded Payloads', …}12: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1556.003', attack_object_name: 'Pluggable Authentication Modules', …}13: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1592', attack_object_name: 'Gather Victim Host Information', …}14: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1596.003', attack_object_name: 'Digital Certificates', …}15: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1056.001', attack_object_name: 'Keylogging', …}16: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1564.012', attack_object_name: 'File/Path Exclusions', …}17: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1222.002', attack_object_name: 'Linux and Mac File and Directory Permissions Modification', …}18: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1110.001', attack_object_name: 'Password Guessing', …}19: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1216.001', attack_object_name: 'PubPrn', …}20: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1597.002', attack_object_name: 'Purchase Technical Data', …}21: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1003', attack_object_name: 'OS Credential Dumping', …}22: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1129', attack_object_name: 'Shared Modules', …}23: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1602', attack_object_name: 'Data from Configuration Repository', …}24: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1498.001', attack_object_name: 'Direct Network Flood', …}25: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1492', attack_object_name: 'Stored Data Manipulation', …}26: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1574.007', attack_object_name: 'Path Interception by PATH Environment Variable', …}27: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1213.002', attack_object_name: 'Sharepoint', …}28: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1044', attack_object_name: 'File System Permissions Weakness', …}29: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1588.007', attack_object_name: 'Artificial Intelligence', …}30: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1491.002', attack_object_name: 'External Defacement', …}31: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1027.013', attack_object_name: 'Encrypted/Encoded File', …}32: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1590.005', attack_object_name: 'IP Addresses', …}33: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1499.001', attack_object_name: 'OS Exhaustion Flood', …}34: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1059.007', attack_object_name: 'JavaScript', …}35: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1059.007', attack_object_name: 'JavaScript', …}36: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1590.002', attack_object_name: 'DNS', …}37: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1543', attack_object_name: 'Create or Modify System Process', …}38: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1133', attack_object_name: 'External Remote Services', …}39: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1539', attack_object_name: 'Steal Web Session Cookie', …}40: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1053.007', attack_object_name: 'Container Orchestration Job', …}41: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1568.002', attack_object_name: 'Domain Generation Algorithms', …}42: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1099', attack_object_name: 'Timestomp', …}43: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1496.003', attack_object_name: 'SMS Pumping', …}44: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1016.001', attack_object_name: 'Internet Connection Discovery', …}45: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1560.003', attack_object_name: 'Archive via Custom Method', …}46: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1578', attack_object_name: 'Modify Cloud Compute Infrastructure', …}47: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1583.008', attack_object_name: 'Malvertising', …}48: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1069', attack_object_name: 'Permission Groups Discovery', …}49: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1114', attack_object_name: 'Email Collection', …}50: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1596.002', attack_object_name: 'WHOIS', …}51: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1594', attack_object_name: 'Search Victim-Owned Websites', …}52: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1069.003', attack_object_name: 'Cloud Groups', …}53: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1596.001', attack_object_name: 'DNS/Passive DNS', …}54: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1499.003', attack_object_name: 'Application Exhaustion Flood', …}55: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1195.001', attack_object_name: 'Compromise Software Dependencies and Development Tools', …}56: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1588.004', attack_object_name: 'Digital Certificates', …}57: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1583.002', attack_object_name: 'DNS Server', …}58: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1071.004', attack_object_name: 'DNS', …}59: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1552.005', attack_object_name: 'Cloud Instance Metadata API', …}60: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1522', attack_object_name: 'Cloud Instance Metadata API', …}61: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1036.005', attack_object_name: 'Match Legitimate Name or Location', …}62: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1172', attack_object_name: 'Domain Fronting', …}63: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1587.003', attack_object_name: 'Digital Certificates', …}64: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1565.001', attack_object_name: 'Stored Data Manipulation', …}65: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1110.002', attack_object_name: 'Password Cracking', …}66: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1600', attack_object_name: 'Weaken Encryption', …}67: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1606.002', attack_object_name: 'SAML Tokens', …}68: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1192', attack_object_name: 'Spearphishing Link', …}69: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1036.008', attack_object_name: 'Masquerade File Type', …}70: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1489', attack_object_name: 'Service Stop', …}71: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1587.001', attack_object_name: 'Malware', …}72: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1564', attack_object_name: 'Hide Artifacts', …}73: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1559.002', attack_object_name: 'Dynamic Data Exchange', …}74: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1591.003', attack_object_name: 'Identify Business Tempo', …}75: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1063', attack_object_name: 'Security Software Discovery', …}76: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1071.005', attack_object_name: 'Publish/Subscribe Protocols', …}77: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1592.001', attack_object_name: 'Hardware', …}78: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1080', attack_object_name: 'Taint Shared Content', …}79: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1484.002', attack_object_name: 'Trust Modification', …}80: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1573.001', attack_object_name: 'Symmetric Cryptography', …}81: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1527', attack_object_name: 'Application Access Token', …}82: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1527', attack_object_name: 'Application Access Token', …}83: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1568.001', attack_object_name: 'Fast Flux DNS', …}84: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1053.003', attack_object_name: 'Cron', …}85: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1588.006', attack_object_name: 'Vulnerabilities', …}86: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1566.002', attack_object_name: 'Spearphishing Link', …}87: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1070.002', attack_object_name: 'Clear Linux or Mac System Logs', …}88: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1499.004', attack_object_name: 'Application or System Exploitation', …}89: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1598.003', attack_object_name: 'Spearphishing Link', …}90: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1021.004', attack_object_name: 'SSH', …}91: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1098.003', attack_object_name: 'Additional Cloud Roles', …}92: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1089', attack_object_name: 'Disabling Security Tools', …}93: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1027.008', attack_object_name: 'Stripped Payloads', …}94: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1119', attack_object_name: 'Automated Collection', …}95: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1115', attack_object_name: 'Clipboard Data', …}96: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1003.007', attack_object_name: 'Proc Filesystem', …}97: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1583.005', attack_object_name: 'Botnet', …}98: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1608.004', attack_object_name: 'Drive-by Target', …}99: {capability_id: 'Web Application', capability_group: 'Applications & Workloads', capability_description: 'A Web Application is a software application that r…he server on which the web application is hosted.', attack_object_id: 'T1040', attack_object_name: 'Network Sniffing', …}[100 … 199][200 … 299][300 … 399][400 … 499][500 … 599][600 … 699][700 … 799][800 … 899][900 … 999][1000 … 1099][1100 … 1199][1200 … 1299][1300 … 1399][1400 … 1499][1500 … 1599][1600 … 1699][1700 … 1799][1800 … 1878]length: 1879[[Prototype]]: Array(0)metadata: {mapping_version: '1.0', technology_domain: 'enterprise', attack_version: '16.1', mapping_framework: 'enterprise-asset-types-applications', mapping_framework_version: '1.0', …}[[Prototype]]: Object assetType
+(index):629  Error processing enterprise-assets-applications-02.20.2025_attack-16.1-enterprise_json.json: TypeError: "importMapexMappings mapping_id:" is not a function
+    at (index):599:63
+    at Array.forEach (<anonymous>)
+    at importMapexMappings ((index):552:38)
+    at async fetchAndImportMapexFiles ((index):627:25)
+    at async HTMLDocument.<anonymous> ((index):822:13)
+fetchAndImportMapexFiles @ (index):629
+await in fetchAndImportMapexFiles
+(anonymous) @ (index):822
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+[Deprecation] -ms-high-contrast is in the process of being deprecated. Please see <URL> for tips on updating to the new Forced Colors Mode standard.
+content.js:2  [Deprecation] -ms-high-contrast-adjust is in the process of being deprecated. Please see https://blogs.windows.com/msedgedev/2024/04/29/deprecating-ms-high-contrast/ for tips on updating to the new Forced Colors Mode standard.
+e.insertRule @ content.js:2
+x @ content.js:2
+l @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+We @ content.js:2
+Ke @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Xe @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+nt @ content.js:2
+dt @ content.js:2
+t.renderToString @ content.js:2
+addStaticCss @ content.js:2
+addStaticCss @ content.js:2
+updateStaticCss @ content.js:2
+ke @ content.js:2
+Vi @ content.js:2
+Es @ content.js:2
+_l @ content.js:2
+Cc @ content.js:2
+vc @ content.js:2
+bc @ content.js:2
+ic @ content.js:2
+S @ content.js:2
+T @ content.js:2
+(anonymous) @ content.js:2
+g @ content.js:2
+s @ content.js:2
+postMessage
+r @ content.js:2
+f.setImmediate @ content.js:2
+O @ content.js:2
+A @ content.js:2
+t.unstable_scheduleCallback @ content.js:2
+Tc @ content.js:2
+oc @ content.js:2
+rc @ content.js:2
+Vc @ content.js:2
+Xc.render.$c.render @ content.js:2
+Lh @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Hi @ content.js:2
+a @ content.js:2
+Promise.then
+Hi @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+b @ content.js:2
+a @ content.js:2
+Promise.then
+b @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+b @ content.js:2
+a @ content.js:2
+Promise.then
+b @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+e.emit @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+initialize @ content.js:2
+await in initialize
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Ca @ content.js:2
+a @ content.js:2
+Promise.then
+Ca @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+Oa @ content.js:2
+Oa @ content.js:2
+Sa @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+_a @ content.js:2
+i @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+o @ content.js:2
+(anonymous) @ content.js:2
+o @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+content.js:2  [Deprecation] -ms-high-contrast-adjust is in the process of being deprecated. Please see https://blogs.windows.com/msedgedev/2024/04/29/deprecating-ms-high-contrast/ for tips on updating to the new Forced Colors Mode standard.
+e.insertRule @ content.js:2
+x @ content.js:2
+l @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+We @ content.js:2
+Ke @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Xe @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+nt @ content.js:2
+dt @ content.js:2
+t.renderToString @ content.js:2
+addStaticCss @ content.js:2
+addStaticCss @ content.js:2
+updateStaticCss @ content.js:2
+ke @ content.js:2
+Vi @ content.js:2
+Es @ content.js:2
+_l @ content.js:2
+Cc @ content.js:2
+vc @ content.js:2
+bc @ content.js:2
+ic @ content.js:2
+S @ content.js:2
+T @ content.js:2
+(anonymous) @ content.js:2
+g @ content.js:2
+s @ content.js:2
+postMessage
+r @ content.js:2
+f.setImmediate @ content.js:2
+O @ content.js:2
+A @ content.js:2
+t.unstable_scheduleCallback @ content.js:2
+Tc @ content.js:2
+oc @ content.js:2
+rc @ content.js:2
+Vc @ content.js:2
+Xc.render.$c.render @ content.js:2
+Lh @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Hi @ content.js:2
+a @ content.js:2
+Promise.then
+Hi @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+b @ content.js:2
+a @ content.js:2
+Promise.then
+b @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+b @ content.js:2
+a @ content.js:2
+Promise.then
+b @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+e.emit @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+initialize @ content.js:2
+await in initialize
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Ca @ content.js:2
+a @ content.js:2
+Promise.then
+Ca @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+Oa @ content.js:2
+Oa @ content.js:2
+Sa @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+_a @ content.js:2
+i @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+o @ content.js:2
+(anonymous) @ content.js:2
+o @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+content.js:2  [Deprecation] -ms-high-contrast-adjust is in the process of being deprecated. Please see https://blogs.windows.com/msedgedev/2024/04/29/deprecating-ms-high-contrast/ for tips on updating to the new Forced Colors Mode standard.
+e.insertRule @ content.js:2
+x @ content.js:2
+l @ content.js:2
+(anonymous) @ content.js:2
+t.render @ content.js:2
+Ze @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Xe @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Xe @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Xe @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+nt @ content.js:2
+dt @ content.js:2
+t.renderToString @ content.js:2
+addStaticCss @ content.js:2
+addStaticCss @ content.js:2
+updateStaticCss @ content.js:2
+ke @ content.js:2
+Vi @ content.js:2
+Es @ content.js:2
+_l @ content.js:2
+Cc @ content.js:2
+vc @ content.js:2
+bc @ content.js:2
+ic @ content.js:2
+S @ content.js:2
+T @ content.js:2
+(anonymous) @ content.js:2
+g @ content.js:2
+s @ content.js:2
+postMessage
+r @ content.js:2
+f.setImmediate @ content.js:2
+O @ content.js:2
+A @ content.js:2
+t.unstable_scheduleCallback @ content.js:2
+Tc @ content.js:2
+oc @ content.js:2
+rc @ content.js:2
+Vc @ content.js:2
+Xc.render.$c.render @ content.js:2
+Lh @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Hi @ content.js:2
+a @ content.js:2
+Promise.then
+Hi @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+b @ content.js:2
+a @ content.js:2
+Promise.then
+b @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+b @ content.js:2
+a @ content.js:2
+Promise.then
+b @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+e.emit @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+initialize @ content.js:2
+await in initialize
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Ca @ content.js:2
+a @ content.js:2
+Promise.then
+Ca @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+Oa @ content.js:2
+Oa @ content.js:2
+Sa @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+_a @ content.js:2
+i @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+o @ content.js:2
+(anonymous) @ content.js:2
+o @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+content.js:2  [Deprecation] -ms-high-contrast-adjust is in the process of being deprecated. Please see https://blogs.windows.com/msedgedev/2024/04/29/deprecating-ms-high-contrast/ for tips on updating to the new Forced Colors Mode standard.
+e.insertRule @ content.js:2
+x @ content.js:2
+l @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+We @ content.js:2
+Ke @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ze @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Xe @ content.js:2
+$e @ content.js:2
+Qe @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+Ke @ content.js:2
+$e @ content.js:2
+nt @ content.js:2
+dt @ content.js:2
+t.renderToString @ content.js:2
+addStaticCss @ content.js:2
+addStaticCss @ content.js:2
+updateStaticCss @ content.js:2
+ke @ content.js:2
+Vi @ content.js:2
+Es @ content.js:2
+_l @ content.js:2
+Cc @ content.js:2
+vc @ content.js:2
+bc @ content.js:2
+ic @ content.js:2
+S @ content.js:2
+T @ content.js:2
+(anonymous) @ content.js:2
+g @ content.js:2
+s @ content.js:2
+postMessage
+r @ content.js:2
+f.setImmediate @ content.js:2
+O @ content.js:2
+A @ content.js:2
+t.unstable_scheduleCallback @ content.js:2
+Tc @ content.js:2
+oc @ content.js:2
+rc @ content.js:2
+Vc @ content.js:2
+Xc.render.$c.render @ content.js:2
+Lh @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Hi @ content.js:2
+a @ content.js:2
+Promise.then
+Hi @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+b @ content.js:2
+a @ content.js:2
+Promise.then
+b @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+b @ content.js:2
+a @ content.js:2
+Promise.then
+b @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+e.emit @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+Promise.then
+v @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+initialize @ content.js:2
+await in initialize
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+Promise.then
+Fo @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+value @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+Ca @ content.js:2
+a @ content.js:2
+Promise.then
+Ca @ content.js:2
+a @ content.js:2
+(anonymous) @ content.js:2
+Oa @ content.js:2
+Oa @ content.js:2
+Sa @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+_a @ content.js:2
+i @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+o @ content.js:2
+(anonymous) @ content.js:2
+o @ content.js:2
+(anonymous) @ content.js:2
+(anonymous) @ content.js:2
+(index):626 fetchAndImportMapexFiles assetType {metadata: {…}, mapping_objects: Array(15661)} assetType
+(index):629  Error processing enterprise-assets-devices-02.20.2025_attack-16.1-enterprise_json.json: TypeError: "importMapexMappings mapping_id:" is not a function
+    at (index):599:63
+    at Array.forEach (<anonymous>)
+    at importMapexMappings ((index):552:38)
+    at async fetchAndImportMapexFiles ((index):627:25)
+    at async HTMLDocument.<anonymous> ((index):822:13)
+fetchAndImportMapexFiles @ (index):629
+await in fetchAndImportMapexFiles
+(anonymous) @ (index):822
+(index):626 fetchAndImportMapexFiles assetType {metadata: {…}, mapping_objects: Array(2429)} assetType
+(index):629  Error processing enterprise-assets-networks-02.20.2025_attack-16.1-enterprise_json.json: TypeError: "importMapexMappings mapping_id:" is not a function
+    at (index):599:63
+    at Array.forEach (<anonymous>)
+    at importMapexMappings ((index):552:38)
+    at async fetchAndImportMapexFiles ((index):627:25)
+    at async HTMLDocument.<anonymous> ((index):822:13)
+fetchAndImportMapexFiles @ (index):629
+await in fetchAndImportMapexFiles
+(anonymous) @ (index):822
+(index):626 fetchAndImportMapexFiles assetType {metadata: {…}, mapping_objects: Array(7840)} assetType
+(index):629  Error processing enterprise-assets-data-02.20.2025_attack-16.1-enterprise_json.json: TypeError: "importMapexMappings mapping_id:" is not a function
+    at (index):599:63
+    at Array.forEach (<anonymous>)
+    at importMapexMappings ((index):552:38)
+    at async fetchAndImportMapexFiles ((index):627:25)
+    at async HTMLDocument.<anonymous> ((index):822:13)
+fetchAndImportMapexFiles @ (index):629
+await in fetchAndImportMapexFiles
+(anonymous) @ (index):822
+(index):626 fetchAndImportMapexFiles assetType {metadata: {…}, mapping_objects: Array(5878)} assetType
+(index):629  Error processing enterprise-assets-identities-02.20.2025_attack-16.1-enterprise_json.json: TypeError: "importMapexMappings mapping_id:" is not a function
+    at (index):599:63
+    at Array.forEach (<anonymous>)
+    at importMapexMappings ((index):552:38)
+    at async fetchAndImportMapexFiles ((index):627:25)
+    at async HTMLDocument.<anonymous> ((index):822:13)
+fetchAndImportMapexFiles @ (index):629
+await in fetchAndImportMapexFiles
+(anonymous) @ (index):822
+(index):626 fetchAndImportMapexFiles securityControl {metadata: {…}, mapping_objects: Array(5136)} securityControl
+(index):629  Error processing nist_800_53-rev5_attack-14.1-enterprise.json: TypeError: "importMapexMappings mapping_id:" is not a function
+    at (index):599:63
+    at Array.forEach (<anonymous>)
+    at importMapexMappings ((index):552:38)
+    at async fetchAndImportMapexFiles ((index):627:25)
+    at async HTMLDocument.<anonymous> ((index):822:13)
+fetchAndImportMapexFiles @ (index):629
+await in fetchAndImportMapexFiles
+(anonymous) @ (index):822
+(index):626 fetchAndImportMapexFiles cloudCapability {metadata: {…}, mapping_objects: Array(518)} cloudCapability
+(index):629  Error processing m365-12.11.2023_attack-14.1-enterprise.json: TypeError: "importMapexMappings mapping_id:" is not a function
+    at (index):599:63
+    at Array.forEach (<anonymous>)
+    at importMapexMappings ((index):552:38)
+    at async fetchAndImportMapexFiles ((index):627:25)
+    at async HTMLDocument.<anonymous> ((index):822:13)
+fetchAndImportMapexFiles @ (index):629
+await in fetchAndImportMapexFiles
+(anonymous) @ (index):822
+(index):626 fetchAndImportMapexFiles cloudCapability {metadata: {…}, mapping_objects: Array(442)} cloudCapability
+(index):629  Error processing gcp-06.28.2022_attack-10.0-enterprise.json: TypeError: "importMapexMappings mapping_id:" is not a function
+    at (index):599:63
+    at Array.forEach (<anonymous>)
+    at importMapexMappings ((index):552:38)
+    at async fetchAndImportMapexFiles ((index):627:25)
+    at async HTMLDocument.<anonymous> ((index):822:13)
+fetchAndImportMapexFiles @ (index):629
+await in fetchAndImportMapexFiles
+(anonymous) @ (index):822
+(index):626 fetchAndImportMapexFiles cloudCapability {metadata: {…}, mapping_objects: Array(497)} cloudCapability
+(index):629  Error processing aws-12.12.2024_attack-16.1-enterprise.json: TypeError: "importMapexMappings mapping_id:" is not a function
+    at (index):599:63
+    at Array.forEach (<anonymous>)
+    at importMapexMappings ((index):552:38)
+    at async fetchAndImportMapexFiles ((index):627:25)
+    at async HTMLDocument.<anonymous> ((index):822:13)
+fetchAndImportMapexFiles @ (index):629
+await in fetchAndImportMapexFiles
+(anonymous) @ (index):822
+(index):626 fetchAndImportMapexFiles cloudCapability {metadata: {…}, mapping_objects: Array(978)} cloudCapability
+(index):629  Error processing azure-06.29.2021_attack-8.2-enterprise.json: TypeError: "importMapexMappings mapping_id:" is not a function
+    at (index):599:63
+    at Array.forEach (<anonymous>)
+    at importMapexMappings ((index):552:38)
+    at async fetchAndImportMapexFiles ((index):627:25)
+    at async HTMLDocument.<anonymous> ((index):822:13)
+fetchAndImportMapexFiles @ (index):629
+await in fetchAndImportMapexFiles
+(anonymous) @ (index):822
+(index):823 MAPEX mappings loaded.
+(index):714 ✅ Imported 656 techniques, 44 mitigations, and 1372 relationships.
+(index):825 STIX data loaded.
+(index):756 ✅ Imported 11418 CIS safeguard mappings into IndexedDB.
+(index):827 CIS Safeguard data loaded.
+(index):789 ✅ Imported 638 ATT&CK prevalence mappings into IndexedDB.
+(index):829 Technique prevalence and tid data loaded.
+(index):1546  Uncaught (in promise) TypeError: store.getAll is not a function
+    at (index):1546:35
+    at new Promise (<anonymous>)
+    at getAllFromStore ((index):1545:20)
+    at populateAssetCategories ((index):872:43)
+    at HTMLDocument.<anonymous> ((index):830:19)
+(anonymous) @ (index):1546
+getAllFromStore @ (index):1545
+populateAssetCategories @ (index):872
+(anonymous) @ (index):830
