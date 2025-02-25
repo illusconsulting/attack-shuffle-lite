@@ -10,6 +10,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dexie/4.0.10/dexie.min.js" integrity="sha512-jF+6XYwL495BDSom6h9X0w5EvtDrXfevVM17XSnhXHxP/iwallbjIo4TPbGltrj/gkCN4qde+S/HjiF8J5ATKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js" integrity="sha512-vc58qvvBdrDR4etbxMdlTt4GBQk1qjvyORR2nrsPsFPyrs+/u5c3+1Ct6upOgdZoIl7eq6k3a1UPDSNAQi/32A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-sankey/0.12.3/d3-sankey.min.js"></script>
+
     <style>
         /* Dark mode by default */
         body.dark {
@@ -236,6 +238,7 @@
             <li data-step="4">ATT&CK Technique Visualization</li>
             <li data-step="5">CDM View</li>
             <li data-step="6">Organization Details</li>
+            <li data-step="7">Attack Analysis</li>
         </ol>  
 
         <div id="form-navigation" class="flex justify-between mt-4">
@@ -461,6 +464,28 @@
                 </div>
             </div>
 
+            <!-- Step 7: Attack Analysis -->
+            <div class="form-step">
+                <h3 class="text-lg font-semibold mb-2">Attack Analysis</h3>
+                <p class="text-sm text-gray-600 mb-4">Run simulations and generate a Sankey diagram.</p>
+            
+                <!-- (A) Input for # of iterations -->
+                <label class="block mt-2">
+                Number of iterations:
+                <input type="number" id="attackAnalysisIterations" value="1000" min="1" class="border p-2 w-full" />
+                </label>
+            
+                <!-- (B) Button to start the analysis -->
+                <button type="button" id="run-attack-analysis" class="bg-green-500 text-white px-4 py-2 rounded mt-4">
+                Run Attack Analysis
+                </button>
+            
+                <!-- (C) A container for the final tables or any textual output (optional) -->
+                <div id="attackAnalysisResults" class="mt-4"></div>
+            
+                <!-- (D) Container for the Sankey diagram -->
+                <div id="sankey-diagram-container" class="mt-4" style="width: 800px; height: 600px;"></div>
+            </div>
         </form>
 
         <!-- JSON Output -->
@@ -712,6 +737,9 @@
                 .forEach(cb => {
                     cb.addEventListener('change', () => renderCdmView(db));
                 });
+            document.getElementById("run-attack-analysis").addEventListener("click", async () => {
+                await runAttackAnalysis();
+            });
         });
     
         /**
@@ -989,6 +1017,9 @@
                 }
                 if (currentStep === 5) {
                     buildOrganizationAttributes(modelDefinition);
+                }
+                if (currentStep === 6) {
+                    
                 }
 
                 currentStep++;
@@ -3015,6 +3046,329 @@
         return allTechs.slice(0, 5);
         }
 
+        // 
+        // Attack Analysis functions
+        //
+        async function runAttackAnalysis() {
+            const iterationCount = parseInt(document.getElementById("attackAnalysisIterations").value, 10) || 1000;
+
+            // 1) Gather all techniques from the CDM
+            // (You can store them in a variable after Step 5, or reconstruct them here)
+            const cdmTechniques = getCdmTechniques(); // e.g. an array of { techniqueId, attackScore, mappedControls: [...] }
+
+            // 2) Compute sum of all attackScore
+            let totalScore = 0;
+            cdmTechniques.forEach(t => totalScore += t.attackScore);
+
+            // 3) Pre-calculate each technique’s weightedImpact = (attackScore / totalScore)
+            cdmTechniques.forEach(t => {
+                t.weightedImpact = t.attackScore / totalScore;
+            });
+
+            // 4) Data structures for storing results
+            const residualRiskValues = [];
+            // Keep counters for each technique if you want the # times it overcame all controls
+            // and keep a map for each control => total rosi
+            const techniqueBreakthroughCount = {}; // e.g. { T1001: 0, T1002: 0 }
+            const controlRosiTotals = {}; // e.g. { 'AC-1': 0, 'AC-2': 0 }
+
+            // Initialize them
+            for (const t of cdmTechniques) {
+                techniqueBreakthroughCount[t.techniqueId] = 0;
+                for (const c of t.mappedControls) {
+                if (!controlRosiTotals[c]) {
+                    controlRosiTotals[c] = 0;
+                }
+                }
+            }
+
+            // 5) Monte Carlo loop
+            for (let i = 0; i < iterationCount; i++) {
+                // Start inherent risk = 100
+                let inherentRisk = 100;
+
+                for (const t of cdmTechniques) {
+                // Generate random attackEffectiveness [0..100]
+                const attackEffectiveness = Math.floor(Math.random() * 101);
+
+                // Generate random maturityScore [5..70] for each mapped control
+                // (or store them in a map, but we only need them for this iteration)
+                let maturityScores = [];
+                for (const ctrl of t.mappedControls) {
+                    const score = Math.floor(Math.random() * 66) + 5; // random between 5 and 70
+                    maturityScores.push({ ctrlId: ctrl, score });
+                }
+
+                // Check if the technique overcame all controls:
+                // i.e. attackEffectiveness > every maturityScore
+                const allOvercome = maturityScores.every(ms => attackEffectiveness > ms.score);
+
+                if (allOvercome) {
+                    // technique overcame all controls
+                    techniqueBreakthroughCount[t.techniqueId] += 1;
+                    // Decrease inherent risk by that technique's weightedImpact
+                    inherentRisk -= (t.weightedImpact * 100);
+                } else {
+                    // If not strictly greater, we compute rosiScore = (weightedImpact) / (# of controls with maturity > attackEffectiveness)
+                    const strongControls = maturityScores.filter(ms => ms.score >= attackEffectiveness);
+                    const rosiScore = t.weightedImpact / strongControls.length;
+
+                    // Add rosi to each strong control
+                    for (const sc of strongControls) {
+                    controlRosiTotals[sc.ctrlId] += rosiScore;
+                    }
+                }
+                }
+
+                // After all techniques, what's left is "residualRisk"
+                const finalResidual = Math.max(0, inherentRisk);
+                residualRiskValues.push(finalResidual);
+            }
+
+            // 6) Summaries
+            // Sort residualRiskValues => compute 50%, 75%, 90% quantiles
+            residualRiskValues.sort((a,b) => a - b);
+            const q50 = residualRiskValues[Math.floor(0.5 * iterationCount)];
+            const q75 = residualRiskValues[Math.floor(0.75 * iterationCount)];
+            const q90 = residualRiskValues[Math.floor(0.90 * iterationCount)];
+
+            // Build your technique table (sorted by techniqueBreakthroughCount desc)
+            // Build your controls table (sorted by controlRosiTotals desc)
+
+            // 7) Build the Sankey JSON
+            const sankeyData = buildSankeyJson(cdmTechniques, techniqueBreakthroughCount, controlRosiTotals, iterationCount);
+
+            // 8) Render the Sankey
+            renderSankeyDiagram(sankeyData);
+
+            // 9) Display numeric results in #attackAnalysisResults
+            document.getElementById("attackAnalysisResults").innerHTML =
+                `Residual Risk distribution over ${iterationCount} runs:<br/>
+                50%: ${q50.toFixed(2)}<br/>
+                75%: ${q75.toFixed(2)}<br/>
+                90%: ${q90.toFixed(2)}<br/>`;
+        }
+
+        function buildSankeyJson(cdmTechniques, techniqueBreakthroughCount, controlRosiTotals, iterationCount) {
+            // This is very domain-specific. The best approach is to enumerate the nodes in an array,
+            // keep track of their index, then build links accordingly.
+
+            const nodes = [];
+            const links = [];
+
+            // Node 0: Inherent Risk
+            nodes.push({ node:0, name:"Inherent Risk" });
+            let currentNodeIndex = 0;
+
+            // Add technique nodes
+            // Suppose technique i => node i+1
+            cdmTechniques.forEach((t, i) => {
+                const nodeIndex = i+1; // technique i => node i+1
+                nodes.push({ node: nodeIndex, name: `Technique: ${t.techniqueId}` });
+                currentNodeIndex = nodeIndex;
+            });
+
+            // After techniques, add the “residual risk” node
+            const residualNodeIndex = currentNodeIndex+1;
+            nodes.push({ node: residualNodeIndex, name: "Residual Risk" });
+
+            // Then add control nodes after that
+            // But the requirement says we only add each control if rosi-score > 0
+            // so we do that last or in parallel, and keep track of their indexes.
+
+            // You’d also add the “links”:
+            // 1) link from node0 -> first technique node with value=100
+            // 2) link from each technique -> next technique, etc.
+            // 3) link from technique -> each control
+            // 4) link from last technique -> residual
+
+            // Finally return:
+            return {
+                nodes,
+                links
+            };
+        }
+
+        function renderSankeyDiagram(sankeyData) {
+            // sankeyData = { nodes: [...], links: [...] }
+
+            // 1) Clear any existing diagram
+            const container = d3.select("#sankey-diagram-container");
+            container.selectAll("*").remove();
+
+            const width = 800;
+            const height = 600;
+
+            // 2) Create SVG
+            const svg = container
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            // 3) Create sankey generator
+            const sankey = d3.sankey()
+                .nodeId(d => d.name)
+                .nodeWidth(20)
+                .nodePadding(10)
+                .size([width, height]);
+
+            // 4) Build the graph from your sankeyData
+            const graph = sankey({
+                nodes: sankeyData.nodes.map(d => Object.assign({}, d)),
+                links: sankeyData.links.map(d => Object.assign({}, d))
+            });
+
+            // 5) Draw links
+            svg.append("g")
+                .selectAll("path")
+                .data(graph.links)
+                .enter()
+                .append("path")
+                .attr("d", d3.sankeyLinkHorizontal())
+                .attr("stroke", "#aaa")
+                .attr("stroke-width", d => Math.max(1, d.width))
+                .attr("fill", "none")
+                .attr("opacity", 0.5);
+
+            // 6) Draw nodes
+            const node = svg.append("g")
+                .selectAll("g")
+                .data(graph.nodes)
+                .enter().append("g");
+
+            node.append("rect")
+                .attr("x", d => d.x0)
+                .attr("y", d => d.y0)
+                .attr("width", d => d.x1 - d.x0)
+                .attr("height", d => Math.max(1, d.y1 - d.y0))
+                .attr("fill", "#69b3a2")
+                .attr("stroke", "#000");
+
+            // 7) Add node text
+            node.append("text")
+                .attr("x", d => d.x0 - 6)
+                .attr("y", d => (d.y1 + d.y0) / 2)
+                .attr("dy", "0.35em")
+                .attr("text-anchor", "end")
+                .text(d => d.name)
+                .filter(d => d.x0 < width / 2)
+                .attr("x", d => d.x1 + 6)
+                .attr("text-anchor", "start");
+        }
+
+        /**
+         * Extracts a single array of technique objects (with their top 5 attackScore 
+         * and an array of mapped controls) from your "cdmData" structure 
+         * produced by buildCdmDataByEnvironment().
+         *
+         * @param {Array} cdmData - e.g. [
+         *   {
+         *     environment: "AWS",
+         *     categoryData: {
+         *       devices: {
+         *         assetTypes: [...],
+         *         controls: { "nist-controls": [...], "mitigations": [...], ... },
+         *         techniques: [
+         *           { techniqueId: "T1001", techniqueName: "Data Obfuscation", score: 0.5 },
+         *           { techniqueId: "T1059", techniqueName: "Command and Scripting", score: 0.7 },
+         *         ]
+         *       },
+         *       networks: { ... },
+         *       data: { ... },
+         *       ...
+         *     }
+         *   },
+         *   { environment: "Azure", categoryData: ... },
+         *   ...
+         * ]
+         * @returns {Array} An array of technique objects in the form:
+         *   [
+         *     {
+         *       techniqueId: "T1001",
+         *       attackScore: 0.5,
+         *       mappedControls: [ "AC-1", "AC-2", ... ] 
+         *     },
+         *     ...
+         *   ]
+         */
+        function getCdmTechniques(cdmData) {
+            // We'll store technique objects in a map keyed by techniqueId, so duplicates 
+            // (if the same technique appears in multiple categories/environments) get merged.
+            const techniqueMap = {};
+
+            // For each environment
+            for (const envBlock of cdmData) {
+                const { environment, categoryData } = envBlock;
+                if (!categoryData) continue;
+
+                // For each category in this environment
+                for (const catKey of Object.keys(categoryData)) {
+                const catObj = categoryData[catKey];
+                if (!catObj) continue;
+
+                const { techniques, controls } = catObj;
+                if (!techniques || !Array.isArray(techniques)) continue;
+
+                // Build a union of all control IDs from the top controls in this category
+                // because the data structure lumps all controls for the category, 
+                // not technique-by-technique. 
+                // If you want each technique to have only a subset, 
+                // you'd need a more detailed mapping.
+                const mappedControlsSet = new Set();
+                if (controls && typeof controls === "object") {
+                    // controls is e.g. { "nist-controls": [ { idOrName, freq }, ... ], "mitigations": [...], ... }
+                    Object.values(controls).forEach(arr => {
+                    arr.forEach(item => {
+                        // item is { idOrName: "...", freq: number }
+                        mappedControlsSet.add(item.idOrName);
+                    });
+                    });
+                }
+
+                // For each technique in the top 5 for this category
+                for (const tech of techniques) {
+                    const { techniqueId, techniqueName, score } = tech;
+                    if (!techniqueId) continue;
+
+                    // Either create or update an entry in techniqueMap
+                    if (!techniqueMap[techniqueId]) {
+                    // create
+                    techniqueMap[techniqueId] = {
+                        techniqueId,
+                        attackScore: score || 0,
+                        // We'll store a set internally, convert to array at the end
+                        _controlSet: new Set([...mappedControlsSet]),
+                    };
+                    } else {
+                    // merge updates
+                    // if the new technique's score is higher, update it
+                    const existing = techniqueMap[techniqueId];
+                    if (score > existing.attackScore) {
+                        existing.attackScore = score;
+                    }
+                    // union the controls
+                    for (const c of mappedControlsSet) {
+                        existing._controlSet.add(c);
+                    }
+                    }
+                }
+                }
+            }
+
+            // Convert the map to a final array
+            const result = [];
+            for (const techId of Object.keys(techniqueMap)) {
+                const entry = techniqueMap[techId];
+                result.push({
+                techniqueId: entry.techniqueId,
+                attackScore: entry.attackScore,
+                // flatten the set
+                mappedControls: Array.from(entry._controlSet)
+                });
+            }
+
+            return result;
+        }
     </script>
          
   
