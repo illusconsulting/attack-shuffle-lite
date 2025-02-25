@@ -151,6 +151,64 @@
             position: relative;
         }
 
+        /* Styles for CDM View Step */
+        /* Category headers row at the top */
+        .assetCategoryHeaders {
+        display: flex;
+        margin-bottom: 8px;  /* some spacing before the matrix containers */
+        }
+        .category-header {
+        flex: 1;            /* so that all five categories share space equally */
+        text-align: center;
+        background-color: #668bb3;
+        color: #f4f4f4;
+        padding: 5px 0;
+        border-radius: 2px;
+        margin: 0 2px;      /* small horizontal gap */
+        font-weight: bold;
+        }
+
+        /* Each matrix-container holds multiple section-containers (or just one) */
+        .matrix-container {
+        margin-bottom: 20px; /* some spacing after each matrix */
+        }
+
+        /* A row of data for either environment or an overall row for controls, etc. */
+        .section-container {
+        display: flex;
+        align-items: stretch;
+        margin-bottom: 5px;
+        border: 1px solid #394a6d;
+        border-radius: 2px;
+        background: #394a6d;
+        }
+
+        /* The narrow "header" on the left for each row, showing environment or a single label */
+        .section-header-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #668bb3;
+        color: #f4f4f4;
+        padding: 5px;
+        writing-mode: vertical-lr;  /* vertical text, top to bottom */
+        transform: rotate(180deg);  /* flip so text is upright */
+        flex: 0 0 25px;             /* fixed width for vertical header */
+        border-radius: 2px 0 0 2px;
+        text-align: center;
+        font-size: 0.85em;
+        }
+
+        /* The 5 columns inside each row for the 5 categories */
+        .section-category-container {
+        flex: 1;
+        background: #394a6d;
+        padding: 5px;
+        margin: 0 2px;   /* small horizontal gap between columns */
+        border-radius: 2px;
+        }
+
+
     </style>
     
 </head>
@@ -176,7 +234,8 @@
             <li data-step="2">Asset Types</li>
             <li data-step="3">MITRE ATT&CK Inventory</li>
             <li data-step="4">ATT&CK Technique Visualization</li>
-            <li data-step="5">Organization Details</li>
+            <li data-step="5">CDM View</li>
+            <li data-step="6">Organization Details</li>
         </ol>  
 
         <div id="form-navigation" class="flex justify-between mt-4">
@@ -346,7 +405,30 @@
                 <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button>
             </div>
 
-            <!-- Step 5: Organization Details -->
+            <!-- Step 5: CDM View -->
+            <div class="form-step">
+                <h3 class="text-lg font-semibold mb-2">CDM View</h3>
+                <p class="text-sm text-gray-600 mb-4">Visualize categories, techniques, and selected controls/capabilities.</p>
+            
+                <!-- (1) Controls/Capabilities Checkboxes -->
+                <div id="cdm-capability-filters" class="mb-4">
+                <label><input type="checkbox" name="cdmFilters" value="mitigations"> ATT&CK Mitigations</label>
+                <label><input type="checkbox" name="cdmFilters" value="nist-controls"> NIST 800-53r5</label>
+                <label><input type="checkbox" name="cdmFilters" value="cis-safeguards"> CIS Controls</label>
+                <label><input type="checkbox" name="cdmFilters" value="aws-capabilities"> AWS Capabilities</label>
+                <label><input type="checkbox" name="cdmFilters" value="gcp-capabilities"> GCP Capabilities</label>
+                <label><input type="checkbox" name="cdmFilters" value="azure-capabilities"> Azure Capabilities</label>
+                <label><input type="checkbox" name="cdmFilters" value="m365-capabilities"> M365 Capabilities</label>
+                </div>
+            
+                <!-- (2) CDM Matrix Container -->
+                <div id="cdm-matrix-container" class="overflow-auto">
+                <!-- The dynamic matrix layout (like ATT&CK Shuffle) goes here -->
+                </div>
+            </div>
+   
+
+            <!-- Step 6: Organization Details -->
             <div class="form-step">
                 <h3 class="text-lg font-semibold mb-2">Organization Details</h3>
                 <p class="text-sm text-gray-600 mb-2">Define your organization's security practices.</p>
@@ -625,6 +707,11 @@
                     generateRadialTree();
                 });
             });
+
+            document.querySelectorAll('#cdm-capability-filters input[type="checkbox"]')
+                .forEach(cb => {
+                    cb.addEventListener('change', () => renderCdmView(db));
+                });
         });
     
         /**
@@ -898,6 +985,9 @@
                     generateRadialTree();
                 }
                 if (currentStep === 4) {
+                    await renderCdmView(db);
+                }
+                if (currentStep === 5) {
                     buildOrganizationAttributes(modelDefinition);
                 }
 
@@ -2250,6 +2340,681 @@
 
             return root;
         }
+
+        //
+        // Cyber Defense Matrix View functions
+        //
+        async function buildCdmDataByEnvironment(db, selectedControlTypes) {
+            const allInstances = await db.modelInstances
+                .where("record_type").equals("asset-type-instance")
+                .toArray();
+
+            // 1) Unique environments
+            const envSet = new Set(allInstances.map(i => i.environment || "Unknown"));
+            const environments = Array.from(envSet);
+
+            // 2) For each environment, group by the 5 categories
+            const results = []; // We'll build an array of { environment, categoryData: {...} }
+
+            for (const env of environments) {
+                // Filter just the asset instances for this environment
+                const envInstances = allInstances.filter(i => (i.environment || "Unknown") === env);
+
+                // Build a map from category => [instances]
+                const catMap = {
+                devices: [],
+                networks: [],
+                "applications & workloads": [],
+                data: [],
+                identities: []
+                };
+                for (const inst of envInstances) {
+                const cat = normalizeCategory(inst["asset-category"] || "");
+                if (catMap[cat]) {
+                    catMap[cat].push(inst);
+                }
+                }
+
+                // Now for each category, gather:
+                // - All asset types
+                // - Top 5 controls
+                // - Top 5 techniques
+                const categoryData = {};
+                for (const cat of Object.keys(catMap)) {
+                const instancesInCat = catMap[cat];
+
+                // (A) Asset Types row: all distinct assetType from these instances
+                const assetTypes = instancesInCat.map(x => x["asset-type"]).filter(Boolean);
+
+                // (B) Build or gather the top 5 controls. For that, we need to get the top 5 across
+                //     all techniques in these instances. (Similar logic to your existing code.)
+                const topControls = computeTopControlsFromInstances(instancesInCat, selectedControlTypes);
+
+                // (C) Build the top 5 techniques (by score) for these instances
+                const topTechniques = computeTop5TechniquesFromInstances(instancesInCat);
+
+                categoryData[cat] = {
+                    assetTypes,
+                    controls: topControls,      // object keyed by each selected ctrlType -> array
+                    techniques: topTechniques   // array of { techniqueId, name, score }
+                };
+                }
+
+                results.push({
+                environment: env,
+                categoryData
+                });
+            }
+
+            return results;
+            }
+
+        /**
+         * Renders the CDM view into the element with id="cdm-matrix-container".
+         * This is typically called when the user reaches Step 5 or whenever
+         * any of the capability-filter checkboxes change.
+         *
+         * @param {Dexie} db - The Dexie database instance.
+         */
+        async function renderCdmView(db) {
+            // 1) Read which capability types the user wants (from checkboxes).
+            const selectedControlTypes = getSelectedControlTypes(); 
+            // e.g. ["mitigations", "nist-controls", "cis-safeguards", "aws-capabilities", ...]
+
+            // 2) Build data for the matrix (top 5 techniques & relevant controls).
+            // const cdmData = await buildCdmData(db, selectedControlTypes);
+            const cdmData = await buildCdmDataByEnvironment(db, selectedControlTypes);
+
+            // 3) Render the resulting data structure into the page.
+            // drawCdmMatrix(cdmData);
+            drawCdmMatrixByEnvironment(cdmData);
+        }
+
+        /**
+         * Returns an array of the checked capability types. E.g.:
+         * ["mitigations", "nist-controls", "aws-capabilities"].
+         */
+        function getSelectedControlTypes() {
+        const checkboxes = document.querySelectorAll('#cdm-capability-filters input[name="cdmFilters"]:checked');
+        return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        /**
+         * Builds an in-memory data structure needed to display the CDM matrix:
+         * [
+         *   {
+         *     category: "devices",
+         *     topTechniques: [ {techniqueId, techniqueName, attackScore}, ... up to 5 ],
+         *     controls: {
+         *       "mitigations": [ {idOrName, freq}, ... up to 5 ],
+         *       "nist-controls": [ {idOrName, freq}, ... up to 5 ],
+         *       // etc. for each selected control type
+         *     }
+         *   },
+         *   ... repeated for networks, applications & workloads, data, identities
+         * ]
+         *
+         * @param {Dexie} db - Dexie instance
+         * @param {string[]} selectedControlTypes - array of chosen controls/capabilities
+         * @returns {Array} cdmData
+         */
+        async function buildCdmData(db, selectedControlTypes) {
+        // The five categories we want, in this specific order:
+        const categories = ["devices", "networks", "applications & workloads", "data", "identities"];
+
+        // 1) Fetch all asset instances from modelInstances
+        const allInstances = await db.modelInstances
+            .where("record_type").equals("asset-type-instance")
+            .toArray();
+
+        // 2) Group them by category
+        const categoryMap = {};
+        for (const cat of categories) {
+            categoryMap[cat] = [];
+        }
+        for (const instance of allInstances) {
+            const cat = (instance["asset-category"] || "").toLowerCase();
+            // do a simple match ignoring case, or unify "applications & workloads"
+            // if the stored data might differ slightly:
+            const canonical = normalizeCategory(cat);
+            if (categoryMap[canonical]) {
+            categoryMap[canonical].push(instance);
+            }
+        }
+
+        // 3) For each category, gather top 5 techniques + top controls
+        const results = [];
+        for (const cat of categories) {
+            const instancesInCat = categoryMap[cat] || [];
+            if (!instancesInCat.length) {
+            // If no instances, push an empty placeholder
+            results.push({
+                category: cat,
+                topTechniques: [],
+                controls: {}
+            });
+            continue;
+            }
+
+            // 4) Gather all techniques across the instances in this category
+            const allTechs = [];
+            for (const inst of instancesInCat) {
+            // abusedByTechniques + targetedByTechniques
+            const abusedObj   = inst.abusedByTechniques   || {};
+            const targetedObj = inst.targetedByTechniques || {};
+
+            // Convert each to [techId, { ...details }] pairs, push all
+            for (const [techId, techDetail] of Object.entries(abusedObj)) {
+                allTechs.push({
+                techniqueId:   techId,
+                techniqueName: techDetail["technique_name"],
+                score:         parseFloat(techDetail["attack-score"]) || 0,
+                detail:        techDetail
+                });
+            }
+            for (const [techId, techDetail] of Object.entries(targetedObj)) {
+                allTechs.push({
+                techniqueId:   techId,
+                techniqueName: techDetail["technique_name"],
+                score:         parseFloat(techDetail["attack-score"]) || 0,
+                detail:        techDetail
+                });
+            }
+            }
+
+            // 5) Sort by score descending, pick top 5
+            allTechs.sort((a,b) => b.score - a.score);
+            const topTechs = allTechs.slice(0, 5);
+
+            // 6) From those top 5, compute the top controls in each selected type
+            const controlsByType = {};
+            for (const ctrlType of selectedControlTypes) {
+            // Example: ctrlType = "nist-controls"
+            // We'll gather frequency across the topTechs
+            const freqMap = {};
+            for (const t of topTechs) {
+                // e.g. t.detail["nist-controls"] => array of strings
+                const arr = t.detail[ctrlType] || [];
+                for (const ctrlId of arr) {
+                freqMap[ctrlId] = (freqMap[ctrlId] || 0) + 1;
+                }
+
+                // If ctrlType == "mitigations" it might be an array of objects or array of {mitigation_id, ...}
+                // Depending on your data shape, adapt accordingly:
+                if (ctrlType === "mitigations" && Array.isArray(t.detail.mitigations)) {
+                // If "mitigations" is an array
+                for (const mitObj of t.detail.mitigations) {
+                    const mId = mitObj.mitigation_id || "UnknownMitigation";
+                    freqMap[mId] = (freqMap[mId] || 0) + 1;
+                }
+                }
+            }
+
+            // Turn freqMap into a sorted array
+            let freqArr = Object.entries(freqMap).map(([key, val]) => ({ idOrName: key, freq: val }));
+            freqArr.sort((a,b) => b.freq - a.freq);
+            // slice top 5
+            freqArr = freqArr.slice(0, 5);
+
+            controlsByType[ctrlType] = freqArr;
+            }
+
+            // 7) Build the final data object for this category
+            results.push({
+            category: cat,
+            topTechniques: topTechs.map(t => ({
+                techniqueId:   t.techniqueId,
+                techniqueName: t.techniqueName,
+                score:         t.score
+            })),
+            controls: controlsByType
+            });
+        }
+
+        return results;
+        }
+
+        /**
+         * Build the CDM View layout that mimics the shuffle-vue.html structure.
+         * @param {Array} cdmData - array of environment blocks returned from buildCdmDataByEnvironment, e.g.:
+         *   [
+         *     {
+         *       environment: "AWS",
+         *       categoryData: {
+         *         devices: { assetTypes: [...], controls: {...}, techniques: [...] },
+         *         networks: {...},
+         *         data: {...},
+         *         "applications & workloads": {...},
+         *         identities: {...}
+         *       }
+         *     },
+         *     { environment: "Azure", categoryData: ... },
+         *     ...
+         *   ]
+         */
+        function drawCdmMatrixByEnvironment(cdmData) {
+        // 1) Clear previous content
+        const container = document.getElementById("cdm-matrix-container");
+        container.innerHTML = "";
+
+        // 2) Build the assetCategoryHeaders bar
+        const categoryHeadersDiv = document.createElement("div");
+        categoryHeadersDiv.className = "assetCategoryHeaders";
+        const categoriesInOrder = ["devices", "networks", "data", "applications & workloads", "identities"];
+        categoriesInOrder.forEach(cat => {
+            const catHeader = document.createElement("div");
+            catHeader.className = "category-header";
+            catHeader.textContent = cat;
+            categoryHeadersDiv.appendChild(catHeader);
+        });
+        container.appendChild(categoryHeadersDiv);
+
+        // 3) Build the first matrix-container for Asset Types
+        const assetTypesMatrix = document.createElement("div");
+        assetTypesMatrix.className = "matrix-container assetTypesMatrix";
+        container.appendChild(assetTypesMatrix);
+
+        // For each environment, create a "section-container"
+        cdmData.forEach(envBlock => {
+            // <div class="section-container">
+            const sectionDiv = document.createElement("div");
+            sectionDiv.className = "section-container";
+
+            // Left vertical label with environment name
+            const headerDiv = document.createElement("div");
+            headerDiv.className = "section-header-container";
+            headerDiv.textContent = envBlock.environment;
+            sectionDiv.appendChild(headerDiv);
+
+            // Then 5 "section-category-container" columns, in the same category order
+            categoriesInOrder.forEach(cat => {
+            const catData = envBlock.categoryData[cat] || {};
+            const colDiv = document.createElement("div");
+            colDiv.className = "section-category-container";
+
+            // catData.assetTypes is an array of strings
+            if (!catData.assetTypes || !catData.assetTypes.length) {
+                colDiv.textContent = "(None)";
+            } else {
+                catData.assetTypes.forEach(aType => {
+                const div = document.createElement("div");
+                div.textContent = aType;
+                div.className = "doc asset_type";
+                colDiv.appendChild(div);
+                });
+            }
+
+            sectionDiv.appendChild(colDiv);
+            });
+
+            assetTypesMatrix.appendChild(sectionDiv);
+        });
+
+        // 4) Build the second matrix-container for Controls & Capabilities
+        const controlsMatrix = document.createElement("div");
+        controlsMatrix.className = "matrix-container controlsMatrix";
+        container.appendChild(controlsMatrix);
+
+        // We only want a single section-container for all controls
+        const controlsSection = document.createElement("div");
+        controlsSection.className = "section-container";
+        controlsMatrix.appendChild(controlsSection);
+
+        // The left label: "Controls & Capabilities"
+        const controlsHeader = document.createElement("div");
+        controlsHeader.className = "section-header-container";
+        controlsHeader.textContent = "Controls & Capabilities";
+        controlsSection.appendChild(controlsHeader);
+
+        // Now 5 columns, one for each category. We need to combine all envs for each category, or pick how you want it displayed.
+        // For simplicity, let's assume you want to display "the top controls" across ALL environments, grouped by category.
+        // If you prefer environment-by-environment, you'd do more section-containers. 
+        categoriesInOrder.forEach(cat => {
+            const colDiv = document.createElement("div");
+            colDiv.className = "section-category-container";
+
+            // We can iterate over each environment, gather the controls for cat, or do a single "merged" view. 
+            // Below is just an example: we gather all controls across all envs, flatten, and display top controls. 
+            // Adjust to your actual logic for how to show them.
+
+            let allControls = [];
+            cdmData.forEach(env => {
+            const catObj = env.categoryData[cat];
+            if (catObj && catObj.controls) {
+                // catObj.controls = { "nist-controls": [...], "mitigations": [...], ... }
+                // You might want to show them differently; here's a naive approach.
+                const ctrlKeys = Object.keys(catObj.controls);
+                ctrlKeys.forEach(ctrlType => {
+                const items = catObj.controls[ctrlType]; // e.g. [ {idOrName, freq}, ... ]
+                if (items) {
+                    items.forEach(x => {
+                    // Add ctrlType or some label if you want
+                    allControls.push({ ctrlType, idOrName: x.idOrName, freq: x.freq });
+                    });
+                }
+                });
+            }
+            });
+
+            if (!allControls.length) {
+            colDiv.textContent = "(No controls)";
+            } else {
+            // Example: just listing them all 
+            allControls.forEach(ctrl => {
+                const d = document.createElement("div");
+                d.textContent = `[${ctrl.ctrlType}] ${ctrl.idOrName} (freq: ${ctrl.freq})`;
+                d.className = "doc capability";
+                colDiv.appendChild(d);
+            });
+            }
+
+            controlsSection.appendChild(colDiv);
+        });
+
+        // 5) Build the third matrix-container for ATT&CK Techniques
+        const techniquesMatrix = document.createElement("div");
+        techniquesMatrix.className = "matrix-container techniquesMatrix";
+        container.appendChild(techniquesMatrix);
+
+        // Single section-container for techniques
+        const techniquesSection = document.createElement("div");
+        techniquesSection.className = "section-container";
+        techniquesMatrix.appendChild(techniquesSection);
+
+        // Left label
+        const techniquesHeader = document.createElement("div");
+        techniquesHeader.className = "section-header-container";
+        techniquesHeader.textContent = "ATT&CK Techniques";
+        techniquesSection.appendChild(techniquesHeader);
+
+        // 5 columns for categories
+        categoriesInOrder.forEach(cat => {
+            const colDiv = document.createElement("div");
+            colDiv.className = "section-category-container";
+
+            // gather top techniques across all envs (or just one environment, up to you)
+            let allTechs = [];
+            cdmData.forEach(env => {
+            const catObj = env.categoryData[cat];
+            if (catObj && catObj.techniques) {
+                allTechs = allTechs.concat(catObj.techniques);
+            }
+            });
+
+            if (!allTechs.length) {
+            colDiv.textContent = "(No techniques)";
+            } else {
+            // for each technique, create a doc div
+            allTechs.forEach(t => {
+                const d = document.createElement("div");
+                d.className = "doc technique";
+                d.textContent = `${t.techniqueId} (${t.score.toFixed(3)}) - ${t.techniqueName}`;
+                colDiv.appendChild(d);
+            });
+            }
+
+            techniquesSection.appendChild(colDiv);
+        });
+        }
+
+
+
+        /**
+         * Renders the CDM data structure into #cdm-matrix-container using a simple
+         * table or flex layout. Each category is a column; we show the top 5 techniques
+         * in one row, and the chosen controls in a second row.
+         *
+         * @param {Array} cdmData - As returned by buildCdmData()
+         */
+        function drawCdmMatrix(cdmData) {
+        const container = document.getElementById("cdm-matrix-container");
+        if (!container) return;
+
+        // Clear previous
+        container.innerHTML = "";
+
+        // We'll do a simple horizontally scrolling table with 2 row sections:
+        // Row 1: "Techniques" across all columns
+        // Row 2: "Controls & Capabilities" across all columns
+
+        // Build a table
+        const table = document.createElement("table");
+        table.className = "w-full border-collapse border border-gray-300 text-sm mb-4";
+
+        // (A) Build a thead that labels each category
+        //     (One extra empty cell on top-left if you want row labels, or skip it.)
+        const thead = document.createElement("thead");
+        const headRow = document.createElement("tr");
+
+        // First blank cell for row label
+        const blankTh = document.createElement("th");
+        blankTh.className = "border border-gray-300 px-4 py-2 bg-gray-700 text-white text-center";
+        blankTh.textContent = " ";
+        headRow.appendChild(blankTh);
+
+        // Then a cell for each category
+        for (const catObj of cdmData) {
+            const th = document.createElement("th");
+            th.className = "border border-gray-300 px-4 py-2 bg-gray-700 text-white text-center capitalize";
+            // e.g. catObj.category might be "devices"
+            th.textContent = catObj.category;
+            headRow.appendChild(th);
+        }
+        thead.appendChild(headRow);
+        table.appendChild(thead);
+
+        // (B) Techniques row
+        const tbody = document.createElement("tbody");
+
+        const techniquesRow = document.createElement("tr");
+        // row label
+        const techLabelTd = document.createElement("td");
+        techLabelTd.className = "border border-gray-300 px-4 py-2 font-bold bg-gray-100";
+        techLabelTd.textContent = "Techniques (Top 5)";
+        techniquesRow.appendChild(techLabelTd);
+
+        // For each category
+        for (const catObj of cdmData) {
+            const td = document.createElement("td");
+            td.className = "border border-gray-300 px-2 align-top";
+
+            if (!catObj.topTechniques.length) {
+            td.textContent = "(No techniques)";
+            } else {
+            // List each technique
+            const ul = document.createElement("ul");
+            catObj.topTechniques.forEach(t => {
+                const li = document.createElement("li");
+                li.className = "mb-1";
+                li.textContent = `${t.techniqueId} (${t.score.toFixed(3)}) - ${t.techniqueName}`;
+                ul.appendChild(li);
+            });
+            td.appendChild(ul);
+            }
+            techniquesRow.appendChild(td);
+        }
+        tbody.appendChild(techniquesRow);
+
+        // (C) "Controls & Capabilities" row
+        // We'll combine everything the user selected into a single row for each category.
+        const controlsRow = document.createElement("tr");
+        const controlsLabelTd = document.createElement("td");
+        controlsLabelTd.className = "border border-gray-300 px-4 py-2 font-bold bg-gray-100";
+        controlsLabelTd.textContent = "Controls & Capabilities";
+        controlsRow.appendChild(controlsLabelTd);
+
+        // For each category
+        for (const catObj of cdmData) {
+            const td = document.createElement("td");
+            td.className = "border border-gray-300 px-2 align-top";
+
+            // catObj.controls is an object keyed by the selected control type
+            // e.g. { "nist-controls": [ {idOrName, freq}, ...], "mitigations": [...] }
+            if (!catObj.topTechniques.length) {
+            // If no techniques, presumably no controls
+            td.textContent = "(No data)";
+            } else if (Object.keys(catObj.controls).length === 0) {
+            td.textContent = "(No controls selected)";
+            } else {
+            // We'll build a small sub-section for each control type
+            for (const [ctrlType, ctrlArr] of Object.entries(catObj.controls)) {
+                // A small label
+                const labelDiv = document.createElement("div");
+                labelDiv.className = "font-semibold mb-1 mt-2";
+                labelDiv.textContent = ctrlType; 
+                td.appendChild(labelDiv);
+
+                if (!ctrlArr.length) {
+                const noneDiv = document.createElement("div");
+                noneDiv.className = "text-xs italic";
+                noneDiv.textContent = "No mappings";
+                td.appendChild(noneDiv);
+                continue;
+                }
+
+                // List top 5
+                const ul = document.createElement("ul");
+                ctrlArr.forEach(c => {
+                const li = document.createElement("li");
+                li.className = "ml-2 text-sm";
+                li.textContent = `${c.idOrName} (freq: ${c.freq})`;
+                ul.appendChild(li);
+                });
+                td.appendChild(ul);
+            }
+            }
+
+            controlsRow.appendChild(td);
+        }
+        tbody.appendChild(controlsRow);
+
+        table.appendChild(tbody);
+        container.appendChild(table);
+        }
+
+        /**
+         * For a given list of asset-type-instances (all in the same category),
+         * gather the top 5 of each selected control type. 
+         * 
+         * Returns an object keyed by control type, e.g.:
+         * {
+         *   "nist-controls": [ { idOrName: "AC-1", freq: 2 }, { ... }, ... up to 5 ],
+         *   "mitigations": [ ... ],
+         *   ...
+         * }
+         *
+         * This is similar to your existing logic in buildCdmData(...) for controls,
+         * but extracted to a standalone function.
+         */
+        function computeTopControlsFromInstances(instancesInCat, selectedControlTypes) {
+            // 1) Gather top 5 techniques from these instances. 
+            //    If we want the “most frequently mapped” controls across *all* techniques, 
+            //    then we should gather *all* relevant techniques, not just top 5. 
+            //    Or if you truly only want controls from the top 5 techniques, 
+            //    then you need to also call computeTop5TechniquesFromInstances first. 
+            //    For this example, let’s gather *all* techniques from these instances:
+
+            const allTechs = [];
+            for (const inst of instancesInCat) {
+                const abusedObj   = inst.abusedByTechniques   || {};
+                const targetedObj = inst.targetedByTechniques || {};
+                
+                for (const [techId, techDetail] of Object.entries(abusedObj)) {
+                allTechs.push(techDetail);
+                }
+                for (const [techId, techDetail] of Object.entries(targetedObj)) {
+                allTechs.push(techDetail);
+                }
+            }
+
+            // 2) Build a result object keyed by each control type
+            const controlsByType = {};
+            for (const ctrlType of selectedControlTypes) {
+                // We’ll gather frequency across all techniques (or the top 5, if that’s your requirement)
+                const freqMap = {};
+
+                for (const t of allTechs) {
+                // e.g. t["nist-controls"] => array of strings
+                const arr = t[ctrlType] || [];
+                if (Array.isArray(arr)) {
+                    for (const ctrlId of arr) {
+                    freqMap[ctrlId] = (freqMap[ctrlId] || 0) + 1;
+                    }
+                }
+
+                // If ctrlType is "mitigations" and it’s an array of mitigation objects
+                if (ctrlType === "mitigations" && Array.isArray(t.mitigations)) {
+                    for (const mitObj of t.mitigations) {
+                    const mId = mitObj.mitigation_id || "UnknownMitigation";
+                    freqMap[mId] = (freqMap[mId] || 0) + 1;
+                    }
+                }
+                }
+
+                // Turn freqMap into a sorted array
+                let freqArr = Object.entries(freqMap).map(([key, val]) => ({ idOrName: key, freq: val }));
+                freqArr.sort((a, b) => b.freq - a.freq);
+                // slice top 5
+                freqArr = freqArr.slice(0, 5);
+
+                controlsByType[ctrlType] = freqArr;
+            }
+
+            return controlsByType;
+        }
+
+
+        /**
+         * Helper to standardize category naming if your modelInstances
+         * can store "Devices"/"devices"/"DEVICES", etc. Adjust as needed.
+         */
+        function normalizeCategory(input) {
+        const val = (input || "").trim().toLowerCase();
+        if (val.includes("device")) return "devices";
+        if (val.includes("network")) return "networks";
+        if (val.includes("application")) return "applications & workloads";
+        if (val.includes("workload")) return "applications & workloads";
+        if (val.includes("data")) return "data";
+        if (val.includes("identit")) return "identities";
+        // fallback
+        return val;
+        }
+
+        /**
+         * Gathers all techniques (abused + targeted) from the given list of asset-type-instances,
+         * then returns the top 5 by "attack-score."
+         */
+        function computeTop5TechniquesFromInstances(instancesInCat) {
+        const allTechs = [];
+
+        // 1) Collect techniques
+        for (const inst of instancesInCat) {
+            const abusedObj   = inst.abusedByTechniques   || {};
+            const targetedObj = inst.targetedByTechniques || {};
+
+            for (const [techId, techDetail] of Object.entries(abusedObj)) {
+            const score = parseFloat(techDetail["attack-score"]) || 0;
+            allTechs.push({
+                techniqueId: techId,
+                techniqueName: techDetail["technique_name"],
+                score
+            });
+            }
+            for (const [techId, techDetail] of Object.entries(targetedObj)) {
+            const score = parseFloat(techDetail["attack-score"]) || 0;
+            allTechs.push({
+                techniqueId: techId,
+                techniqueName: techDetail["technique_name"],
+                score
+            });
+            }
+        }
+
+        // 2) Sort descending by score, return top 5
+        allTechs.sort((a, b) => b.score - a.score);
+        return allTechs.slice(0, 5);
+        }
+
     </script>
          
   
