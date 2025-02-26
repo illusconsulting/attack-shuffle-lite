@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>(attackShuffle).Lite</title>
-    <link rel="icon" href="favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="./favicon.ico" type="image/x-icon"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js" integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -211,6 +211,14 @@
         border-radius: 2px;
         }
 
+        .main-form-container {
+        position: absolute;
+        top: 2em;
+        left: 50%;
+        transform: translateX(-50%);
+        }
+
+
 
     </style>
     
@@ -219,13 +227,13 @@
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-5 right-5 space-y-2 z-50"></div>
     <!-- Main Form Container -->
-    <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-2xl">
+    <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-6xl main-form-container">
             <!-- Progress Bar -->
             <div id="progress-container" class="w-full bg-gray-300 rounded mt-4 hidden">
                 <div id="loading-progress-bar" class="h-4 bg-blue-500 rounded w-0 hidden"></div>
             </div>
         <div class="flex justify-between items-center">
-            <h2 class="text-xl font-bold">(attackShuffle).Lite</h2>
+            <h2 class="text-2xl font-bold" style="margin-bottom: 1em;">(attackShuffle).Lite</h2>
             <!-- <button id="darkModeToggle" class="px-3 py-1 text-sm bg-gray-700 text-white rounded">
                 <span id="darkModeIcon" class="material-symbols-outlined">dark_mode</span>
             </button>             -->
@@ -381,7 +389,7 @@
                     </table>
                 </div>
 
-                <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button>
+                <!-- <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button> -->
 
             </div>
 
@@ -406,7 +414,7 @@
                 <!-- Radial Tree Visualization Container -->
                 <div id="radial-tree-container" class="w-full h-96 border border-gray-300 rounded bg-white"></div>
 
-                <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button>
+                <!-- <button type="button" id="download-json" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Download JSON</button> -->
             </div>
 
             <!-- Step 5: CDM View -->
@@ -440,27 +448,27 @@
                 <div id="organization-details">
                     <label class="block mt-2">
                         <input type="checkbox" id="ai_automation" class="mr-2">
-                        AI & Automation for Information Security
+                        My organization leverages AI & Automation to enhance Information Security capabilities
                     </label>
                     <label class="block mt-2">
                         <input type="checkbox" id="cybersecurity_training_security_staff" class="mr-2">
-                        Cybersecurity Training for Security Staff
+                        My organization requires Cybersecurity Training for Security Staff
                     </label>
                     <label class="block mt-2">
                         <input type="checkbox" id="cybersecurity_training_all_employees" class="mr-2">
-                        Cybersecurity Training for All Employees
+                        My organization requires Cybersecurity Awareness Training for All Employees
                     </label>
                     <label class="block mt-2">
                         <input type="checkbox" id="incident_response_testing" class="mr-2">
-                        Conduct Incident Response Tests
+                        My organization Conducts Incident Response Tests
                     </label>
                     <label class="block mt-2">
                         <input type="checkbox" id="law_enforcement_ransomware" class="mr-2">
-                        Engage Law Enforcement for Ransomware
+                        My organization Engages Law Enforcement for Significant Security Incidents
                     </label>
                     <label class="block mt-2">
                         <input type="checkbox" id="data_encryption" class="mr-2">
-                        Encrypt Stored Data (Beyond Disk Encryption)
+                        My organization Encrypts Data at the value/string level (Not Disk/Database Encryption)
                     </label>
                 </div>
             </div>
@@ -470,11 +478,37 @@
                 <h3 class="text-lg font-semibold mb-2">Attack Analysis</h3>
                 <p class="text-sm text-gray-600 mb-4">Run simulations and generate a Sankey diagram.</p>
             
-                <!-- [A] Input for # of iterations -->
+                <!-- [A] Inputs -->
+                <label class="block mt-2">
+                Assumed Cost of Breach:
+                <input type="number" id="costOfBreach" value="9500000" min="100000" class="border p-2 w-full"/>
+                </label>
+                
                 <label class="block mt-2">
                 Number of iterations:
-                <input type="number" id="attackAnalysisIterations" value="1000" min="1" class="border p-2 w-full" />
+                <input type="number" id="attackAnalysisIterations" value="10000" min="100" class="border p-2 w-full"/>
                 </label>
+                
+                <label class="block mt-2">
+                Minimum Attack Effectiveness:
+                <input type="number" id="minAttackEffect" value="15" min="0" class="border p-2 w-full"/>
+                </label>
+                
+                <label class="block mt-2">
+                Maximum Attack Effectiveness:
+                <input type="number" id="maxAttackEffect" value="100" max="100" class="border p-2 w-full"/>
+                </label>
+
+                <label class="block mt-2">
+                Minimum Maturity Score:
+                <input type="number" id="minMaturityScore" value="5" min="0" class="border p-2 w-full"/>
+                </label>
+                
+                <label class="block mt-2">
+                Maximum Maturity Score:
+                <input type="number" id="maxMaturityScore" value="50" max="100" class="border p-2 w-full"/>
+                </label>
+
             
                 <!-- [B] Single-Select Radio Buttons for Controls/Capabilities -->
                 <div id="analysis-control-selection" class="mt-4">
@@ -524,7 +558,7 @@
                 <div id="riskFlowTableContainer" class="mt-4">
                     <h4 class="text-lg font-semibold mb-2">Risk Flow Details</h4>
                     <table id="riskFlowTable" class="table-auto w-full border-collapse border border-gray-300">
-                    <thead class="bg-gray-200">
+                    <thead>
                         <tr>
                         <th class="border px-4 py-2">Segment</th>
                         <th class="border px-4 py-2">Value</th>
@@ -1088,7 +1122,7 @@
             prevButton.classList.toggle("hidden", step === 0);
 
             // Change "Next" button to "Finish" on the last step
-            nextButton.innerText = step === steps.length - 1 ? "Finish" : "Next";
+            // nextButton.innerText = step === steps.length - 1 ? "Finish" : "Next";
         }
 
         // Function to Hide the Techniques Table and JSON Output
@@ -1119,6 +1153,7 @@
                 }
                 if (currentStep === 5) {
                     buildOrganizationAttributes(modelDefinition);
+                    document.getElementById("next-step").classList.add("hidden");
                 }
                 if (currentStep === 6) {
                     
@@ -1137,8 +1172,10 @@
             if (currentStep > 0) {
                 currentStep--;
                 showStep(currentStep);
+                document.getElementById("next-step").classList.remove("hidden")
                 hideDynamicElements();
-                updateModelDisplay(); 
+                updateModelDisplay();
+                 
             }
         });
    
@@ -1168,7 +1205,7 @@
             document.body.removeChild(a);
         }
     
-        document.getElementById("download-json").addEventListener("click", exportModelAsJSON);
+        // document.getElementById("download-json").addEventListener("click", exportModelAsJSON);
 
         // Function to Build Organization Attributes from Checkboxes
         function buildOrganizationAttributes(modelDefinition) {
@@ -1982,49 +2019,49 @@
          * @param {number} [recordCount]   only defined if assetCategory === "data"
          */
         async function updateModelValuesForAssetType(
-        assetCategory,
-        assetTypeName,
-        environment,
-        coverageObj,
-        recordCount
-        ) {
-        try {
-            // 1. Get or initialize your Dexie db
-            const db = await initShuffleDb(); // or use a global `db` if you've already opened it
+            assetCategory,
+            assetTypeName,
+            environment,
+            coverageObj,
+            recordCount
+            ) {
+            try {
+                // 1. Get or initialize your Dexie db
+                const db = await initShuffleDb(); // or use a global `db` if you've already opened it
 
-            // 2. Build the record in the shape your new schema expects
-            //    We’ll store it as record_type="asset-type-instance"
-            const newRecord = {
-            record_type: "asset-type-instance",
-            "asset-category": assetCategory,
-            "asset-type": assetTypeName,
-            environment: environment,
-            "monitoring-coverage": coverageObj || {},
-            };
+                // 2. Build the record in the shape your new schema expects
+                //    We’ll store it as record_type="asset-type-instance"
+                const newRecord = {
+                "record_type": "asset-type-instance",
+                "asset-category": assetCategory,
+                "asset-type": assetTypeName,
+                "environment": environment,
+                "monitoring-coverage": coverageObj || {},
+                };
 
-            console.log("updateModelValuesForAssetType: ", newRecord)
+                console.log("updateModelValuesForAssetType: ", newRecord)
 
-            // Add recordCount if provided
-            if (recordCount != null) {
-            newRecord["record-count"] = recordCount;
+                // Add recordCount if provided
+                if (recordCount != null) {
+                newRecord["record-count"] = recordCount;
+                }
+                console.log("updateModelValuesForAssetType: ", newRecord)
+                // 3. Insert the record. Using add() will always make a new entry,
+                //    while put() can "upsert" if you have a matching primary key.
+                //    Because modelInstances has an auto-increment “++id”,
+                //    we can just do add() for new entries:
+                const instanceId = await db.modelInstances.add(newRecord);
+                console.log("Created new modelInstance with ID:", instanceId);
+
+                // 4. Now that the instance is created, build its technique objects
+                await buildAssetTechniques(db, instanceId);
+
+                // 5. Refresh any UI table that displays modelInstances
+                await refreshAssetTypeInstancesTable(db);
+
+            } catch (error) {
+                console.error("Error in updateModelValuesForAssetType:", error);
             }
-            console.log("updateModelValuesForAssetType: ", newRecord)
-            // 3. Insert the record. Using add() will always make a new entry,
-            //    while put() can "upsert" if you have a matching primary key.
-            //    Because modelInstances has an auto-increment “++id”,
-            //    we can just do add() for new entries:
-            const instanceId = await db.modelInstances.add(newRecord);
-            console.log("Created new modelInstance with ID:", instanceId);
-
-            // 4. Now that the instance is created, build its technique objects
-            await buildAssetTechniques(db, instanceId);
-
-            // 5. Refresh any UI table that displays modelInstances
-            await refreshAssetTypeInstancesTable(db);
-
-        } catch (error) {
-            console.error("Error in updateModelValuesForAssetType:", error);
-        }
         }
 
         /**
@@ -2238,7 +2275,7 @@
             const logsDiv = document.getElementById("loading-logs");
             const newLogLine = document.createElement("div");
             // newLogLine.textContent = `(${currentStep}/${totalSteps}) ${logMessage}`;
-            newLogLine.textContent = `(${logMessage}`;
+            newLogLine.textContent = `${logMessage}`;
             logsDiv.prepend(newLogLine);
         }
 
@@ -3159,182 +3196,336 @@
         // 
         // Attack Analysis functions
         //
+        // helper to format value as currency
+        function formatCurrency(value) {
+            return value.toLocaleString(undefined, {
+                style: 'currency',
+                currency: 'USD'
+            });
+        }
+        // helper to return cost from percent
+        function riskPercentToCost(riskPercent, costOfBreach) {
+            return costOfBreach * (riskPercent / 100.0);
+        }
+        // helper function to generate random numbers within a given range.
+        function randomIntBetween(min, max) {
+            // inclusive of min, max
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        // helper function to handle confidence interval calcs
+        function computeConfidenceIntervals(values, confidenceLevels = [0.50, 0.75, 0.90]) {
+            const n = values.length;
+            if (!n) return {};
+
+            // 1) Compute mean and standard deviation of the sample
+            const mean = values.reduce((sum, val) => sum + val, 0) / n;
+            let variance = 0;
+            values.forEach(v => {
+                const diff = v - mean;
+                variance += diff * diff;
+            });
+            variance = variance / (n - 1);
+            const stdev = Math.sqrt(variance);
+
+            // 2) Standard error of the mean
+            const se = stdev / Math.sqrt(n);
+
+            // 3) For each confidence level c in [0..1], 
+            //    we find z using the inverse of the normal CDF for (c + (1-c)/2).
+            //    E.g. for 90% CI, alpha=0.10 => we want z for 95% percentile => ~1.645
+            //    For 75% CI => 87.5% percentile => z ~1.15
+            //    For 50% CI => 75% percentile => z ~0.6745
+
+            const results = {};
+
+            confidenceLevels.forEach(c => {
+                // get z-value for  (0.5 + c/2)
+                const alpha = 1 - c;      // e.g. if c=0.90, alpha=0.10
+                const tail = 1 - alpha/2; // e.g. 0.95
+                const z = zscoreFromProbability(tail);  // we'll define a helper below
+
+                const margin = z * se;
+                results[c] = {
+                mean,
+                lower: mean - margin,
+                upper: mean + margin
+                };
+            });
+
+            return results;
+            }
+
+            /**
+             * zscoreFromProbability(tail)
+             * Approximates the z-score for a given upper-tail probability,
+             * e.g. tail=0.95 => z~1.645, tail=0.975 => z~1.96
+             */
+            function zscoreFromProbability(tail) {
+            // For simplicity, you can do a small lookup or approximate with an inverse error function.
+            // We'll do a small table for common confidence levels:
+            // tail=0.50 => z=0, tail=0.75 => z=0.6745, tail=0.90 => z=1.2816, tail=0.95 => z=1.645, tail=0.975 => z=1.96, etc.
+            // We can do a very small piecewise or interpolation. For more robust solutions, use a proper inverseCDF (erfinv).
+            
+            // Common approximate z for typical tails:
+            const table = {
+                0.50: 0.0,
+                0.75: 0.6745,
+                0.80: 0.8416,
+                0.90: 1.2816,
+                0.95: 1.645,
+                0.975: 1.96,
+                0.99: 2.3263,
+                0.995: 2.5758,
+                0.999: 3.09
+            };
+
+            // If tail is in the table, return directly
+            let keys = Object.keys(table).map(x => parseFloat(x));
+            keys.sort((a,b) => a-b);
+
+            let closest = keys[0];
+            for (let k of keys) {
+                if (Math.abs(k - tail) < Math.abs(closest - tail)) {
+                closest = k;
+                }
+            }
+            return table[closest] || 0;
+        }
+
         async function runAttackAnalysis() {
             try {
+                // 1) Get inputs from step 7
                 const iterationCount = parseInt(
-                document.getElementById("attackAnalysisIterations").value,
-                10
+                    document.getElementById("attackAnalysisIterations").value,
+                    10
                 ) || 1000;
-                const db = await initShuffleDb(); // or use your globally opened Dexie db
 
-                // [A] Check which single controls/capabilities radio is selected
+                const baseCostOfBreach = parseFloat(
+                    document.getElementById("costOfBreach").value
+                ) || 10000000; // fallback if invalid
+                
+                // Find the checkboxes in #organization-details
+                const orgDetailCheckboxes = document.querySelectorAll('#organization-details input[type="checkbox"]');
+                // Count how many are unchecked
+                const uncheckedCount = Array.from(orgDetailCheckboxes).filter(cb => !cb.checked).length;
+                // Increase the cost by 2% for each unchecked box
+                const additionalPercent = 0.02 * uncheckedCount;
+                const costOfBreach = baseCostOfBreach * (1 + additionalPercent);
+
+                const minAttackEffectiveness = parseInt(document.getElementById("minAttackEffect").value, 10) || 5;
+                const maxAttackEffectiveness = parseInt(document.getElementById("maxAttackEffect").value, 10) || 100;
+
+                const minMaturityScore = parseInt(document.getElementById("minMaturityScore").value, 10) || 10;
+                const maxMaturityScore = parseInt(document.getElementById("maxMaturityScore").value, 10) || 50;
+
+                // 2) Open or init your Dexie/DB handle
+                const db = await initShuffleDb();
+
+                // 3) Which control set did the user pick? (e.g., "nist-controls", "cis-safeguards", etc.)
                 const selectedRadio = document.querySelector('input[name="analysis-control-option"]:checked');
                 if (!selectedRadio) {
-                alert("Please select exactly one controls/capabilities set before running Attack Analysis.");
-                return;
+                    alert("Please select exactly one controls/capabilities set before running Attack Analysis.");
+                    return;
                 }
                 const selectedControlType = selectedRadio.value; 
-                // e.g. "nist-controls", "cis-safeguards", "aws-capabilities", "mitigations", etc.
 
-                // [B] Gather all asset-type-instance records
+                // 4) Gather asset-type-instance records
                 const allInstances = await db.modelInstances
-                .where("record_type")
-                .equals("asset-type-instance")
-                .toArray();
+                    .where("record_type")
+                    .equals("asset-type-instance")
+                    .toArray();
                 if (!allInstances.length) {
-                console.warn("No asset-type-instance records found. Aborting analysis.");
-                return;
+                    console.warn("No asset-type-instance records found. Aborting analysis.");
+                    return;
                 }
 
-                // [C] Build a big array of (assetCategory, techniqueId, techniqueName, attackScore, controlArrays...)
-                //    We'll store them in an array so we can group by category easily
+                // 5) Collect all techniques from those instances
                 const allTechniqueEntries = []; 
-                // shape: { assetCategory, techniqueId, techniqueName, attackScore, controlsArray: [] }
-
-                // Helper to add one technique
                 function addTechnique(assetCat, techId, techDetails) {
-                const score = parseFloat(techDetails["attack-score"] || 0);
-                const name  = techDetails["technique_name"] || techId;
-                // gather the relevant array of controls from the single user selection
-                // e.g. if (selectedControlType==="nist-controls") => techDetails["nist-controls"]
-                let rawControls = techDetails[selectedControlType] || [];
-                // For "mitigations" we might have an array of objects instead:
-                if (selectedControlType === "mitigations" && Array.isArray(techDetails.mitigations)) {
-                    rawControls = techDetails.mitigations.map(m => m.mitigation_id || "UnknownMitigation");
+                    const score = parseFloat(techDetails["attack-score"] || 0);
+                    const name  = techDetails["technique_name"] || techId;
+
+                    // Gather the relevant array of controls from the user's single selection
+                    let rawControls = techDetails[selectedControlType] || [];
+                    // If "mitigations", often an array of { mitigation_id: "..."}
+                    if (selectedControlType === "mitigations" && Array.isArray(techDetails.mitigations)) {
+                        rawControls = techDetails.mitigations.map(m => m.mitigation_id || "UnknownMitigation");
+                    }
+
+                    allTechniqueEntries.push({
+                        assetCategory: (assetCat || "").toLowerCase(),
+                        techniqueId:   techId,
+                        techniqueName: name,
+                        attackScore:   score,
+                        controls:      rawControls || []
+                    });
                 }
 
-                allTechniqueEntries.push({
-                    assetCategory: assetCat,
-                    techniqueId:   techId,
-                    techniqueName: name,
-                    attackScore:   score,
-                    controls:      rawControls || []
-                });
-                }
-
-                // For each asset-type-instance
                 for (const inst of allInstances) {
-                const assetCat = (inst["asset-category"] || "").toLowerCase();
-                // Combine abused + targeted
-                const abusedObj = inst.abusedByTechniques || {};
-                for (const [tid, tDetails] of Object.entries(abusedObj)) {
-                    addTechnique(assetCat, tid, tDetails);
-                }
-                const targetedObj = inst.targetedByTechniques || {};
-                for (const [tid, tDetails] of Object.entries(targetedObj)) {
-                    addTechnique(assetCat, tid, tDetails);
-                }
+                    const assetCat = (inst["asset-category"] || "").toLowerCase();
+                    
+                    const abusedObj = inst.abusedByTechniques || {};
+                    for (const [tid, tDetails] of Object.entries(abusedObj)) {
+                        addTechnique(assetCat, tid, tDetails);
+                    }
+                    const targetedObj = inst.targetedByTechniques || {};
+                    for (const [tid, tDetails] of Object.entries(targetedObj)) {
+                        addTechnique(assetCat, tid, tDetails);
+                    }
                 }
 
                 if (!allTechniqueEntries.length) {
-                console.warn("No techniques found from any instance. Aborting analysis.");
-                return;
+                    console.warn("No techniques found from any instance. Aborting analysis.");
+                    return;
                 }
 
-                // [D] Group by assetCategory => top 5 by attackScore
-                // possible categories: "devices", "networks", "applications & workloads", "data", "identities"
+                // 6) Group by assetCategory -> sort descending by attackScore -> pick top 5 each
                 const categoryToTechs = {};
                 for (const entry of allTechniqueEntries) {
-                if (!categoryToTechs[entry.assetCategory]) {
-                    categoryToTechs[entry.assetCategory] = [];
-                }
-                categoryToTechs[entry.assetCategory].push(entry);
+                    if (!categoryToTechs[entry.assetCategory]) {
+                        categoryToTechs[entry.assetCategory] = [];
+                    }
+                    categoryToTechs[entry.assetCategory].push(entry);
                 }
 
-                // Now for each category, sort by score descending, slice top 5
-                const finalTechniques = []; // after picking top 5 each category
-
+                const finalTechniques = [];
                 for (const cat of Object.keys(categoryToTechs)) {
-                const arr = categoryToTechs[cat];
-                arr.sort((a, b) => b.attackScore - a.attackScore);
-                const top5 = arr.slice(0, 5);
-                finalTechniques.push(...top5);
+                    const arr = categoryToTechs[cat];
+                    arr.sort((a,b) => b.attackScore - a.attackScore);
+                    const top5 = arr.slice(0, 5);
+                    finalTechniques.push(...top5);
                 }
 
-                // So finalTechniques has up to 25 items max (5 from each category).
+                // Up to 25 total (5 from each of 5 categories)
                 if (!finalTechniques.length) {
-                console.warn("No top techniques found after grouping by asset-category. Aborting analysis.");
-                return;
+                    console.warn("No final techniques after top-5 selection. Aborting analysis.");
+                    return;
                 }
 
-                // [E] Summaries / Preprocessing for Monte Carlo
-                let totalScore = 0;
-                finalTechniques.forEach(t => {
-                totalScore += t.attackScore;
-                });
-
-                finalTechniques.forEach(t => {
-                t.weightedImpact = totalScore > 0 ? (t.attackScore / totalScore) : 0;
-                });
-
-                // [F] Monte Carlo simulation
-                const residualRiskValues = [];
+                // 7) Prepare data structures to accumulate Monte Carlo results
                 const techniqueBreakthroughCount = {};
+                const techniqueReachedCount = {};
                 const controlRosiTotals = {};
-
-                // initialize counters
-                for (const t of finalTechniques) {
-                techniqueBreakthroughCount[t.techniqueId] = 0;
-                for (const cId of t.controls) {
-                    controlRosiTotals[cId] = 0;
-                }
-                }
-
-                for (let i = 0; i < iterationCount; i++) {
-                let inherentRisk = 100;
+                let overcameChainCount = 0; // how many times the attacker overcame ALL techniques
 
                 for (const t of finalTechniques) {
-                    // random in [0..100]
-                    const attackEffectiveness = Math.floor(Math.random() * 101);
-
-                    // random maturity for each control in [5..70]
-                    const maturityScores = t.controls.map(ctrlId => ({
-                    ctrlId,
-                    score: Math.floor(Math.random() * 66) + 5
-                    }));
-
-                    const overcameAll = maturityScores.every(ms => attackEffectiveness > ms.score);
-                    if (overcameAll) {
-                    techniqueBreakthroughCount[t.techniqueId]++;
-                    inherentRisk -= (t.weightedImpact * 100);
-                    } else {
-                    // for each control whose maturity >= attackEffectiveness, we allocate rosi
-                    const strongCtrls = maturityScores.filter(ms => ms.score >= attackEffectiveness);
-                    if (strongCtrls.length) {
-                        const rosiScore = (t.weightedImpact * 100) / strongCtrls.length;
-                        for (const sc of strongCtrls) {
-                        controlRosiTotals[sc.ctrlId] += rosiScore;
+                    techniqueBreakthroughCount[t.techniqueId] = 0;
+                    techniqueReachedCount[t.techniqueId] = 0;
+                    for (const cId of t.controls) {
+                        if (typeof controlRosiTotals[cId] === "undefined") {
+                            controlRosiTotals[cId] = 0;
                         }
                     }
+                }
+
+                // 8) Monte Carlo (chain approach)
+                const residualRiskValues = [];   
+
+                for (let i = 0; i < iterationCount; i++) {
+                    let chainFullyOvercame = true; // track if the attacker overcame every technique in the sequence
+
+                    // The attacker attempts each technique in order. If blocked at T_i, stop.
+                    for (const t of finalTechniques) {
+                        techniqueReachedCount[t.techniqueId]++;
+
+                        // Attack effectiveness in [minAttackEffectiveness..maxAttackEffectiveness]
+                        const attackEffectiveness = randomIntBetween(minAttackEffectiveness, maxAttackEffectiveness);
+
+                        // Maturity for each control in [minMaturityScore..maxMaturityScore]
+                        const maturityScores = t.controls.map(ctrlId => ({
+                            ctrlId,
+                            score: randomIntBetween(minMaturityScore, maxMaturityScore)
+                        }));
+
+                        // overcameAll => means the technique overcame (beat) all controls
+                        const overcameAll = maturityScores.every(ms => attackEffectiveness > ms.score);
+
+                        if (overcameAll) {
+                            // technique overcame the controls
+                            techniqueBreakthroughCount[t.techniqueId]++;
+                            // no rosi gained from these controls
+                            // attacker continues to next technique
+                        } else {
+                            // blocked => allocate rosi to controls that contributed
+                            const strongCtrls = maturityScores.filter(ms => ms.score >= attackEffectiveness);
+                            if (strongCtrls.length > 0) {
+                                const rosiValueEach = 1 / strongCtrls.length; 
+                                strongCtrls.forEach(sc => {
+                                    controlRosiTotals[sc.ctrlId] += rosiValueEach;
+                                });
+                            }
+                            // chain stops here for this iteration
+                            chainFullyOvercame = false;
+                            break;
+                        }
+                    }
+
+                    // If chainFullyOvercame => overcame EVERY technique => residual risk = 100
+                    // else => residual risk = 0
+                    if (chainFullyOvercame) {
+                        overcameChainCount++;
+                        residualRiskValues.push(100);
+                    } else {
+                        residualRiskValues.push(0);
                     }
                 }
 
-                const finalResidual = Math.max(0, inherentRisk);
-                residualRiskValues.push(finalResidual);
-                }
+                // 9) Now convert residualRiskValues to dollars, THEN compute confidence intervals
+                const residualRiskValuesInDollars = residualRiskValues.map(rr => 
+                    riskPercentToCost(rr, costOfBreach)
+                );
 
-                // [G] Sort & Show stats
-                residualRiskValues.sort((a,b) => a - b);
-                const q50 = residualRiskValues[Math.floor(0.5 * iterationCount)];
-                const q75 = residualRiskValues[Math.floor(0.75 * iterationCount)];
-                const q90 = residualRiskValues[Math.floor(0.90 * iterationCount)];
+                const ciResults = computeConfidenceIntervals(residualRiskValuesInDollars, [0.50, 0.75, 0.90]);
 
-                // [H] Build Sankey data from finalTechniques (up to 25)
-                const sankeyData = buildSankeyJson(finalTechniques, techniqueBreakthroughCount, controlRosiTotals, iterationCount);
-                console.log("buildSankeyJson(finalTechniques, techniqueBreakthroughCount, controlRosiTotals, iterationCount)", "finalTechniques: ", finalTechniques, ", techniqueBreakthroughCount: ", techniqueBreakthroughCount, ", controlRosiTotals: ", controlRosiTotals, ", iterationCount: ", iterationCount)
+                // Extract the numeric stats
+                const ci50lr = ciResults[0.50].lower;
+                const ci75lr = ciResults[0.75].lower;
+                const ci90lr = ciResults[0.90].lower;
+                const ci50ur = ciResults[0.50].upper;
+                const ci75ur = ciResults[0.75].upper;
+                const ci90ur = ciResults[0.90].upper;
+                const ci50mr = ciResults[0.50].mean;
+                const ci75mr = ciResults[0.75].mean;
+                const ci90mr = ciResults[0.90].mean;
 
-                // Render Sankey
+                // Format as currency
+                const ci50l = formatCurrency(ci50lr);
+                const ci75l = formatCurrency(ci75lr);
+                const ci90l = formatCurrency(ci90lr);
+                const ci50u = formatCurrency(ci50ur);
+                const ci75u = formatCurrency(ci75ur);
+                const ci90u = formatCurrency(ci90ur);
+                const ci50m = formatCurrency(ci50mr);
+                const ci75m = formatCurrency(ci75mr);
+                const ci90m = formatCurrency(ci90mr);
+
+                // For each technique:
+                // fractionBlocked(t) = # of blocked occurrences / # times it was reached
+                // fractionBreakthrough(t) = 1 - fractionBlocked(t)
+                finalTechniques.forEach(t => {
+                    const id = t.techniqueId;
+                    const reached = techniqueReachedCount[id] || 1; // avoid /0
+                    const overcame = techniqueBreakthroughCount[id] || 0;
+                    const fractionBreak = overcame / reached;
+                    t.fractionBreakthrough = fractionBreak;
+                    t.fractionBlocked = 1 - fractionBreak;
+                });
+
+                // 10) Build Sankey with the single-flow approach
+                const sankeyData = buildSankeyJsonSingleFlow(finalTechniques, controlRosiTotals);
+
+                // 11) Render or display results
                 renderSankeyDiagram(sankeyData);
 
-                // Show numeric results
                 document.getElementById("attackAnalysisResults").innerHTML = `
                 <p><strong>Using Control/Capability Set:</strong> ${selectedControlType}</p>
-                <p>Top 5 techniques from each category => total: ${finalTechniques.length} techniques used in the analysis.</p>
-                <p>Residual Risk distribution over ${iterationCount} runs:</p>
+                <p>Top 5 techniques from each category => total: ${finalTechniques.length} techniques used in analysis.</p>
+                <p>Out of ${iterationCount} runs, the attacker defeated all defenses <strong>${overcameChainCount}</strong> times (~${(100.0 * overcameChainCount/iterationCount).toFixed(1)}%).
+                <p><strong>Confidence Intervals for Mean Residual Risk (USD)</strong></p>
                 <ul>
-                    <li>50%: ${q50.toFixed(2)}</li>
-                    <li>75%: ${q75.toFixed(2)}</li>
-                    <li>90%: ${q90.toFixed(2)}</li>
+                    <li>50% Confidence Interval: [${ci50l} - ${ci50u}], mean=${ci50m}</li>
+                    <li>75% Confidence Interval: [${ci75l} - ${ci75u}], mean=${ci75m}</li>
+                    <li>90% Confidence Interval: [${ci90l} - ${ci90u}], mean=${ci90m}</li>
                 </ul>
                 `;
 
@@ -3345,50 +3536,39 @@
             }
         }
 
-        /**
-         * buildSankeyJson
-         *
-         * @param {Array} finalTechniques  - Each element:
-         *   {
-         *     techniqueId:  "T1059",
-         *     techniqueName:"Command & Scripting Interpreter",
-         *     assetCategory:"applications & workloads",
-         *     attackScore:  3,
-         *     weightedImpact:0.2,
-         *     controls: ["M1018","M1022",...]
-         *   }
-         * @param {Object} techniqueBreakthroughCount
-         *   e.g. { "T1059": 331, "T1036": 366, ... }
-         * @param {Object} controlRosiTotals
-         *   e.g. { "M1018": 70.7, "M1038": 86.2, ... }
-         * @param {number} iterationCount
-         *   e.g. 1000
-         * @return {Object} { nodes: [...], links: [...] } suitable for D3 Sankey
-         */
-        function buildSankeyJson(
-            finalTechniques,
-            techniqueBreakthroughCount,
-            controlRosiTotals,
-            iterationCount
-            ) {
-            // fractionBlocked(t) => portion of runs technique t was blocked
-            function fractionBlocked(t) {
-                const breakthroughs = techniqueBreakthroughCount[t.techniqueId] || 0;
-                const blockedCount  = iterationCount - breakthroughs;
-                return blockedCount / iterationCount;
-            }
 
-            // We’ll keep track of how much “flow” arrives at each technique (for chaining).
-            const techniqueFlow = new Array(finalTechniques.length).fill(0);
-
-            // Prepare arrays
+            /**
+             * buildSankeyJsonSingleFlow
+             *
+             * Takes the finalTechniques array, each with:
+             *   - techniqueId
+             *   - techniqueName
+             *   - assetCategory
+             *   - fractionBlocked
+             *   - fractionBreakthrough
+             *   - controls: []
+             *
+             * And a controlRosiTotals map: { [controlId]: number }
+             *
+             * Returns { nodes: [...], links: [...] } for a D3 Sankey.
+             * 
+             * Single-Flow Logic:
+             *  - We always start with 100 flow from "Inherent Risk" → Technique 1.
+             *  - For technique i with inboundFlow X:
+             *    blockedFlow = X * fractionBlocked(t)
+             *    breakthroughFlow = X * fractionBreakthrough(t)
+             *    blockedFlow → technique’s controls
+             *    breakthroughFlow → next technique
+             *  - Finally from the last technique → "Residual Risk".
+             */
+            function buildSankeyJsonSingleFlow(finalTechniques, controlRosiTotals) {
             const nodes = [];
             const links = [];
 
             // 1) Node 0 => "Inherent Risk"
             nodes.push({ node: 0, name: "Inherent Risk" });
 
-            // 2) Technique nodes => 1..N
+            // 2) Technique nodes => indices 1..N
             finalTechniques.forEach((tech, i) => {
                 nodes.push({
                 node: i + 1,
@@ -3396,124 +3576,95 @@
                 });
             });
 
-            // -- We’ll place control nodes next, but gather them first. --
-            // Collect all controls/capabilities with rosi>0 from any technique
+            // 3) Collect unique controls with positive rosi
             const allControlIds = new Set();
             finalTechniques.forEach(t => {
                 t.controls.forEach(ctrlId => {
-                const rosiVal = controlRosiTotals[ctrlId] || 0;
-                if (rosiVal > 0) {
+                // We can create a node for any control that has rosiTotals > 0
+                if ((controlRosiTotals[ctrlId] || 0) > 0) {
                     allControlIds.add(ctrlId);
                 }
                 });
             });
             const controlList = Array.from(allControlIds);
-
-            // The first control node index is after the technique nodes
             const firstControlIndex = finalTechniques.length + 1;
-
-            // We won't add "Residual Risk" until after these controls
             const controlToNode = {};
 
-            // Add a node for each control
             controlList.forEach((ctrlId, idx) => {
                 const nodeIndex = firstControlIndex + idx;
-                nodes.push({
-                node: nodeIndex,
-                name: ctrlId
-                });
+                nodes.push({ node: nodeIndex, name: ctrlId });
                 controlToNode[ctrlId] = nodeIndex;
             });
 
-            // The residual node is after all techniques + all controls
+            // 4) "Residual Risk" node
             const residualIndex = firstControlIndex + controlList.length;
-            nodes.push({
-                node: residualIndex,
-                name: "Residual Risk"
-            });
+            nodes.push({ node: residualIndex, name: "Residual Risk" });
 
-            // E) Link from Inherent Risk -> first technique with value=100
+            // Keep track of flow for each technique (the inboundFlow).
+            const techniqueFlow = new Array(finalTechniques.length).fill(0);
+
+            // Link from Inherent Risk -> Technique 1 with 100
             if (finalTechniques.length > 0) {
-                links.push({
-                source: 0,
-                target: 1,
-                value: 100
-                });
+                links.push({ source: 0, target: 1, value: 100 });
                 techniqueFlow[0] = 100;
             }
 
-            // G) Chain each technique i -> technique i+1:
-            //    outflow = inboundFlow - fractionBlocked * weightedImpact
-            for (let i = 0; i < finalTechniques.length - 1; i++) {
-                const tech = finalTechniques[i];
-                const inboundFlow = techniqueFlow[i] || 0;
-                const frac = fractionBlocked(tech) * ((tech.weightedImpact * 100) || 0);
-                const outFlow = inboundFlow - frac;
-                const nextNode = i + 2; // technique i+1 => node index (i+1)+1
-
-                links.push({
-                source: i + 1,  // current technique node
-                target: nextNode,
-                value: outFlow < 0 ? 0 : outFlow // clamp to 0 if negative
-                });
-                techniqueFlow[i + 1] = outFlow < 0 ? 0 : outFlow;
-            }
-
-            // H) Link from last technique -> Residual
-            if (finalTechniques.length > 0) {
-                const lastIdx = finalTechniques.length - 1;
-                const lastTech = finalTechniques[lastIdx];
-                const inboundFlow = techniqueFlow[lastIdx] || 0;
-                const frac = fractionBlocked(lastTech) * ((lastTech.weightedImpact * 100) || 0);
-                const outFlow = inboundFlow - frac;
-
-                links.push({
-                source: lastIdx + 1,
-                target: residualIndex,
-                value: outFlow < 0 ? 0 : outFlow
-                });
-            }
-
-            // F) For each technique, create technique->control links
-            //    if rosi>0 for that control. 
-            //    linkValue = fractionBlocked(tech)*weightedImpact 
-            //                * rosiOfControl / sumOfRosi(tech)
+            // For each technique i, split inboundFlow into blockedFlow & breakthroughFlow
             for (let i = 0; i < finalTechniques.length; i++) {
                 const tech = finalTechniques[i];
-                const fracTerm = fractionBlocked(tech) * ((tech.weightedImpact * 100) || 0);
-                if (fracTerm <= 0) continue;
+                const inboundFlow = techniqueFlow[i];
+                if (inboundFlow <= 0) continue;
 
-                // sum rosi across that technique’s controls
-                let sumRosi = 0;
-                tech.controls.forEach(ctrlId => {
-                const cVal = controlRosiTotals[ctrlId] || 0;
-                if (cVal > 0) sumRosi += cVal;
-                });
-                if (sumRosi <= 0) continue;
+                // fraction blocked or overcame from the Monte Carlo stats
+                const fb = tech.fractionBlocked;       // e.g. 0.70 means 70% of inboundFlow is blocked
+                const blockedFlow = inboundFlow * fb;
+                const breakthroughFlow = inboundFlow - blockedFlow; 
+                // or inboundFlow * tech.fractionBreakthrough
 
-                // create link for each rosi>0
+                // Technique => Controls (blockedFlow)
+                // We distribute the blockedFlow among t.controls in proportion to each control’s rosiTotals
+                let sumControlRosi = 0;
+                let relevantControls = [];
                 tech.controls.forEach(ctrlId => {
-                const cVal = controlRosiTotals[ctrlId] || 0;
-                if (cVal > 0) {
-                    const ctrlNode = controlToNode[ctrlId];
-                    if (typeof ctrlNode === "undefined") {
-                    // no node for this control => skip
-                    return;
-                    }
-                    const linkVal = fracTerm * (cVal / sumRosi);
-                    if (linkVal > 0) {
-                    links.push({
-                        source: i + 1,      // technique node index
-                        target: ctrlNode,   // control node index
-                        value: linkVal
-                    });
-                    }
+                const rosiVal = controlRosiTotals[ctrlId] || 0;
+                if (rosiVal > 0) {
+                    sumControlRosi += rosiVal;
+                    relevantControls.push({ ctrlId, rosiVal });
                 }
                 });
+
+                if (blockedFlow > 0 && sumControlRosi > 0) {
+                relevantControls.forEach(rc => {
+                    const portion = rc.rosiVal / sumControlRosi;
+                    const flowToControl = blockedFlow * portion;
+                    links.push({
+                    source: i + 1,               // technique node
+                    target: controlToNode[rc.ctrlId],
+                    value: flowToControl
+                    });
+                });
+                }
+
+                // Technique => Next Technique
+                if (i < finalTechniques.length - 1) {
+                links.push({
+                    source: i + 1,
+                    target: i + 2,
+                    value: breakthroughFlow
+                });
+                techniqueFlow[i + 1] += breakthroughFlow; // pass the flow onward
+                } else {
+                // Last technique => "Residual Risk"
+                links.push({
+                    source: i + 1,
+                    target: residualIndex,
+                    value: breakthroughFlow
+                });
+                }
             }
 
             return { nodes, links };
-        }
+            }
 
         function renderSankeyDiagram(sankeyData) {
             // sankeyData = { nodes: [...], links: [...] }
@@ -3669,12 +3820,16 @@
             // Clear old data
             tbody.innerHTML = "";
 
+            const costOfBreach = parseFloat(
+                document.getElementById("costOfBreach").value
+            ) || 10000000; // fallback if invalid
+
             // Build each row
             rowData.forEach(item => {
                 const tr = document.createElement("tr");
                 tr.innerHTML = `
                 <td class="border px-4 py-2">${item.label}</td>
-                <td class="border px-4 py-2">${item.value.toFixed(2)}</td>
+                <td class="border px-4 py-2">${(formatCurrency(riskPercentToCost(item.value,costOfBreach)))}</td>
                 `;
                 tbody.appendChild(tr);
             });
