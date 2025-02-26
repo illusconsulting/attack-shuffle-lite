@@ -54,16 +54,16 @@ A live version is available at:
    Loads JSON data into IndexedDB with progress logs.
 
 2. **Asset Types & Monitoring Coverage**  
-   ![Asset Step Screenshot](docs/img/asset-type-step.png)
+   ![Asset Step Screenshot](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/images/asset-type-step.png?raw=true)
 
 3. **Techniques Inventory**  
    Summaries for each asset category and environment.
 
 4. **Radial Tree**  
-   ![Radial Tree Visualization](docs/img/radial-tree.png)
+   Displays mapping between assets, ATT&CK techniques, and controls and capabilities.
 
 5. **CDM View**  
-   Displays top techniques & relevant controls across five asset categories.
+   Displays top techniques & relevant controls across the five asset categories.
 
 6. **Attack Analysis**  
    Runs repeated simulations to show potential risk flows in a Sankey diagram.
@@ -134,6 +134,7 @@ Once you open the app, you’ll follow a **multi-step wizard**. The steps are sh
   The app automatically loads all JSON files into your browser’s IndexedDB. You’ll see progress logs indicating how many records were imported.
 - **When complete**:  
   A “Next” button appears. Click it to move on.
+  ![Step 1 Usage Screenshot](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/images/1-initialize.png?raw=true)
 
 ### Step 2: Define Asset Types
 - **Select Asset Category**: Devices, Networks, Applications & Workloads, Data, or Identities.  
@@ -142,30 +143,39 @@ Once you open the app, you’ll follow a **multi-step wizard**. The steps are sh
 - **Monitoring Coverage**: Radio buttons for Network, Process, File, Cloud, Hardware coverage (High, Medium, Low, None).  
 - **Click “Add Asset Type”**: Saves the record, which appears in the “Current Asset Instances” table below.  
   - For “Data” assets, you’ll also select an estimated record count.
+    ![Step 2 Usage Screenshot](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/images/2-add-asset-types.png?raw=true)
 
 ### Step 3: ATT&CK Inventory
 - Summaries of ATT&CK techniques mapped to each asset instance. 
 - The table shows how many relevant techniques are “abused by” or “targeted by” each asset, plus their average technique score.  
 - You can click on a row to view detailed techniques for that asset: technique IDs, names, and computed “attack-score.”
+    ![Step 3 Usage Screenshot](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/images/3-review-attack-scores.png?raw=true)
 
 ### Step 4: Visualization (Radial Tree)
 - Choose what you want to visualize (e.g., “mitigations,” “nist-controls,” “cis-safeguards,” “aws-capabilities,” etc.).  
 - A **radial tree** is generated, grouping technique nodes and linking them to the relevant control or mitigation references.
+    ![Step 4 Usage Screenshot](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/images/4-review-mapping.png?raw=true)
 
 ### Step 5: CDM View
 - A simplified **Cyber Defense Matrix** layout that organizes assets (rows) and categories (columns) with top 5 techniques and controls.  
 - You can select which capability frameworks to show in the top filter checkboxes.
+    ![Step 5 Usage Screenshot](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/images/5-CDM.png?raw=true)
 
 ### Step 6: Organization Details
 - Checkbox prompts about security practices (e.g., “My organization leverages AI for InfoSec,” “Conducts Incident Response Tests,” etc.).  
 - Checking more items can reduce your overall projected breach cost during the final analysis step.
+    ![Step 6 Usage Screenshot](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/images/6-org-details.png?raw=true)
 
 ### Step 7: Attack Analysis
 - Configure simulation parameters:
   - **Cost of Breach**, **# Iterations**, and “attack effectiveness” vs. “maturity” ranges.  
   - Choose one set of controls/capabilities to emphasize (e.g., “nist-controls” only).  
 - **Run Attack Analysis** to simulate possible outcomes.  
+    ![Step 7 Usage Screenshot](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/images/7a-prep-simulation.png?raw=true)
 - A **Sankey diagram** visualizes risk flows, and a table summarizes potential losses with confidence intervals.
+    ![Step 7 Usage Screenshot](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/images/7b-review-results.png?raw=true)
+
+   ![Step 7 Usage Screenshot](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/images/7c-review-results.png?raw=true)
 
 ---
 
