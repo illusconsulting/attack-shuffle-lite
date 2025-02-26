@@ -1,0 +1,6 @@
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'
+X-Content-Type-Options: nosniff
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+/index.html
+  Cache-Control: no-store
