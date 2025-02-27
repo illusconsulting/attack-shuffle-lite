@@ -5,6 +5,57 @@
 A live demo is hosted at:  
 [https://illusconsulting.github.io/attack-shuffle-lite/](https://illusconsulting.github.io/attack-shuffle-lite/)
 
+<details>
+This tool was used as an aid for a talk at a [CSA OC Meetup](https://www.meetup.com/cloud-security-alliance-csa-orange-county/). [A PDF of the slides from that talk](https://github.com/illusconsulting/attack-shuffle-lite/blob/main/Reframing-Attack-Path-Analysis-for-Cloud-Risk-Assessment-20250226.pdf) are included in this repo. 
+<summary> There were also several questions about the additional resources I referenced, those resources are listed here: </summary>
+
+### Books:
+
+- [The Phoenix Project](https://www.amazon.com/Phoenix-Project-DevOps-Helping-Business/dp/1942788290)
+- [The Unicorn Project]( https://www.amazon.com/Unicorn-Project-Developers-Disruption-Thriving/dp/1942788762)
+- [Investments Unlimited](https://www.amazon.com/Investments-Unlimited-Security-Compliance-Thriving/dp/B0B5LV5F42)
+- [Project Zero Trust](https://www.amazon.com/Project-Zero-Trust-Strategy-Aligning/dp/1119884845)
+- [The Cyber Defense Matrix](https://www.amazon.com/Cyber-Defense-Matrix-Navigating-Cybersecurity/dp/B09QP2GSGZ)
+- [Cybersecurity First Principles](https://www.amazon.com/Cybersecurity-First-Principles-Strategy-Tactics/dp/1394173083)
+- [How to Measure Anything in Cybersecurity Risk](https://hubbardresearch.com/shop/how-to-measure-anything-in-cybersecurity-risk-2e-signed-by-doug-hubbard/)
+- [The Active Defender](https://www.amazon.com/Active-Defender-Immersion-Offensive-Security-ebook/dp/B0C8WZLFTY)
+- [Towards improved offensive security assessment using counter APT red teams (Counter-APT Red Teaming)](https://archives.towson.edu/Documents/Detail/towards-improved-offensive-security-assessment-using-counter-apt-red-teams/166750)
+- [Also see Dr. Oakley's book, Professional Red Teaming](https://www.amazon.com/Professional-Red-Teaming-Cybersecurity-Engagements/dp/1484243080)
+
+### Sites/Tools:
+
+- [Open Policy Agent](https://www.openpolicyagent.org/) also check out [this talk from CNSC 2023](https://www.youtube.com/watch?v=7pbIVjSluMs&list=PLj6h78yzYM2NQ-Zi_k5qVmZyxSmLBzM6V)
+- [Open Security Controls Assessment Language (OSCAL)](https://pages.nist.gov/OSCAL/) and [awesome-oscal](https://github.com/oscal-club/awesome-oscal)
+- [MITRE CALDERA](https://github.com/mitre/caldera)
+- [MITRE Engenuity Center for Threat-Informed Defense](https://github.com/center-for-threat-informed-defense) and [the main site](https://ctid.mitre.org/)
+  - [Attack-flow](https://github.com/center-for-threat-informed-defense/attack-flow) and [the project site](https://ctid.io/flow)
+    - The Sankey diagram from attack-flow v1 I referred to is in the .zip at https://github.com/center-for-threat-informed-defense/attack-flow/archive/refs/tags/v1.0.0.zip under \data\tesla-flow-costs-controls.png
+  - [Mappings-explorer](https://ctid.io/mappings-explorer) and [the GitHub repo]( https://github.com/center-for-threat-informed-defense/mappings-explorer)
+  - [Adversary-emulation-library](https://ctid.io/adversary-emulation) and [the GitHub repo]( https://github.com/center-for-threat-informed-defense/adversary_emulation_library)
+- [Another tool I'm building can help with visualizations of some of the existing adversary emulation plans](https://illusconsulting.github.io/illus-attack-shuffle/)
+- [Top-attack-techniques](https://ctid.io/top-attack-techniques) and [the GitHub repo](https://github.com/center-for-threat-informed-defense/top-attack-techniques)
+- [ZeroTier](https://www.zerotier.com/) and the [GitHub Org](https://github.com/zerotier)
+- [SPIFFE/SPIRE](https://spiffe.io/)
+- [CIS Community Defense Model](https://www.cisecurity.org/insights/white-papers/cis-community-defense-model-2-0)
+- [D3FEND](https://d3fend.mitre.org/)
+
+### Misc.:
+
+- [ATT&CK Evals (this is the one I couldn't remember the name of)](https://attackevals.mitre-engenuity.org/)
+- [Antisyphon](https://www.antisyphontraining.com/)
+- [MAD20](https://mad20.io/) and [the YouTube channel](https://www.youtube.com/@MAD20Tech)
+- [NIST AI RMF](https://www.nist.gov/itl/ai-risk-management-framework)
+- [When we say security, what do we mean?]( https://kellyshortridge.com/blog/posts/what-do-we-mean-when-we-say-security-part-1/)
+- InfoSec-oriented fediverse sites: [Hachyderm](https://hachyderm.io) and [infosec.exchange](https://infosec.exchange)
+- [The Open Group Zero Trust Core Principles](https://pubs.opengroup.org/security/zero-trust-principles/)
+- On Cybersecurity First Principles:
+  - [Buffalo State slides](https://cs4hs.buffalostate.edu/sites/cs4hs.buffalostate.edu/files/uploads/Documents/Summer%20Workshop%20Agenda/Cybersecurity%20First%20Principles.pdf)
+  - [Nebraska GenCyber content](https://mlhale.github.io/nebraska-gencyber-modules/intro_to_first_principles/README/)
+  - [PDF of NSA breakdown of first principles](https://users.cs.jmu.edu/tjadenbc/Bootcamp/0-GenCyber-First-Principles.pdf)
+- [A LinkedIn post discussing core concepts beyond the CIA Triad](https://www.linkedin.com/posts/jrkingitpro_the-cia-triad-is-incomplete-and-im-not-activity-7232453990716694528-hTti)
+
+</details>
+
 ---
 
 ## Table of Contents
