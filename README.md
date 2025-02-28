@@ -53,6 +53,7 @@ This tool was used as an aid for a talk at a [CSA OC Meetup](https://www.meetup.
   - [Nebraska GenCyber content](https://mlhale.github.io/nebraska-gencyber-modules/intro_to_first_principles/README/)
   - [PDF of NSA breakdown of first principles](https://users.cs.jmu.edu/tjadenbc/Bootcamp/0-GenCyber-First-Principles.pdf)
 - [A LinkedIn post discussing core concepts beyond the CIA Triad](https://www.linkedin.com/posts/jrkingitpro_the-cia-triad-is-incomplete-and-im-not-activity-7232453990716694528-hTti)
+- [Infragard](https://www.infragard.org/)
 
 </details>
 
